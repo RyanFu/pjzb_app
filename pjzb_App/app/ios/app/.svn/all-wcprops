@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/scm/svn/pjzb/!svn/ver/2532/pjzb_App/app/ios/app
+END
+main.m
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/scm/svn/pjzb/!svn/ver/2531/pjzb_App/app/ios/app/main.m
+END
+AppDelegate.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/scm/svn/pjzb/!svn/ver/3458/pjzb_App/app/ios/app/AppDelegate.h
+END
+Info.plist
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/scm/svn/pjzb/!svn/ver/3458/pjzb_App/app/ios/app/Info.plist
+END
+AppDelegate.m
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/scm/svn/pjzb/!svn/ver/3458/pjzb_App/app/ios/app/AppDelegate.m
+END
+app.entitlements
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/scm/svn/pjzb/!svn/ver/3424/pjzb_App/app/ios/app/app.entitlements
+END

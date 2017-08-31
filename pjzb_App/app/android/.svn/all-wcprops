@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/scm/svn/pjzb/!svn/ver/3489/pjzb_App/app/android
+END
+gradlew
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/scm/svn/pjzb/!svn/ver/2531/pjzb_App/app/android/gradlew
+END
+local.properties
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/scm/svn/pjzb/!svn/ver/3884/pjzb_App/app/android/local.properties
+END
+gradle.properties
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/scm/svn/pjzb/!svn/ver/3883/pjzb_App/app/android/gradle.properties
+END
+gradlew.bat
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/scm/svn/pjzb/!svn/ver/2531/pjzb_App/app/android/gradlew.bat
+END
+build.gradle
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/scm/svn/pjzb/!svn/ver/3882/pjzb_App/app/android/build.gradle
+END
+settings.gradle
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/scm/svn/pjzb/!svn/ver/3885/pjzb_App/app/android/settings.gradle
+END

@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/scm/svn/pjzb/!svn/ver/2531/pjzb_App/app/android/keystores
+END
+BUCK
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/scm/svn/pjzb/!svn/ver/2531/pjzb_App/app/android/keystores/BUCK
+END
+debug.keystore.properties
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/scm/svn/pjzb/!svn/ver/2531/pjzb_App/app/android/keystores/debug.keystore.properties
+END

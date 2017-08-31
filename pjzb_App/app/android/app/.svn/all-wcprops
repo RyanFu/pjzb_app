@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/scm/svn/pjzb/!svn/ver/3489/pjzb_App/app/android/app
+END
+pjzb-key.keystore
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/scm/svn/pjzb/!svn/ver/3417/pjzb_App/app/android/app/pjzb-key.keystore
+END
+BUCK
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/scm/svn/pjzb/!svn/ver/3888/pjzb_App/app/android/app/BUCK
+END
+proguard-rules.pro
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/scm/svn/pjzb/!svn/ver/2531/pjzb_App/app/android/app/proguard-rules.pro
+END
+build.gradle
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/scm/svn/pjzb/!svn/ver/3887/pjzb_App/app/android/app/build.gradle
+END
