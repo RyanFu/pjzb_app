@@ -237,6 +237,9 @@
          //this.props.navigator.push({component:CouponCard,name:'CouponCard'});
          this.props.navigator.push({component:OwebView,name:'OwebView',params:{url:data.html,back:true,title:'投标'}});
          this.setState({animating:false});
+       }else if (data.error=='2') {
+          Alert.alert('提示信息', data.msg);
+          this._getData();
        }else{
          this.setState({animating:false});
          Alert.alert('提示信息', data.msg)

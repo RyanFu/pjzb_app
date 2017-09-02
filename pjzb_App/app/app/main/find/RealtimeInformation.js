@@ -181,7 +181,7 @@ class DashLine extends Component{
             <View style={styles.viewItems}>
               <View style={styles.itemLeft}>
                 <Text style={styles.itemText}>90天逾期笔数（笔）</Text>
-                <Text style={styles.itemText1}>{this.state.overdueAmount}</Text>
+                <Text style={styles.itemText1}>{this.state.overdueCount90Day}</Text>
               </View>
               <View style={styles.itemLine}></View>
               <View style={styles.itemRight}>
