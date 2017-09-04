@@ -42,7 +42,9 @@ export default class Welcome extends Component {
                  totalInvestNum:data.experienceBorrow[1].experienceBorrowCount,
                  gsdtList:data.pageBean.page,
                  islogin:islogin,
-                 isExgo:isExgo
+                 isExgo:isExgo,
+                 isxsBiao: data.isxsBiao,
+                 xsBorrow: data.xsBorrow[0],
                }
             }
         },(error)=>{});
@@ -69,6 +71,8 @@ export default class Welcome extends Component {
             component: AppMain,
             animated:'FadeIn'
         })
+        // 停止
+        this.interval&&clearInterval(this.interval);
     }
     jumpLogin = () =>{
         this.props.navigator.push({

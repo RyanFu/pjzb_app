@@ -229,5 +229,37 @@ export const styles = StyleSheet.create({
     height:80/oPx,
     justifyContent:'center',
     alignItems:'center'
-  }
+  },
+
+  // 新手标
+  xsBaoView: {
+    flex: 1,
+    height: 160/oPx,
+    backgroundColor: '#fff',
+    marginTop: 16/oPx,
+  },
+  xsView: {
+    flex: 1,
+    flexDirection: 'row',
+    marginLeft: 30/oPx,
+    marginRight: 30/oPx,
+  },
+  xsBaoImg: {
+    width: 111/oPx,
+    height: 111/oPx,
+    alignSelf: 'center',
+  },
+  xsTitleView: {
+    marginTop: 13/oPx,
+    marginBottom: 13/oPx,
+    marginLeft: 13/oPx,
+  },
+  xsMothView: {
+    marginLeft: 80/oPx,
+  },
+  xsBtnView: {
+    flex: 1,
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+  },
 });

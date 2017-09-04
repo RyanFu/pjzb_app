@@ -77,6 +77,29 @@
        </View>
      </View>
    }
+
+   _getBorrowWayTitle() {
+      let dateStart = new Date(Date.parse("2017/09/09")).getTime();
+      let dateEnd = new Date(Date.parse("2017/09/30")).getTime(); 
+      let date = new Date().getTime();
+      if (!this.props.showList) {
+        if (date >= dateStart && date <= dateEnd) {
+          return  <View style={[styles.product_title_way, {borderColor:'#fc3350', width: 310/oPx}]}>
+                    <Text style={[styles.product_title_way_text, {color:'#fc3350'}]}>
+                      {this._getBorrowWay(this.props.data.borrowTypeSubId)}
+                      /200元现金红包可用
+                    </Text>
+                  </View>;
+        } else {
+          return  <View style={styles.product_title_way}>
+                    <Text style={styles.product_title_way_text}>
+                      {this._getBorrowWay(this.props.data.borrowTypeSubId)}
+                    </Text>
+                  </View>;
+        }
+      }
+   }
+
    _renderElm(){
      let data = this.props.data;
      let isAlignCenter = this.props.showList?{justifyContent:'center'}:null;
@@ -88,12 +111,7 @@
              {data.borrowTitle}
            </Text>:<TouchableOpacity onPress={()=>{this.props.onPressEvent(data.id,data.borrowTitle)}}><Text style={styles.product_title_text}>{data.borrowTitle}</Text></TouchableOpacity>
            }
-           {
-            !this.props.showList?
-            <View style={styles.product_title_way}><Text style={styles.product_title_way_text}>
-             {this._getBorrowWay(data.borrowTypeSubId)}
-           </Text></View>:null
-           }
+           { this._getBorrowWayTitle() }
          </View>
          <View style={styles.product_detail}>
            <View style={styles.product_detail_left}>

@@ -42,6 +42,7 @@
   import InviteFriendsHome from '../user/inviteFriendsHome';
   import RegIpayPersonal from '../user/regIpayPersonal';
   import SLBaoPage from '../user/SLBaoPage';
+  import Button from '../../components/Button';
 const oPx = StyleConfig.oPx;
  let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
  import  ImagePicker from 'react-native-image-picker';
@@ -72,6 +73,8 @@ var options = {
        gsdtList:global.indexData?global.indexData.gsdtList:[],
        islogin:global.indexData?global.indexData.islogin:0,
        isExgo:global.indexData?global.indexData.isExgo:0,
+       isxsBiao:global.indexData?global.indexData.isxsBiao:0,
+       xsBorrow:global.indexData?global.indexData.xsBorrow:{annualRate:'0',deadline:0,investNum:0},
      }
    }
    componentWillMount(){
@@ -93,7 +96,9 @@ var options = {
          bannerList:data.bannerList,
          experienceBorrow:data.experienceBorrow[0],
          totalInvestNum:data.experienceBorrow[1].experienceBorrowCount,
-         gsdtList:data.pageBean.page
+         gsdtList:data.pageBean.page,
+         xsBorrow: data.xsBorrow[0],
+         isxsBiao: data.isxsBiao,
        });
        if(data.hasOwnProperty("isExgo")){
            this.setState({
@@ -142,6 +147,7 @@ var options = {
       this.props.navigator.push({component:InvestDetail,name:'InvestDetail',params:{borrowId:id,borrowTitle:title}})
     );
    }
+   // 跳转体验标
    async _onPress(id){
     let data = await Storage.getItem('USER')
      if(data){
@@ -158,6 +164,24 @@ var options = {
          )
      }
    }
+    // 跳转新手标
+   async _onPressXS(id){
+    let data = await Storage.getItem('USER')
+     if(data){
+        this.setState({sweiperIndex:0})
+         this.props.navigator.push({component:InvestDetailXS,name:'InvestDetailXS',params:{id:this.state.xsBorrow.id}})
+     }else{
+         Alert.alert(
+             '提示信息',
+             '您还未登录，请先登录！',
+             [
+                 {text: '取消' },
+                 {text: '确定', onPress: () => this.props.navigator.push({component:Login,name:'Login'})},
+             ]
+         )
+     }
+   }
+
    _imgLoad = () =>{
     this.bannerCount = this.bannerCount+1;
     if(this.bannerCount == this.state.bannerList.length){
@@ -539,25 +563,62 @@ var options = {
                <Text style={styles.about_text}>邀请有礼</Text>
              </TouchableOpacity>
            </View>
-           <Image style={styles.experiences} source={require('../../images/index/finance_experience_background.png')}>
-              <View style={styles.lefts_exp_rate}>
-                 <View style={styles.exp_rate}>
-                     <Text style={[styles.exp_rate_big,{backgroundColor: "transparent",}]}>{this.state.experienceBorrow.annualRate}.00</Text><Text style={[styles.exp_rate_small,{backgroundColor: "transparent",}]}>%</Text><Text style={[styles.exp_title_texts,{backgroundColor: "transparent",}]}>理财体验标</Text>
-                 </View>
-                  {this.state.islogin === 1 && this.state.isExgo>0?<Image style={styles.exp_image_btn} source={require('../../images/index/index_miss_button.png')}>
-                          <Text style={{backgroundColor:'transparent',textAlign:'center',color:'#fff', fontSize:24/oPx,}}>
-                              您已投资
-                          </Text>
-                      </Image>:
-                 <TouchableOpacity onPress={()=>this._onPress()} >
-                   <Image style={styles.exp_image_btn} source={require('../../images/index/index_buy_button.png')}>
-                       <Text style={{backgroundColor:'transparent',textAlign:'center',color:'#fff', fontSize:24/oPx,}}>
-                           立即投资
-                       </Text>
-                   </Image>
-                 </TouchableOpacity>}
-              </View>
-           </Image>
+
+          {/* 体验标 */}
+          {/* <Image style={styles.experiences} source={require('../../images/index/finance_experience_background.png')}>*/}
+          {/*    <View style={styles.lefts_exp_rate}>*/}
+          {/*       <View style={styles.exp_rate}>*/}
+          {/*           <Text style={[styles.exp_rate_big,{backgroundColor: "transparent",}]}>{this.state.experienceBorrow.annualRate}.00</Text><Text style={[styles.exp_rate_small,{backgroundColor: "transparent",}]}>%</Text><Text style={[styles.exp_title_texts,{backgroundColor: "transparent",}]}>理财体验标</Text>*/}
+          {/*       </View>*/}
+          {/*        {this.state.islogin === 1 && this.state.isExgo>0?<Image style={styles.exp_image_btn} source={require('../../images/index/index_miss_button.png')}>*/}
+          {/*                <Text style={{backgroundColor:'transparent',textAlign:'center',color:'#fff', fontSize:24/oPx,}}>*/}
+          {/*                    您已投资*/}
+          {/*                </Text>*/}
+          {/*            </Image>:*/}
+          {/*       <TouchableOpacity onPress={()=>this._onPress()} >*/}
+          {/*         <Image style={styles.exp_image_btn} source={require('../../images/index/index_buy_button.png')}>*/}
+          {/*             <Text style={{backgroundColor:'transparent',textAlign:'center',color:'#fff', fontSize:24/oPx,}}>*/}
+          {/*                 立即投资*/}
+          {/*             </Text>*/}
+          {/*         </Image>*/}
+          {/*       </TouchableOpacity>}*/}
+          {/*    </View>*/}
+          {/* </Image>*/}
+
+          {/* 新手标 */}
+          <View style={styles.xsBaoView}>
+              <View style={styles.xsView}>
+                <Image style={styles.xsBaoImg} source={require('../../images/index/icon_index_xsBao.png')} />
+                <View style={styles.xsTitleView}>
+                  <Text style={{color: '#333', fontSize: 28/oPx, flex: 2}}>新手专享标</Text>
+                  <Text style={{color: '#eb3331', fontSize: 50/oPx, flex: 3}}>12.00%</Text>
+                  <Text style={{color: '#999', fontSize: 22/oPx, flex: 1}}>预期年化收益率</Text>
+                </View>
+                <View style={styles.xsMothView}>
+                  <Text style={{fontSize: 50/oPx, color: '#333', marginTop: 40/oPx}}>3
+                    <Text style={{fontSize: 28/oPx, color: '#333'}}>个月</Text>
+                  </Text>
+                  <Text style={{fontSize: 22/oPx, color: '#999'}}>项目期限</Text>
+                </View>
+                <View style={styles.xsBtnView}>
+                  {
+                    this.state.islogin === 1 && this.state.isxsBiao > 0 
+                    ?
+                    <Image style={{width: 160/oPx, height: 46/oPx, justifyContent:'center'}} source={require('../../images/index/icon_index_xsBtn_1.png')}>
+                      <Text style={{backgroundColor: 'transparent', color: '#fff', alignSelf:'center'}}>已投资</Text>
+                    </Image>
+                    :
+                    <Button imgSource={require('../../images/index/icon_index_xsBtn.png')}
+                        text="立即投资" textColor="#fff"
+                        onPress={() => {alert(1)}}
+                        width={160/oPx}
+                        height={46/oPx}
+                    />
+                  }
+                </View>
+            </View>
+          </View>
+
            <View style={styles.product}>
              <View style={[styles.exp_title,styles.noborder]}>
                <Text style={styles.exp_title_text}>投资推荐</Text>
