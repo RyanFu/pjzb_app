@@ -20,30 +20,47 @@ export default class Welcome extends Component {
     constructor(props) {
         super(props);
         this.flag = false;
+        this.state = {
+            timerCount: 3,
+        };
     }
     componentDidMount() {
-    //获取数据]
-     Request.post('getBannerAndBorrows.do',{},(data)=>{
-        if(data.error == '0'){
-            this.flag = true;
-            let islogin = 0;
-            let isExgo = 0;
-            if(data.hasOwnProperty("isExgo")){
-               islogin = 1;
-               isExgo = data.isExgo;
+        //获取数据]
+        Request.post('getBannerAndBorrows.do',{},(data)=>{
+            if(data.error == '0'){
+                this.flag = true;
+                let islogin = 0;
+                let isExgo = 0;
+                if(data.hasOwnProperty("isExgo")){
+                   islogin = 1;
+                   isExgo = data.isExgo;
+                }
+                global.indexData = {
+                 dataSource:data.recommendBorrowList,
+                 bannerList:data.bannerList,
+                 experienceBorrow:data.experienceBorrow[0],
+                 totalInvestNum:data.experienceBorrow[1].experienceBorrowCount,
+                 gsdtList:data.pageBean.page,
+                 islogin:islogin,
+                 isExgo:isExgo
+               }
             }
-            global.indexData = {
-             dataSource:data.recommendBorrowList,
-             bannerList:data.bannerList,
-             experienceBorrow:data.experienceBorrow[0],
-             totalInvestNum:data.experienceBorrow[1].experienceBorrowCount,
-             gsdtList:data.pageBean.page,
-             islogin:islogin,
-             isExgo:isExgo
-           }
-        }
-     },(error)=>{
-     });
+        },(error)=>{});
+
+        // 倒计时3s
+        this.interval=setInterval(() =>{
+            codeTime = this.state.timerCount - 1;
+            if(this.state.timerCount > 1){
+                this.setState({
+                    timerCount: codeTime,
+                });
+            } else {
+                // 停止
+                this.interval&&clearInterval(this.interval);
+                this.jumpPage();
+            }
+        },1000);
+
     }
     jumpPage(){
         if(!this.flag)global.indexData = null;
@@ -78,7 +95,7 @@ export default class Welcome extends Component {
                     resizeMode="stretch"
                 />
                 <TouchableOpacity style={styles.topButton} onPress={this.jumpPage.bind(this)}>
-                    <Text style={styles.topButtonText}>跳过</Text>
+                    <Text style={styles.topButtonText}>跳过 {this.state.timerCount}</Text>
                 </TouchableOpacity>
                 {!global.USER?<View style={styles.bottomView}>
                     <TouchableOpacity style={styles.bottomViewButton} onPress={this.jumpLogin}>
