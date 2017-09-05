@@ -43,6 +43,7 @@ export default class CouponCard extends Component{
   }
   _getData(){
     Request.post('vocherAmts.do',{uid:''},(data)=>{
+      console.log(data);
       let status='',money='';
       if(data.isUse==0 && data.experienceCash > 0){
         status = '1';
@@ -51,8 +52,8 @@ export default class CouponCard extends Component{
         status = '2';
         money = data.investAmount;
       } else if(data.isUse==2){
-        status = '3';
-        money = data.investAmount;
+        // status = '3';
+        // money = data.investAmount;
       }
       this.setState({taste1:data.mapList1,taste2:data.mapList2,taste3:[{usestatus:status,money:money + '元体验金'}],oData:data.mapList1});
     },(error)=>{});
