@@ -259,7 +259,7 @@ export const styles = StyleSheet.create({
   },
   xsBtnView: {
     flex: 1,
-    alignItems: 'flex-end',
+    alignItems: 'center',
     justifyContent: 'center',
   },
 });

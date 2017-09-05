@@ -42,6 +42,7 @@
    _toZZZR(id,title){
      this.props.navigator.push({component:ZQZRInvestmentDetails,name:'ZQZRInvestmentDetails',params:{debtId:id,debtTitle:title}});
    }
+
    render(){
      let leftImageSource = require('../../images/icon/icon_search.png');
      let rightImageSource = require('../../images/icon/icon_calculator.png');
@@ -68,6 +69,9 @@
             <InvestList tabLabel="恒金保" navigator={this._toDetail.bind(this)} productType="6"/>
             {/*<InvestList tabLabel="普金保" navigator={this._toDetail.bind(this)} productType="4"/>*/}
             <InvestList tabLabel="多金宝" navigator={this._toDetail.bind(this)} productType="3"/>
+
+            <InvestList tabLabel="新手标" navigator={this._toDetail.bind(this)} productType="5"/>
+
             <ZQZRPage tabLabel="债权转让" navigator={this._toZZZR.bind(this)} productType="3"/>
           </ScrollableTabView>
        </View>

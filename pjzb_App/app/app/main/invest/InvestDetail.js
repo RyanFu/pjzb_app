@@ -20,7 +20,8 @@
    LayoutAnimation,
    KeyboardAvoidingView,
    Alert,
-   TouchableWithoutFeedback
+   TouchableWithoutFeedback,
+   ImageBackground,
  } from 'react-native';
  import NavigationBar from '../../components/NavigationBar';
  import Utils from '../../utils/utils'; 
@@ -77,7 +78,8 @@
          schedules:'0',
          residue:'0.00',
          borrowAmount:'0.00'
-       }
+       },
+       borrowTypeSubId: 1,
      }
    }
    componentWillMount() {
@@ -113,7 +115,7 @@
        borrowId:this.props.borrowId,
        uid:''
      },(data)=>{
-       this.setState({productDetail:data,animating:false,isRefreshing:false});
+       this.setState({productDetail:data,animating:false,isRefreshing:false, borrowTypeSubId: data.borrowTypeSubId});
        if(data.userMap){
          this.setState({usableSum:data.userMap.usableSum,mapListCd:data.mapListCd});
        };
@@ -351,6 +353,39 @@
         this.setState({animating:false});
       },(error)=>{});
     }
+
+    _toActivityView = () => {
+      // 跳转到活动详情页
+      alert(1);
+    } 
+
+    _getActivityView() {
+      let dateStart = new Date(Date.parse("2017/09/09")).getTime();
+      let dateEnd = new Date(Date.parse("2017/09/30")).getTime();
+      let date = new Date().getTime();
+      if (date >= dateStart && date <= dateEnd && this.state.borrowTypeSubId != 5) {
+        return  <View>
+                  <View style={{height:16/oPx,backgroundColor:'#e9ecf3'}}></View>
+                  <View style={{height:100/oPx,backgroundColor:'#fff', flexDirection: 'row'}}>
+                    <Image style={{height:72/oPx,width:72/oPx}}
+                      source={require('../../images/icon/icon_invest_activityBg.png')}
+                    />
+                    <View style={{flexDirection: 'row', flex: 3}}>
+                      <Image style={{height:26/oPx,width:34/oPx, alignSelf: 'center'}}
+                        source={require('../../images/icon/icon_invest_inform.png')}
+                      />
+                      <Text style={{marginLeft: 20/oPx, alignSelf: 'center', color: '#333', fontSize: 24/oPx}}>首投+标王+尾投</Text>
+                      <Text style={{alignSelf: 'center', color: '#eb3331', fontSize: 24/oPx}}>奖励200元现金</Text>
+                    </View>
+                    <View style={{height: 30/oPx, marginRight: 30/oPx, borderLeftWidth: StyleConfig.borderWidth, borderColor: StyleConfig.borderColor, alignSelf: 'center', width: 100/oPx}}>
+                      <Text style={{alignSelf: 'center', color: '#999', fontSize: 24/oPx}} onPress={this._toActivityView}>  详情</Text>
+                    </View>
+                  </View>
+                  <View style={{height:16/oPx,backgroundColor:'#e9ecf3'}}></View>
+                </View>;
+        }
+    }
+
    render(){
      let rightImageSource = require('../../images/icon/icon_calculator.png');
      return (
@@ -411,6 +446,10 @@
                <Text style={styles.proupseText}>{this.state.productDetail.schedules}%</Text>
              </View>
              <View style={styles.canInvestView}><Text style={[styles.canInvestText,{color:'#777'}]}>剩余可投：</Text><Text style={styles.canInvestText}>{this.state.productDetail.residue}元</Text></View>
+             
+            {/* 活动期间view */}
+            { this._getActivityView() }
+
              <View style={styles.investTip}>
                <Text style={styles.investText}>
                 <Text style={{color:'#ffa44b'}}>提示：</Text>

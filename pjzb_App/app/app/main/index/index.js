@@ -74,7 +74,8 @@ var options = {
        islogin:global.indexData?global.indexData.islogin:0,
        isExgo:global.indexData?global.indexData.isExgo:0,
        isxsBiao:global.indexData?global.indexData.isxsBiao:0,
-       xsBorrow:global.indexData?global.indexData.xsBorrow:{annualRate:'0',deadline:0,investNum:0},
+       xsBorrow:global.indexData?global.indexData.xsBorrow:{},
+       xsAnnualRate: 0,
      }
    }
    componentWillMount(){
@@ -99,6 +100,7 @@ var options = {
          gsdtList:data.pageBean.page,
          xsBorrow: data.xsBorrow[0],
          isxsBiao: data.isxsBiao,
+         xsAnnualRate: data.xsBorrow[0].annualRate,
        });
        if(data.hasOwnProperty("isExgo")){
            this.setState({
@@ -165,11 +167,11 @@ var options = {
      }
    }
     // 跳转新手标
-   async _onPressXS(id){
+   async _onPressXS(){
     let data = await Storage.getItem('USER')
      if(data){
         this.setState({sweiperIndex:0})
-         this.props.navigator.push({component:InvestDetailXS,name:'InvestDetailXS',params:{id:this.state.xsBorrow.id}})
+        this._pressRow(this.state.xsBorrow.id, '新手标');
      }else{
          Alert.alert(
              '提示信息',
@@ -591,26 +593,26 @@ var options = {
                 <Image style={styles.xsBaoImg} source={require('../../images/index/icon_index_xsBao.png')} />
                 <View style={styles.xsTitleView}>
                   <Text style={{color: '#333', fontSize: 28/oPx, flex: 2}}>新手专享标</Text>
-                  <Text style={{color: '#eb3331', fontSize: 50/oPx, flex: 3}}>12.00%</Text>
+                  <Text style={{color: '#eb3331', fontSize: 50/oPx, flex: 3}}>{this.state.xsAnnualRate}.00%</Text>
                   <Text style={{color: '#999', fontSize: 22/oPx, flex: 1}}>预期年化收益率</Text>
                 </View>
                 <View style={styles.xsMothView}>
-                  <Text style={{fontSize: 50/oPx, color: '#333', marginTop: 40/oPx}}>3
+                  <Text style={{fontSize: 50/oPx, color: '#333', marginTop: 40/oPx}}>{this.state.xsBorrow.deadline}
                     <Text style={{fontSize: 28/oPx, color: '#333'}}>个月</Text>
                   </Text>
                   <Text style={{fontSize: 22/oPx, color: '#999'}}>项目期限</Text>
                 </View>
                 <View style={styles.xsBtnView}>
                   {
-                    this.state.islogin === 1 && this.state.isxsBiao > 0 
+                    this.state.islogin === 1 && this.state.isxsBiao > 0
                     ?
                     <Image style={{width: 160/oPx, height: 46/oPx, justifyContent:'center'}} source={require('../../images/index/icon_index_xsBtn_1.png')}>
-                      <Text style={{backgroundColor: 'transparent', color: '#fff', alignSelf:'center'}}>已投资</Text>
+                      <Text style={{backgroundColor: 'transparent', color: '#fff', alignSelf:'center'}}>新手可投</Text>
                     </Image>
                     :
                     <Button imgSource={require('../../images/index/icon_index_xsBtn.png')}
                         text="立即投资" textColor="#fff"
-                        onPress={() => {alert(1)}}
+                        onPress={()=>this._onPressXS()}
                         width={160/oPx}
                         height={46/oPx}
                     />
