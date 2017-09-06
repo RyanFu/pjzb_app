@@ -253,7 +253,7 @@
    //使用优惠券
    _useCoupon(){
      Keyboard.dismiss();
-     this.props.navigator.push({component:CouponCard,name:'CouponCard',params:{changeCouponId:this._changeCouponId.bind(this)}});
+     this.props.navigator.push({component:CouponCard,name:'CouponCard',params:{changeCouponId:this._changeCouponId.bind(this), amount: this.state.Amount, deadline: this.state.productDetail.deadline}});
    }
    //获取优惠券
    _changeCouponId(id){

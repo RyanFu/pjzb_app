@@ -45,8 +45,7 @@ export default styles = StyleSheet.create({
   },
   leftViewBottomViewText:{
     fontSize:22/oPx,
-    color:'#ffd2a6',
-    fontWeight:'200'
+    color:'#fff',
   },
   leftViewBottomView:{
     height:28/oPx,
@@ -55,12 +54,14 @@ export default styles = StyleSheet.create({
   centerView:{
     width:340/oPx,
     height:128/oPx,
-    alignItems:'center',
+    alignItems:'flex-start',
     justifyContent:'center',
+    paddingLeft: 10/oPx,
   },
   centerViewText:{
-    fontSize:22/oPx,
+    fontSize:20/oPx,
     color:'#999',
+    lineHeight: 18,
   },
   rightView:{
     flex:1,

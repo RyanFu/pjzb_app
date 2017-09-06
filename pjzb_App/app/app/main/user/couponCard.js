@@ -42,8 +42,7 @@ export default class CouponCard extends Component{
     this._getData();
   }
   _getData(){
-    Request.post('vocherAmts.do',{uid:''},(data)=>{
-      console.log(data);
+    Request.post('vocherAmts.do',{uid:'', amount: this.props.amount, deadline: this.props.deadline},(data)=>{
       let status='',money='';
       if(data.isUse==0 && data.experienceCash > 0){
         status = '1';

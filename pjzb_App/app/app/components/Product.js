@@ -53,6 +53,8 @@
       return '普金保';
      if(way =='6')
       return '恒金保';
+     if(way =='5')
+      return '新手标';
    }
    //金额格式化
    _formatAmt(val){
@@ -83,7 +85,7 @@
       let dateEnd = new Date(Date.parse("2017/09/30")).getTime(); 
       let date = new Date().getTime();
       if (!this.props.showList) {
-        if (date >= dateStart && date <= dateEnd) {
+        if (date >= dateStart && date <= dateEnd && this.props.data.borrowTypeSubId != 5) {
           return  <View style={[styles.product_title_way, {borderColor:'#fc3350', width: 310/oPx}]}>
                     <Text style={[styles.product_title_way_text, {color:'#fc3350'}]}>
                       {this._getBorrowWay(this.props.data.borrowTypeSubId)}

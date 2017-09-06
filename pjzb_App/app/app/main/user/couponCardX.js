@@ -81,6 +81,43 @@ export default class CouponCard extends Component{
       }
     }
   }
+
+  _getInvestAmount(investAmount) {
+    if (investAmount && investAmount > 0) {
+      return  '满' + investAmount + '元抵用';
+    }
+  }
+
+  _getRowText1(deadline, investAmount) {
+    if (deadline == 0) {
+      return  '单笔投资满' + investAmount + '元使用';
+    } else {
+      return  '[新人红包]单笔投资满' + investAmount + '元使用';
+    }
+  }
+
+  _getRowText2(deadline, borrowFlag) {
+    if (borrowFlag == 1) {
+      if (deadline == 0) {
+        return  '不可投新手标项目';
+      } else {
+        return  '仅限' + deadline + '个月以上的所有标可用';
+      }
+    } else if (borrowFlag == 2) {
+      if (deadline == 0) {
+        return  '不可投新手标项目';
+      } else {
+        return  '仅限' + deadline + '个月以上的新手标可用';
+      }
+    } else if (borrowFlag == 3) {
+      if (deadline == 0) {
+        return  '不可投新手标项目';
+      } else {
+        return  '仅限' + deadline + '个月以上的仅老标可用';
+      }
+    }
+  }
+
   _showRow(row,index){
     if(row.usestatus != '1') return;
     return <View style={styles.coupon_card} key={index}>
@@ -91,12 +128,17 @@ export default class CouponCard extends Component{
             <Text style={styles.leftViewTopViewText}>￥{row.money}</Text>
           </View>
           <View style={styles.leftViewBottomView}>
-            <Text style={styles.leftViewBottomViewText}>{row.useendtime?'有效期至'+row.useendtime:null}</Text>
+            <Text style={styles.leftViewBottomViewText}>{ this._getInvestAmount(row.investAmount) }</Text>
+            {/*<Text style={styles.leftViewBottomViewText}>{row.useendtime?'有效期至'+row.useendtime:null}</Text>*/}
           </View>
         </View>
+
         <View style={styles.centerView}>
-          <Text style={styles.centerViewText}>{this._getText()}</Text>
+          <Text style={styles.centerViewText}>{ this._getRowText1(row.deadline, row.investAmount) }</Text>
+          <Text style={styles.centerViewText}>{ this._getRowText2(row.deadline, row.borrowFlag) }</Text>
+          <Text style={styles.centerViewText}>有效期至{ row.useendtime }</Text>
         </View>
+
         <View style={styles.rightView}>
           <TouchableOpacity style={styles.rightViewBtn} onPress={()=>this._useThisCard(row.id,index)}>
             <Text style={styles.rightViewText}>

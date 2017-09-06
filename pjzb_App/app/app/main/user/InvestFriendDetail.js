@@ -71,7 +71,7 @@ export default class InvestFriendDetail extends Component{
             <View style={styles.viewTopTextView}>
               <Text style={styles.viewTopTextCenter}>
                 <Text style={{color:'#333'}}>活动时间：</Text>
-                <Text style={styles.activityTimeText}>2017年8月5日 ~ 9月5日</Text>
+                <Text style={styles.activityTimeText}>2017年9月9日 ~ 9月30日</Text>
               </Text>
               <Text style={styles.viewTopTextCenter}>
                 <Text style={{color:'#333'}}>活动对象：</Text>所有平台用户
