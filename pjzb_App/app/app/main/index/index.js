@@ -592,8 +592,8 @@ var options = {
               <View style={styles.xsView}>
                 <Image style={styles.xsBaoImg} source={require('../../images/index/icon_index_xsBao.png')} />
                 <View style={styles.xsTitleView}>
-                  <Text style={{color: '#333', fontSize: 28/oPx, flex: 2}}>新手专享标</Text>
-                  <Text style={{color: '#eb3331', fontSize: 50/oPx, flex: 3}}>{this.state.xsAnnualRate}.00%</Text>
+                  <Text style={{color: '#333', fontSize: 28/oPx, flex: 1.5}}>新手专享标</Text>
+                  <Text style={{color: '#eb3331', fontSize: 50/oPx, flex: 2.5}}>{this.state.xsAnnualRate}.00%</Text>
                   <Text style={{color: '#999', fontSize: 22/oPx, flex: 1}}>预期年化收益率</Text>
                 </View>
                 <View style={styles.xsMothView}>

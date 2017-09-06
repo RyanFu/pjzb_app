@@ -250,8 +250,8 @@ export const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   xsTitleView: {
-    marginTop: 13/oPx,
-    marginBottom: 13/oPx,
+    marginTop: 10/oPx,
+    marginBottom: 10/oPx,
     marginLeft: 13/oPx,
   },
   xsMothView: {

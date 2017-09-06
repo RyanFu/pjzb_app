@@ -167,7 +167,6 @@ export default class CouponCard extends Component{
   }
   render(){
     return (
-      <View style={{flex:1}}>
       <ScrollView style={styles.container}>
         {
           this.state.showData.map((row, index) =>{
@@ -175,9 +174,8 @@ export default class CouponCard extends Component{
           })
         }
         {this._noData()}
+        <View style={{marginTop: 30/oPx}}></View>
       </ScrollView>
-      <Loading show={this.state.animating} top={true} height={1129/oPx}/>
-    </View>
     );
   }
 }
