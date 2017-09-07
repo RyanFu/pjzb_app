@@ -252,8 +252,15 @@
    }
    //使用优惠券
    _useCoupon(){
-     Keyboard.dismiss();
-     this.props.navigator.push({component:CouponCard,name:'CouponCard',params:{changeCouponId:this._changeCouponId.bind(this), amount: this.state.Amount, deadline: this.state.productDetail.deadline}});
+      if (this.state.Amount == '') {
+        toastShort('请先输入投资金额',100);
+        return;
+      } else if (this.state.minvoucherAmt>this.state.Amount&&this.state.mapListCd.length>0) {
+        toastShort('投资金额不能小于最小投资金额',100);
+        return;
+      }
+      Keyboard.dismiss();
+      this.props.navigator.push({component:CouponCard,name:'CouponCard',params:{changeCouponId:this._changeCouponId.bind(this), amount: this.state.Amount, deadline: this.state.productDetail.deadline}});
    }
    //获取优惠券
    _changeCouponId(id){
@@ -578,7 +585,6 @@
                   </View>
                   <View style={[styles.submitItem,{backgroundColor:'#fff5db'}]}><Text style={[styles.submitItemText,{color:'#ff9a38'}]}>预期收益：{this.state.reckon}</Text></View>
                   <TouchableOpacity style={[styles.submitItem,styles.submitChose,!this.state.cantVoucher?styles.disabled:null]}
-                    disabled={this.state.minvoucherAmt>this.state.Amount&&this.state.mapListCd.length>0}
                     onPress={this._useCoupon.bind(this)}>
                     <Text style={[styles.submitItemText,{flex:1}]}>{this.state.juanName}</Text>
                     <Image style={styles.listBtn} source={require('../../images/icon/icon_user_right.png')}/>
