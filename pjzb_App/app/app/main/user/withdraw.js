@@ -32,6 +32,7 @@ import Loading from '../../components/Loading';
 import MyPicker from './Picker';
 import {toastShort} from '../../utils/Toast';
 import Utils from '../../utils/utils';
+import RegIpayPersonal from './regIpayPersonal';
 
 var codeTime = 60;
 export default class Withdraw extends Component {
@@ -105,7 +106,7 @@ export default class Withdraw extends Component {
                 this.setState({
                     bankId:data.bankList[0].cardNo,
                 });
-            }else if(data.error =='4'){
+            }else if(data.error == '4'){
                 this._goBack();
                 //无银行卡信息
                 Alert.alert(
@@ -115,6 +116,19 @@ export default class Withdraw extends Component {
                         {text: '取消', },
                         {text: '确定', onPress: () =>
                             this.props.navigator.push({component:BankcardManage,name:'BankcardManage',params:{
+                                backUser:{true}
+                            }})},
+                    ]
+                )
+            } else if(data.error == '-1'){
+                this._goBack();
+                Alert.alert(
+                    '提示信息',
+                    '请先注册汇付天下',
+                    [
+                        {text: '取消', },
+                        {text: '确定', onPress: () =>
+                            this.props.navigator.push({component:RegIpayPersonal,name:'RegIpayPersonal',params: {
                                 backUser:{true}
                             }})},
                     ]

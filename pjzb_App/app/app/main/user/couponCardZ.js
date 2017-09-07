@@ -44,6 +44,7 @@ export default class CouponCard extends Component{
         </View>
         <View style={styles.centerView}>
           <Text style={styles.centerViewText}>{this._getText(row)}</Text>
+          <Text style={styles.centerViewText}>{row.useendtime}已过期</Text>
         </View>
         <View style={styles.rightView}></View>
       </View>

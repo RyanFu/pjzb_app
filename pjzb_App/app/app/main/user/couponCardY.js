@@ -44,9 +44,9 @@ export default class CouponCard extends Component{
         </View>
         <View style={styles.centerView}>
           <Text style={styles.centerViewText}>{this._getText(row)}</Text>
+          <Text style={styles.centerViewText}>{row.usetime}已使用</Text>
         </View>
-        <View style={styles.rightView}>
-        </View>
+        <View style={styles.rightView}></View>
       </View>
     </View>
   }
@@ -64,17 +64,17 @@ export default class CouponCard extends Component{
     return null;
   }
   render(){
-    return (
-      <View style={{flex:1}}>
-        <ScrollView style={styles.container}>
-        {
-          this.props.data.map((row, index) =>{
-              return this._showRow(row,index);
-          })
-        }
-        {this._noData()}
-      </ScrollView>
-    </View>
-    )
+      return (
+        <View style={{flex:1}}>
+          <ScrollView style={styles.container}>
+          {
+            this.props.data.map((row, index) =>{
+                return this._showRow(row,index);
+            })
+          }
+          {this._noData()}
+        </ScrollView>
+      </View>
+      )
   }
 }

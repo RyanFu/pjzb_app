@@ -121,6 +121,7 @@
         }
         return;
       }
+      console.log(link);
       this.props.navigator.push({component:OwebView,name:'OwebView',params:{url:link,title:title,back:true}});
       
     }

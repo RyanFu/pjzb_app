@@ -356,8 +356,9 @@
 
     _toActivityView = () => {
       // 跳转到活动详情页
-      alert(1);
-    } 
+      let url = Request.HOST + '/wap/activity/activity_06.html';
+      this.props.navigator.push({component:OwebView,name:'OwebView',params:{url: url,title: '普金资本周年庆', back: true}});
+    }
 
     _getActivityView() {
       let dateStart = new Date(Date.parse("2017/09/09")).getTime();
