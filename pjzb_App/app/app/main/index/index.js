@@ -18,6 +18,7 @@
    Alert,
    Platform,
    TouchableWithoutFeedback,
+   Linking,
  } from 'react-native';
   import NavigationBar from '../../components/NavigationBar';
   import Swiper from 'react-native-swiper';
@@ -76,6 +77,10 @@ var options = {
        isxsBiao:global.indexData?global.indexData.isxsBiao:0,
        xsBorrow:global.indexData?global.indexData.xsBorrow:{},
        xsAnnualRate: 0,
+       // android 最新版本
+       androidMap: global.indexData?global.indexData.androidMap:[],
+       // iso 最新版本
+       iosMap: global.indexData?global.indexData.iosMap:[],
      }
    }
    componentWillMount(){
@@ -84,11 +89,17 @@ var options = {
      }},200);
    }
    componentDidMount(){
+      // ios
+      // Linking.openURL('https://itunes.apple.com/cn/app/%E6%99%AE%E9%87%91%E8%B5%84%E6%9C%AC/id1213605344?mt=8');
+      // android
+      // Linking.openURL('http://a.app.qq.com/o/simple.jsp?pkgname=com.pjzbapp');
+
        //获取标的信息和banner的数据
        this._getData();
 
        this._refresh();
    }
+
    //获取数据
    _getData(){
      Request.post('getBannerAndBorrows.do',{uid:''},(data)=>{
@@ -98,9 +109,16 @@ var options = {
          experienceBorrow:data.experienceBorrow[0],
          totalInvestNum:data.experienceBorrow[1].experienceBorrowCount,
          gsdtList:data.pageBean.page,
+         // 新手标
          xsBorrow: data.xsBorrow[0],
+         // 是否投资新手标
          isxsBiao: data.isxsBiao,
+         // 新手标年化收益
          xsAnnualRate: data.xsBorrow[0].annualRate,
+         // android 最新版本
+         androidMap: data.androidMap,
+         // iso 最新版本
+         iosMap: data.iosMap,
        });
        if(data.hasOwnProperty("isExgo")){
            this.setState({
@@ -108,6 +126,9 @@ var options = {
                isExgo:data.isExgo,
            });
        }
+
+       // 跳转到首页后检查更新信息
+       this._isVersionUpdate();
      },(error)=>{
       
      });
@@ -121,6 +142,51 @@ var options = {
             });
           });
       },1000*60);
+   }
+
+   async _isVersionUpdate() {
+    // 获得当前年月日
+    let date = new Date();
+    let year = date.getFullYear();
+    let month = date.getMonth() + 1;
+    let day = date.getDate();
+    date = year+'/'+month+'/'+day;
+    date = new Date(Date.parse(date)).getTime();
+
+    /* 
+      如果全局变量中没有存储过时间，说明从没有提示过。
+      如果当前时间大于全局变量中存储的提醒时间，那么说明今天还未提示过，如果相等就不在提示。
+    */
+    let warnDate = await Storage.getItem('WARN_DATE');
+    if (!warnDate || warnDate.date < date) {
+      Storage.setItem('WARN_DATE', {date: date});
+      this._getVersionUpdate();
+    }
+
+   }
+
+   _getVersionUpdate() {
+    if (this.state.iosMap && this.state.androidMap) {
+        if (Platform.OS === 'ios' && this.state.iosMap.version > global.packageVersion) {
+          Alert.alert(
+            '新版本：' + this.state.iosMap.versionName,
+            this.state.iosMap.descript,
+            [
+                {text: '暂不更新' },
+                {text: '立即更新', onPress: () => {Linking.openURL(this.state.iosMap.downloadPath);}},
+            ]
+          );
+        } else if (Platform.OS === 'android' && this.state.androidMap.version > global.packageVersion) {
+          Alert.alert(
+            '新版本：' + this.state.androidMap.versionName,
+            this.state.androidMap.descript,
+            [
+                {text: '暂不更新' },
+                {text: '立即更新', onPress: () => {Linking.openURL(this.state.androidMap.downloadPath);}},
+            ]
+          );
+        }
+      }
    }
 
    //生成list

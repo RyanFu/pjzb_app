@@ -43,8 +43,16 @@ export default class Welcome extends Component {
                  gsdtList:data.pageBean.page,
                  islogin:islogin,
                  isExgo:isExgo,
-                 isxsBiao: data.isxsBiao,
+                 // 新手标
                  xsBorrow: data.xsBorrow[0],
+                 // 是否投资新手标
+                 isxsBiao: data.isxsBiao,
+                 // 新手标年化收益
+                 xsAnnualRate: data.xsBorrow[0].annualRate,
+                 // android 最新版本
+                 androidMap: data.androidMap,
+                 // iso 最新版本
+                 iosMap: data.iosMap,
                }
             }
         },(error)=>{});
