@@ -520,6 +520,43 @@ var options = {
          })
      }
 
+    _getXSBiao() {
+      if (this.state.xsBorrow) {
+        return  <View style={styles.xsBaoView}>
+              <View style={styles.xsView}>
+                <Image style={styles.xsBaoImg} source={require('../../images/index/icon_index_xsBao.png')} />
+                <View style={styles.xsTitleView}>
+                  <Text style={{color: '#333', fontSize: 28/oPx, flex: 1.5}}>新手专享标</Text>
+                  <Text style={{color: '#eb3331', fontSize: 50/oPx, flex: 2.5}}>{this.state.xsAnnualRate}.00%</Text>
+                  <Text style={{color: '#999', fontSize: 22/oPx, flex: 1}}>预期年化收益率</Text>
+                </View>
+                <View style={styles.xsMothView}>
+                  <Text style={{fontSize: 50/oPx, color: '#333', marginTop: 40/oPx}}>{this.state.xsBorrow.deadline}
+                    <Text style={{fontSize: 28/oPx, color: '#333'}}>个月</Text>
+                  </Text>
+                  <Text style={{fontSize: 22/oPx, color: '#999'}}>项目期限</Text>
+                </View>
+                <View style={styles.xsBtnView}>
+                  {
+                    this.state.islogin === 1 && this.state.isxsBiao > 0
+                    ?
+                    <Image style={{width: 160/oPx, height: 46/oPx, justifyContent:'center'}} source={require('../../images/index/icon_index_xsBtn_1.png')}>
+                      <Text style={{backgroundColor: 'transparent', color: '#fff', alignSelf:'center'}}>新手可投</Text>
+                    </Image>
+                    :
+                    <Button imgSource={require('../../images/index/icon_index_xsBtn.png')}
+                        text="立即投资" textColor="#fff"
+                        onPress={()=>this._onPressXS()}
+                        width={160/oPx}
+                        height={46/oPx}
+                    />
+                  }
+                </View>
+            </View>
+          </View>;
+      }
+    }
+
    render(){
      return (
        <View style={{flex:1}}>
@@ -588,38 +625,7 @@ var options = {
           {/* </Image>*/}
 
           {/* 新手标 */}
-          <View style={styles.xsBaoView}>
-              <View style={styles.xsView}>
-                <Image style={styles.xsBaoImg} source={require('../../images/index/icon_index_xsBao.png')} />
-                <View style={styles.xsTitleView}>
-                  <Text style={{color: '#333', fontSize: 28/oPx, flex: 1.5}}>新手专享标</Text>
-                  <Text style={{color: '#eb3331', fontSize: 50/oPx, flex: 2.5}}>{this.state.xsAnnualRate}.00%</Text>
-                  <Text style={{color: '#999', fontSize: 22/oPx, flex: 1}}>预期年化收益率</Text>
-                </View>
-                <View style={styles.xsMothView}>
-                  <Text style={{fontSize: 50/oPx, color: '#333', marginTop: 40/oPx}}>{this.state.xsBorrow.deadline}
-                    <Text style={{fontSize: 28/oPx, color: '#333'}}>个月</Text>
-                  </Text>
-                  <Text style={{fontSize: 22/oPx, color: '#999'}}>项目期限</Text>
-                </View>
-                <View style={styles.xsBtnView}>
-                  {
-                    this.state.islogin === 1 && this.state.isxsBiao > 0
-                    ?
-                    <Image style={{width: 160/oPx, height: 46/oPx, justifyContent:'center'}} source={require('../../images/index/icon_index_xsBtn_1.png')}>
-                      <Text style={{backgroundColor: 'transparent', color: '#fff', alignSelf:'center'}}>新手可投</Text>
-                    </Image>
-                    :
-                    <Button imgSource={require('../../images/index/icon_index_xsBtn.png')}
-                        text="立即投资" textColor="#fff"
-                        onPress={()=>this._onPressXS()}
-                        width={160/oPx}
-                        height={46/oPx}
-                    />
-                  }
-                </View>
-            </View>
-          </View>
+          { this._getXSBiao() }
 
            <View style={styles.product}>
              <View style={[styles.exp_title,styles.noborder]}>
