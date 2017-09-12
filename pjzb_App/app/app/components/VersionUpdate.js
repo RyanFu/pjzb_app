@@ -31,7 +31,7 @@ export default class VersionUpdate extends Component{
 			    	<View style={styles.versionView}>
    						<Image style={styles.versionBg} source={require('../images/index/icon_version_bg.png')}>
    							<View style={{marginTop: 163/oPx, marginBottom: 27/oPx}}>
-								<Buttom width={118/oPx} height={43/oPx} 
+								<Buttom width={119/oPx} height={43/oPx} 
 									imgSource={require('../images/index/icon_btnVersion.png')} 
 									text={versionName}
 								/>
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
 		marginBottom: 30/oPx,
 	},
 	versionBtnImg: {
-		width: 212/oPx,
+		width: 214/oPx,
 		height: 66/oPx,
 	},
 	btnLeftView: {

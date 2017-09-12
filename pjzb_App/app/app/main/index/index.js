@@ -160,7 +160,6 @@ var options = {
       Storage.setItem('WARN_DATE', {date: date});
       this._getVersionUpdate();
     }
-
    }
 
    _getVersionUpdate() {
