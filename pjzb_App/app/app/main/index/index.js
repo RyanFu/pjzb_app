@@ -122,7 +122,6 @@ var options = {
                isExgo:data.isExgo,
            });
        }
-
        // 跳转到首页后检查更新信息
        this._isVersionUpdate();
      },(error)=>{
@@ -570,7 +569,7 @@ var options = {
      }
 
     _getXSBiao() {
-      if (this.state.xsBorrow) {
+      if (this.state.xsBorrow && this.state.xsBorrow.isShow === 1) {
         return  <View style={styles.xsBaoView}>
               <View style={styles.xsView}>
                 <Image style={styles.xsBaoImg} source={require('../../images/index/icon_index_xsBao.png')} />
