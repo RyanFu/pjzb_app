@@ -1,5 +1,5 @@
 /**
- * 
+ * 	app版本更新提示组件 zlx 2017-9-12
  */
 
  import React,{Component} from 'react';
@@ -9,6 +9,8 @@
    StyleSheet,
    Image,
    ScrollView,
+   Linking,
+   TouchableOpacity,
  } from 'react-native';
  import {StyleConfig} from '../style/index';
  import Buttom from '../components/Button';
@@ -23,6 +25,7 @@ export default class VersionUpdate extends Component{
   	}
 
    renderElm(){
+   	let versionName = 'V' + this.props.vMap.versionName;
        return 	<View style={styles.topView}>
        				<View style={styles.loadingDialog}></View>
 			    	<View style={styles.versionView}>
@@ -30,42 +33,52 @@ export default class VersionUpdate extends Component{
    							<View style={{marginTop: 163/oPx, marginBottom: 27/oPx}}>
 								<Buttom width={118/oPx} height={43/oPx} 
 									imgSource={require('../images/index/icon_btnVersion.png')} 
-									text='V1.4'
+									text={versionName}
 								/>
 							</View>
 
 							<ScrollView style={styles.scrollView}>
-	   							<Text>
-	   								是十分舒服是十分舒服是十分舒服是十分舒服
-	   							</Text>
-	   							<Text>
-	   								是十分舒服是十分舒服是十分舒服是十分舒服
-	   							</Text>
-	   							<Text>
-	   								是十分舒服是十分舒服是十分舒服是十分舒服
-	   							</Text>
-	   							<Text>
-	   								是十分舒服是十分舒服是十分舒服是十分舒服
+	   							<Text style={{fontSize: 24/oPx, color: '#999'}}>
+	   								{this.props.vMap.descript}
 	   							</Text>
    							</ScrollView>
-
-   							<View style={styles.btnView}>
-   								<View style={styles.btnLeftView}>
-   									<Image style={styles.versionBtnImg} source={require('../images/index/icon_versionBtn_2.png')}/>
+							{ // 是否必须更新，如果是则把拒绝按钮去掉
+								this.props.vMap.isUpdate === 1
+								?
+								<View style={styles.btnView}>
+									<View style={[styles.btnRightView, {alignItems: 'center'}]}>
+	   									<TouchableOpacity onPress={() => {Linking.openURL(this.props.vMap.downloadPath);}}>
+	   										<Image style={styles.versionBtnImg} source={require('../images/index/icon_versionBtn_1.png')}/>
+	   									</TouchableOpacity>
+									</View>
 								</View>
-   								<View style={styles.btnRightView}>
-   									<Image style={styles.versionBtnImg} source={require('../images/index/icon_versionBtn_1.png')}/>
+								:
+								<View style={styles.btnView}>
+									<View style={styles.btnLeftView}>
+										<TouchableOpacity onPress={this.props.onPress}>
+	   										<Image style={styles.versionBtnImg} source={require('../images/index/icon_versionBtn_2.png')}/>
+	   									</TouchableOpacity>
+									</View>
+	   								<View style={styles.btnRightView}>
+	   									<TouchableOpacity onPress={() => {Linking.openURL(this.props.vMap.downloadPath);}}>
+	   										<Image style={styles.versionBtnImg} source={require('../images/index/icon_versionBtn_1.png')}/>
+	   									</TouchableOpacity>
+									</View>
 								</View>
-   							</View>
-
+							}
    						</Image>
    					</View>
 			    </View>;
    }
   render(){
-    return (
-      this.renderElm()
-    )
+  	if (this.props.isShowVersion) {
+		return (
+			this.renderElm()
+	    )
+  	} else {
+  		return null;
+  	}
+    
   }
 }
 
@@ -101,10 +114,12 @@ const styles = StyleSheet.create({
 		zIndex:10,
 	},
 	scrollView: {
-		paddingLeft: 89/oPx, 
-		paddingRight: 89/oPx, 
+		marginLeft: 75/oPx, 
+		marginRight: 75/oPx, 
 		marginTop: 30/oPx,
-		marginBottom: 30/oPx
+		marginBottom: 30/oPx,
+		paddingLeft: 15/oPx,
+		paddingRight: 15/oPx,
 	},
 	btnView: {
 		paddingLeft: 89/oPx, 

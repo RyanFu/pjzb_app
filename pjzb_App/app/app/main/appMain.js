@@ -25,11 +25,17 @@
  import Utils from '../utils/utils';
  import SetGesture from './other/setGesture';
  import Request from '../utils/Request';
+ // 版本更新提示组件
+ import VersionUpdate from '../components/VersionUpdate';
  export default class AppMain extends Component {
    constructor(props){
      super(props);
      this.state = {
-       selectedTab:props.selectedTab||'home'
+       selectedTab:props.selectedTab||'home',
+       // 是否显示版本更新提示组件
+       isShowVersion: false,
+       // 版本数据map
+       vMap: [],
      }
      //alert('像素密度为'+PixelRatio.get());
      //alert('200转化为像素值为'+PixelRatio.getPixelSizeForLayoutSize(200))
@@ -87,6 +93,17 @@
            )
        }
    }
+
+   // app版本更新提示方法
+   _showVersionUpdate = (isShowVersion, vMap) => {
+      if (isShowVersion && vMap) {
+        this.setState({
+          isShowVersion: isShowVersion,
+          vMap: vMap,
+        });
+      }
+   }
+
    render(){
      return (
        <View style={{flex:1}}>
@@ -99,7 +116,7 @@
            renderIcon={() => <Image source={require("../images/icon/icon_index.png")} style={styles.iconStyle}/>}
            renderSelectedIcon={() => <Image source={require("../images/icon/icon_index_h.png")} style={styles.iconStyle}/>}
            onPress={() => this.setState({ selectedTab: 'home' })}>
-           <Index {...this.props}/>
+           <Index {...this.props} _showVersionUpdate={this._showVersionUpdate} />
          </TabNavigator.Item>
          <TabNavigator.Item
            title="投资"
@@ -142,6 +159,9 @@
            <User {...this.props}/>
          </TabNavigator.Item>
        </TabNavigator>
+
+      {/* 版本更新提示组件 */}
+      <VersionUpdate vMap={this.state.vMap} isShowVersion={this.state.isShowVersion} onPress={() => {this.setState({isShowVersion: false})}} />
      </View>
      )
    }
