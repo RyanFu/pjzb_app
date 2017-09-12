@@ -44,6 +44,9 @@
   import RegIpayPersonal from '../user/regIpayPersonal';
   import SLBaoPage from '../user/SLBaoPage';
   import Button from '../../components/Button';
+  // 版本更新提示组件
+  import VersionUpdate from '../../components/VersionUpdate';
+
 const oPx = StyleConfig.oPx;
  let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
  import  ImagePicker from 'react-native-image-picker';
@@ -157,7 +160,7 @@ var options = {
       如果全局变量中没有存储过时间，说明从没有提示过。
       如果当前时间大于全局变量中存储的提醒时间，那么说明今天还未提示过，如果相等就不在提示。
     */
-
+    // Storage.clear();
     let warnDate = await Storage.getItem('WARN_DATE');
     if (!warnDate || warnDate.date < date) {
       Storage.setItem('WARN_DATE', {date: date});
@@ -726,6 +729,8 @@ var options = {
              </View>
            </View>
          </ScrollView>
+
+         <VersionUpdate />
        </View>
      );
    }

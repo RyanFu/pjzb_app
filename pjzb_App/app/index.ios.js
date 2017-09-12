@@ -17,7 +17,7 @@ import {
     Image,
 } from 'react-native';
  import App from './app/app';
- // import App from './app/main/index/appDownLoadPage';
+ // import App from './app/components/VersionUpdate.js';
 
 AppRegistry.registerComponent('app', () => App);
 
