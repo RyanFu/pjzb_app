@@ -89,7 +89,7 @@
           return  <View style={[styles.product_title_way, {borderColor:'#fc3350', width: 310/oPx}]}>
                     <Text style={[styles.product_title_way_text, {color:'#fc3350'}]}>
                       {this._getBorrowWay(this.props.data.borrowTypeSubId)}
-                      /200元现金红包可用
+                      /奖励200元现金红包
                     </Text>
                   </View>;
         } else {
@@ -131,7 +131,7 @@
                <Text style={[styles.product_d_t_big,{color:'#333'}]}>
                {data.deadline}
                </Text>
-               <Text style={[styles.product_d_t_small,{color:'#333'}]}>个月</Text>
+               <Text style={[styles.product_d_t_small,{color:'#333'}]}>{data.isDayThe == 2 ? '天' : '个月'}</Text>
              </View>
              <View style={styles.product_detail_b_t}>
                <Text style={styles.product_d_b_small}>项目期限</Text>

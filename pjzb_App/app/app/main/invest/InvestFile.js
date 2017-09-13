@@ -47,15 +47,18 @@ export default class InvestFile extends Component{
           this.state.userId = data.userId;
       }
       let filename = data.name;
-    return <View style={[style.tableList]} key={index}>
-          <Text style={style.tableListItemText}>{data.name}</Text>
-        {filename=== '其他资料' ?<TouchableOpacity onPress={()=>this._otherImagePress()}>
-                <Image style={style.tableListItemImages} resizeMode="stretch" source={{uri:data.imgPath}}/>
-            </TouchableOpacity>
-             :
-            <Image style={style.tableListItemImages} resizeMode="stretch" source={{uri:data.imgPath}}/>
-        }
-        </View>
+      return  <View style={[style.tableList]} key={index}>
+                <Text style={style.tableListItemText}>{data.name}</Text>
+                {
+                  filename=== '其他资料' 
+                  ?
+                  <TouchableOpacity onPress={()=>this._otherImagePress()}>
+                      <Image style={style.tableListItemImages} resizeMode="stretch" source={{uri:data.imgPath}}/>
+                  </TouchableOpacity>
+                   :
+                  <Image style={style.tableListItemImages} resizeMode="stretch" source={{uri:data.imgPath}}/>
+                }
+              </View>
   }
   //获取投资
   _getInvetData(flag){
