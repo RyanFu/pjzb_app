@@ -126,13 +126,16 @@ export default class Login extends Component {
                 Storage.setItem('USER',param);
                 global.USER = param;
                 global.userHeadPic = data.imgHead == ''?null:data.imgHead;
-                if(this.props.back){
-                    if(this.props.loginCallBack){
-                        this.props.loginCallBack()
-                    }
-                    this._goBack();
-                    return;
-                };
+                // if(this.props.back){
+                //     if(this.props.loginCallBack){
+                //         this.props.loginCallBack()
+                //     }
+                //     this._goBack();
+                //     return;
+                // };
+                if(this.props.loginCallBack){
+                    this.props.loginCallBack()
+                }
                 this.setState({showDialog:false},()=>
                     this.props.navigator.resetTo({
                         component:AppMain,

@@ -19,17 +19,39 @@
  import InvestDetail from './InvestDetail';
  import ZQZRPage from './ZQZRPage';
  import {StyleConfig} from '../../style/index';
+  import Request from '../../utils/Request';
  const oPx = StyleConfig.oPx;
  export default class About extends Component {
    constructor(props){
      super(props);
      this.state = {
-      Infinity:0
+      Infinity:0,
+      investList: [],
+      isShow: true,
      }
    }
    _leftbtn(){
      console.log(1);
    }
+
+    componentDidMount(){
+      this._getState();
+    }
+
+    _getState = () => {
+      Request.post('getBorrowSubType.do',{uid:''},(data)=>{
+          this.setState({
+            investList: data.data,
+            isShow: false,
+          });
+        },(error)=>{}
+      );
+    }
+
+    _getInvestList = (row, index) => {
+      return  <InvestList key={index} tabLabel={row.name} navigator={this._toDetail.bind(this)} productType={row.id}/>;
+    }
+
    //收益计算器
    _Calculator(){
      this.props.navigator.push({component:Calculator,name:'Calculator'});
@@ -66,11 +88,17 @@
             tabBarInactiveTextColor={'#333'}
             renderTabBar={() => <ScrollableTabBar tabStyle={styles.tabStyle} style={styles.defaultBar}/>}
             >
-            <InvestList tabLabel="恒金保" navigator={this._toDetail.bind(this)} productType="6"/>
-            {/*<InvestList tabLabel="普金保" navigator={this._toDetail.bind(this)} productType="4"/>*/}
-            <InvestList tabLabel="多金宝" navigator={this._toDetail.bind(this)} productType="3"/>
+            {
+              this.state.investList.map((row, index) => {
+                return this._getInvestList(row, index);
+              })
+            }
 
-            <InvestList tabLabel="新手标" navigator={this._toDetail.bind(this)} productType="5"/>
+            { this.state.isShow ? <InvestList tabLabel="恒金保" navigator={this._toDetail.bind(this)} productType="6"/> : null }
+            { this.state.isShow ? <InvestList tabLabel="普金保" navigator={this._toDetail.bind(this)} productType="4"/> : null }
+            { this.state.isShow ? <InvestList tabLabel="多金宝" navigator={this._toDetail.bind(this)} productType="3"/> : null }
+            { this.state.isShow ? <InvestList tabLabel="新手标" navigator={this._toDetail.bind(this)} productType="5"/> : null }
+            
 
             <ZQZRPage tabLabel="债权转让" navigator={this._toZZZR.bind(this)} productType="3"/>
           </ScrollableTabView>

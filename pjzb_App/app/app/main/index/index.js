@@ -264,7 +264,7 @@ var options = {
           this.bannerToPage(data.item.title, data.item.publishTime, this._imgClip(data.item.content), data.item.id, false, newstype);
         }
       },(error)=>{
-          Alert.alert("提示",'您的网络不稳定，请稍后再试！');
+          // Alert.alert("提示",'您的网络不稳定，请稍后再试！');
       }); 
    }
 

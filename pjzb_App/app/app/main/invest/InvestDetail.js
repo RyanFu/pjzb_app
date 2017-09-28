@@ -467,7 +467,17 @@
                 和<Text style={styles.AgreementText} onPress={()=>this._Agreement('12')}>《风险提示书》</Text>，投资有风险，理财需谨慎。
                </Text>
              </View>
-             <View style={styles.submitBtnView}><TouchableOpacity onPress={this._submit.bind(this)} style={[styles.submitBtn,this.state.submitBtnDisabled?styles.submitBtnDisabled:null]} disabled={this.state.submitBtnDisabled} activeOpacity={1}><Text style={[styles.submitBtnText,this.state.submitBtnDisabled?styles.submitBtnTextDisabled:null]}>{this.state.investBtn}</Text></TouchableOpacity></View>
+
+             <View style={styles.submitBtnView}>
+                <TouchableOpacity onPress={this._submit.bind(this)} 
+                  style={[styles.submitBtn,this.state.submitBtnDisabled?styles.submitBtnDisabled:null]} 
+                  disabled={this.state.submitBtnDisabled} activeOpacity={1}>
+                  <Text style={[styles.submitBtnText,this.state.submitBtnDisabled?styles.submitBtnTextDisabled:null]}>
+                    {this.state.investBtn}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+
               <View style={{height:16/oPx,backgroundColor:'#e9ecf3'}}></View>
               <View style={styles.detailView}>
                 <View style={styles.detailViewTab}>
