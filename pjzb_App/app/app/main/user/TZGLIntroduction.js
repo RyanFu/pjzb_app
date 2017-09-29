@@ -153,24 +153,24 @@ let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
          if (this.state.choseType == 0) {// 成功借出
              return  <View style={styles.tableTop}>
                  <Text style={styles.tableRow}>标题</Text>
-                 <Text style={styles.tableRow}>年利率</Text>
-                 <Text style={styles.tableRow}>期限</Text>
+                 {/*<Text style={styles.tableRow}>年利率</Text>*/}
+                 {/*<Text style={styles.tableRow}>期限</Text>*/}
                  <Text style={styles.tableRow}>投资金额</Text>
                  <Text style={styles.tableRow}>投资时间</Text>
              </View>;
          } else  if (this.state.choseType == 1) {// 招标中的借款
              return  <View style={styles.tableTop}>
                  <Text style={styles.tableRow}>标题</Text>
-                 <Text style={styles.tableRow}>年利率</Text>
-                 <Text style={styles.tableRow}>期限</Text>
+                 {/*<Text style={styles.tableRow}>年利率</Text>*/}
+                 {/*<Text style={styles.tableRow}>期限</Text>*/}
                  <Text style={styles.tableRow}>发布时间</Text>
                  <Text style={styles.tableRow}>投资金额</Text>
              </View>;
          } else  if (this.state.choseType == 2) {// 回款中的借款
              return  <View style={styles.tableTop}>
                  <Text style={[styles.tableRow,{paddingLeft:10/oPx}]}>标题</Text>
-                 <Text style={[styles.tableRow,{paddingLeft:10/oPx}]}>年利率</Text>
-                 <Text style={[styles.tableRow,{paddingLeft:10/oPx}]}>期限</Text>
+                 {/*<Text style={[styles.tableRow,{paddingLeft:10/oPx}]}>年利率</Text>*/}
+                 {/*<Text style={[styles.tableRow,{paddingLeft:10/oPx}]}>期限</Text>*/}
                  <Text style={[styles.tableRow,{paddingLeft:10/oPx}]}>投资金额</Text>
                  <Text style={[styles.tableRow,{paddingLeft:10/oPx}]}>已收金额</Text>
                  <Text style={[styles.tableRow,{paddingLeft:10/oPx}]}>还款时间</Text>
@@ -179,8 +179,8 @@ let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
          } else  if (this.state.choseType == 3) {// 已回收的借款
              return  <View style={styles.tableTop}>
                  <Text style={[styles.tableRow,{paddingLeft:10/oPx}]}>标题</Text>
-                 <Text style={[styles.tableRow,{paddingLeft:10/oPx}]}>年利率</Text>
-                 <Text style={[styles.tableRow,{paddingLeft:10/oPx}]}>期限</Text>
+                 {/*<Text style={[styles.tableRow,{paddingLeft:10/oPx}]}>年利率</Text>*/}
+                 {/*<Text style={[styles.tableRow,{paddingLeft:10/oPx}]}>期限</Text>*/}
                  <Text style={[styles.tableRow,{paddingLeft:10/oPx}]}>投资金额</Text>
                  <Text style={[styles.tableRow,{paddingLeft:10/oPx}]}>已收金额</Text>
                  <Text style={[styles.tableRow,{paddingLeft:10/oPx}]}>发布时间</Text>
@@ -201,8 +201,8 @@ let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
              return(
                  <View style={styles.tableTopList} key={index}>
                      <Text onPress={() => {this.toBorrow(row.borrowId, row.borrowTitle)}} numberOfLines={1} style={[styles.tableRow,{color:'#75c0f6'}]}>{row.borrowTitle}</Text>
-                     <Text numberOfLines={1} style={styles.tableRow}>{row.annualRate}%</Text>
-                     <Text numberOfLines={1} style={styles.tableRow}>{row.deadline}个月</Text>
+                     {/*<Text numberOfLines={1} style={styles.tableRow}>{row.annualRate}%</Text>*/}
+                     {/*<Text numberOfLines={1} style={styles.tableRow}>{row.deadline}个月</Text>*/}
                      <Text numberOfLines={1} style={styles.tableRow}>{Utils.formatCurrency(row.investAmount)}</Text>
                      <Text numberOfLines={1} style={styles.tableRow}>{date}</Text>
                  </View>
@@ -212,16 +212,16 @@ let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
              date = date.substr(0, date.indexOf(' '));
              return <View style={styles.tableTopList} key={index}>
                  <Text onPress={() => {this.toBorrow(row.borrowId, row.borrowTitle)}} numberOfLines={1} style={[styles.tableRow,{color:'#75c0f6'}]}>{row.borrowTitle}</Text>
-                 <Text numberOfLines={1} style={styles.tableRow}>{row.annualRate}%</Text>
-                 <Text numberOfLines={1} style={styles.tableRow}>{row.deadline}个月</Text>
+                 {/*<Text numberOfLines={1} style={styles.tableRow}>{row.annualRate}%</Text>*/}
+                 {/*<Text numberOfLines={1} style={styles.tableRow}>{row.deadline}个月</Text>*/}
                  <Text numberOfLines={1} style={styles.tableRow}>{date}</Text>
                  <Text numberOfLines={1} style={styles.tableRow}>{Utils.formatCurrency(row.investAmount)}</Text>
              </View>;
          } else if (this.state.choseType == 2) {
              return <View style={styles.tableTopList} key={index}>
                  <Text onPress={() => {this.toBorrow(row.borrowId, row.borrowTitle)}} numberOfLines={1} style={[styles.tableRow,{paddingLeft:10/oPx,color:'#75c0f6'}]}>{row.borrowTitle}</Text>
-                 <Text numberOfLines={1} style={[styles.tableRow,{paddingLeft:10/oPx}]}>{row.annualRate}%</Text>
-                 <Text numberOfLines={1} style={[styles.tableRow,{paddingLeft:10/oPx}]}>{row.deadline}个月</Text>
+                 {/*<Text numberOfLines={1} style={[styles.tableRow,{paddingLeft:10/oPx}]}>{row.annualRate}%</Text>*/}
+                 {/*<Text numberOfLines={1} style={[styles.tableRow,{paddingLeft:10/oPx}]}>{row.deadline}个月</Text>*/}
                  <Text numberOfLines={1} style={[styles.tableRow,{paddingLeft:10/oPx}]}>{Utils.formatCurrency(row.realAmount)}</Text>
                  <Text numberOfLines={1} style={[styles.tableRow,{paddingLeft:10/oPx}]}>{Utils.formatCurrency(row.forTotalSum)}</Text>
                  <Text numberOfLines={1} style={[styles.tableRow,{paddingLeft:10/oPx}]}>{row.recentlyRepayDate}</Text>
@@ -232,8 +232,8 @@ let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
              date = date.substr(0, date.indexOf(' '));
              return <View style={styles.tableTopList} key={index}>
                  <Text onPress={() => {this.toBorrow(row.borrowId, row.borrowTitle)}} numberOfLines={1} style={[styles.tableRow,{paddingLeft:10/oPx,color:'#75c0f6'}]}>{row.borrowTitle}</Text>
-                 <Text numberOfLines={1} style={[styles.tableRow,{paddingLeft:10/oPx}]}>{row.annualRate}%</Text>
-                 <Text numberOfLines={1} style={[styles.tableRow,{paddingLeft:10/oPx}]}>{row.deadline}个月</Text>
+                 {/*<Text numberOfLines={1} style={[styles.tableRow,{paddingLeft:10/oPx}]}>{row.annualRate}%</Text>*/}
+                 {/*<Text numberOfLines={1} style={[styles.tableRow,{paddingLeft:10/oPx}]}>{row.deadline}个月</Text>*/}
                  <Text numberOfLines={1} style={[styles.tableRow,{paddingLeft:10/oPx}]}>{Utils.formatCurrency(row.realAmount)}</Text>
                  <Text numberOfLines={1} style={[styles.tableRow,{paddingLeft:10/oPx}]}>{Utils.formatCurrency(row.forTotalSum)}</Text>
                  <Text numberOfLines={1} style={[styles.tableRow,{paddingLeft:10/oPx}]}>{date}</Text>
