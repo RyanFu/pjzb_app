@@ -38,14 +38,14 @@
         activityList:[],
         isRefreshing:false,
         leftImageSource:global.userHeadPic ? {uri:global.userHeadPic} : require('../../images/icon/icon_header.png'),
-        funList:[
-          {text:'投资明细',imgSource:require('../../images/icon/icon_user_invest.png'),listPress:()=>{this.props.navigator.push({component:TZGLIntroduction,name:'TZGLIntroduction'});}},
-          {text:'资金记录',imgSource:require('../../images/icon/icon_user_record.png'),listPress:()=>{this.props.navigator.push({component:Funddetail,name:'Funddetail'})},style:styles.lineTop},
-          {text:'生利宝',imgSource:require('../../images/icon/icon_user_slb.png'),listPress:()=>{this.props.navigator.push({component:SLBaoPage,name:'SLBaoPage'})},style:styles.lineTop},
-          {text:'我的赠券',imgSource:require('../../images/icon/icon_user_coupon.png'),listPress:()=>{this.props.navigator.push({component:CouponCard,name:'CouponCard'})},style:styles.lineTop},
-          {text:'债权管理',imgSource:require('../../images/icon/icon_user_deptbuy.png'),listPress:()=>{this.props.navigator.push({component:DebtHasBuy,name:'DebtHasBuy'});},style:styles.lineTop},
-          {text:'借款管理',imgSource:require('../../images/icon/icon_user_loan.png'),listPress:()=>{this.props.navigator.push({component:Loan,name:'Loan'});},style:styles.lineTop},
-        ],
+        // funList:[
+        //   {text:'投资明细',imgSource:require('../../images/icon/icon_user_invest.png'),listPress:()=>{this.props.navigator.push({component:TZGLIntroduction,name:'TZGLIntroduction'});}},
+        //   {text:'资金记录',imgSource:require('../../images/icon/icon_user_record.png'),listPress:()=>{this.props.navigator.push({component:Funddetail,name:'Funddetail'})},style:styles.lineTop},
+        //   {text:'生利宝',imgSource:require('../../images/icon/icon_user_slb.png'),listPress:()=>{this.props.navigator.push({component:SLBaoPage,name:'SLBaoPage'})},style:styles.lineTop},
+        //   {text:'我的赠券',imgSource:require('../../images/icon/icon_user_coupon.png'),listPress:()=>{this.props.navigator.push({component:CouponCard,name:'CouponCard'})},style:styles.lineTop},
+        //   {text:'债权管理',imgSource:require('../../images/icon/icon_user_deptbuy.png'),listPress:()=>{this.props.navigator.push({component:DebtHasBuy,name:'DebtHasBuy'});},style:styles.lineTop},
+        //   {text:'借款管理',imgSource:require('../../images/icon/icon_user_loan.png'),listPress:()=>{this.props.navigator.push({component:Loan,name:'Loan'});},style:styles.lineTop},
+        // ],
         animating:true,
         allTotal:'0.00',//总资产
         forPaySum:'0.00',//待收
@@ -129,6 +129,72 @@
       this.setState({isRefreshing:true});
       this._getState();
     }
+
+    _getUserBottomView() {
+        return  <View>
+                  <View style={styles.userBottomView_top}>
+                    <View style={styles.titleView}>
+                      <Text style={styles.titleText}>我的理财</Text>
+                    </View>
+                    <View style={styles.iconItemView}>
+                      <TouchableOpacity style={styles.itemView} onPress={()=>{this.props.navigator.push({component:SLBaoPage,name:'SLBaoPage'})}}>
+                        <Image source={require('../../images/icon/icon_user_slb.png')} style={styles.itemIcon} />
+                        <View style={styles.textView}>
+                          <Text style={styles.itemTitle}>生利宝</Text>
+                          <Text style={styles.itemText} numberOfLines={1}>资金随进随出不耽误</Text>
+                        </View>
+                      </TouchableOpacity>
+                      <TouchableOpacity style={styles.itemView} onPress={()=>{this.props.navigator.push({component:TZGLIntroduction,name:'TZGLIntroduction'})}}>
+                        <Image source={require('../../images/icon/icon_user_invest.png')} style={styles.itemIcon} />
+                        <View style={styles.textView}>
+                          <Text style={styles.itemTitle}>回款清单</Text>
+                          <Text style={styles.itemText} numberOfLines={1}>10.10回款¥1.50</Text>
+                        </View>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+
+                  <View style={styles.userBottomView_top}>
+                    <View style={styles.titleView}>
+                      <Text style={styles.titleText}>更多</Text>
+                    </View>
+                    <View style={styles.iconItemView}>
+                      <TouchableOpacity style={styles.itemView} onPress={()=>{this.props.navigator.push({component:CouponCard,name:'CouponCard'})}}>
+                        <Image source={require('../../images/icon/icon_user_coupon.png')} style={styles.itemIcon} />
+                        <View style={styles.textView}>
+                          <Text style={styles.itemTitle}>我的赠券</Text>
+                          <Text style={styles.itemText} numberOfLines={1}>100代金券 于10.10过期</Text>
+                        </View>
+                      </TouchableOpacity>
+                      <TouchableOpacity style={styles.itemView} onPress={()=>{this.props.navigator.push({component:Funddetail,name:'Funddetail'})}}>
+                        <Image source={require('../../images/icon/icon_user_record.png')} style={styles.itemIcon} />
+                        <View style={styles.textView}>
+                          <Text style={styles.itemTitle}>资金记录</Text>
+                          <Text style={styles.itemText} numberOfLines={1}>10.10收到¥100000</Text>
+                        </View>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+
+                  <View style={[styles.iconItemView, {borderBottomWidth: StyleConfig.borderWidth, borderColor: StyleConfig.borderColor,}]}>
+                    <TouchableOpacity style={styles.itemView} onPress={()=>{this.props.navigator.push({component:DebtHasBuy,name:'DebtHasBuy'})}}>
+                      <Image source={require('../../images/icon/icon_user_deptbuy.png')} style={styles.itemIcon} />
+                      <View style={styles.textView}>
+                        <Text style={styles.itemTitle}>债权管理</Text>
+                        <Text style={styles.itemText} numberOfLines={1}>暂无购买记录</Text>
+                      </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.itemView} onPress={()=>{this.props.navigator.push({component:Loan,name:'Loan'})}}>
+                      <Image source={require('../../images/icon/icon_user_loan.png')} style={styles.itemIcon} />
+                      <View style={styles.textView}>
+                        <Text style={styles.itemTitle}>借款管理</Text>
+                        <Text style={styles.itemText} numberOfLines={1}>暂无借款记录</Text>
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                </View>;
+    }
+
     render(){
       let rightImageSource = require('../../images/icon/icon_settings.png')
       return (
@@ -172,29 +238,34 @@
               </View>
             </View>
           </LinearGradient>
-          <View style={styles.userCenter}>
-            <View style={{flex:1}}><Image style={styles.user_icon} source={require('../../images/icon/icon_user_pay.png')}/></View>
-            <View style={[styles.line,{height:85/oPx,backgroundColor:'#c8c9cd'}]}></View>
-            <View style={{flex:1}}><Image style={styles.user_icon} source={require('../../images/icon/icon_user_cash.png')}/></View>
-          </View>
-          <View style={styles.userCenter}>
-            <View style={{flex:1}}>
-              <TouchableOpacity onPress={this._toIpay.bind(this)} style={styles.button}>
-                <Text style={styles.button_text}>充值</Text>
-              </TouchableOpacity>
+          <View style={{backgroundColor: '#fff'}}>
+            <View style={styles.userCenter}>
+              <View style={{flex:1}}><Image style={styles.user_icon} source={require('../../images/icon/icon_user_pay.png')}/></View>
+              <View style={[styles.line,{height:85/oPx,backgroundColor:'#c8c9cd'}]}></View>
+              <View style={{flex:1}}><Image style={styles.user_icon} source={require('../../images/icon/icon_user_cash.png')}/></View>
             </View>
-            <View style={{flex:1}}>
-              <TouchableOpacity onPress={this._toCash.bind(this)} style={[styles.button,{backgroundColor:'#ffa44b',shadowColor:'#ffa44b',}]}>
-                <Text style={styles.button_text}>提现</Text>
-              </TouchableOpacity>
+            <View style={styles.userCenter}>
+              <View style={{flex:1}}>
+                <TouchableOpacity onPress={this._toIpay.bind(this)} style={styles.button}>
+                  <Text style={styles.button_text}>充值</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={{flex:1}}>
+                <TouchableOpacity onPress={this._toCash.bind(this)} style={[styles.button,{backgroundColor:'#ffa44b',shadowColor:'#ffa44b',}]}>
+                  <Text style={styles.button_text}>提现</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
           <View style={styles.userListTap}>
-            {
-              this.state.funList.map((row, index) =>{
-                  return this._funList(row,index);
-              })
-            }
+            
+              {/*this.state.funList.map((row, index) =>{ */}
+                  {/*return this._funList(row,index); */}
+              {/*}) */}
+           
+
+            { this._getUserBottomView() }
+
           </View>
          </ScrollView>
          <Loading show={this.state.animating} top={true}/>
@@ -342,6 +413,54 @@
     lineTop:{
       borderColor:'#e0e0e0',
       borderTopWidth:StyleConfig.borderWidth
-    }
+    },
+
+    userBottomView_top: {
+      height: 196/oPx,
+      backgroundColor: '#fff',
+      marginTop: 20/oPx,
+    },
+    titleView: {
+      height: 75/oPx,
+      marginLeft: 30/oPx,
+      justifyContent: 'center',  
+    },
+    titleText: {
+      color: '#333',
+      fontSize: 32/oPx,
+    },
+    iconItemView: {
+      height: 120/oPx,
+      borderTopWidth: StyleConfig.borderWidth,
+      borderColor: StyleConfig.borderColor,
+      flexDirection: 'row',
+    },
+    itemView: {
+      flex: 1,
+      flexDirection:'row',
+      //alignItems: 'center',
+      borderLeftWidth: StyleConfig.borderWidth,
+      borderColor: StyleConfig.borderColor,
+      paddingLeft: 30/oPx,
+      paddingTop: 30/oPx,
+      backgroundColor: '#fff',
+    },
+    itemIcon: {
+      height: 50/oPx,
+      width: 50/oPx,
+    },
+    textView: {
+      width: 250/oPx,
+      marginLeft: 20/oPx,
+    },
+    itemTitle: {
+      fontSize: 30/oPx, 
+      color: '#333'
+    },
+    itemText: {
+      fontSize: 22/oPx, 
+      color: '#999', 
+      marginTop: 10/oPx
+    },
 
   });
