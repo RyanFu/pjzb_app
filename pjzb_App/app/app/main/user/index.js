@@ -54,6 +54,12 @@
         nickname:'',
         headImg:'',
         msgCount:0,
+        slbao: '', // 生利宝总收益
+        huikuanqd: '', // 回款清单
+        wodezq: '', // 我的赠券
+        zijinjl: '', // 资金记录
+        zaiquanzr: '', // 债权转让
+        jiekuangl: '', // 借款管理
       }
     }
     componentDidMount(){
@@ -72,6 +78,12 @@
           nickname:data.nickname,
           headImg:data.headImg,
           msgCount:data.count,
+          slbao: data.slbao,
+          huikuanqd: data.huikuanqd,
+          wodezq: data.wodezq,
+          zijinjl: data.zijinjl,
+          zaiquanzr: data.zaiquanzr,
+          jiekuangl: data.jiekuangl,
         });
         if(data.headImg){
           this.setState({leftImageSource:{uri:data.headImg}});
@@ -141,14 +153,14 @@
                         <Image source={require('../../images/icon/icon_user_slb.png')} style={styles.itemIcon} />
                         <View style={styles.textView}>
                           <Text style={styles.itemTitle}>生利宝</Text>
-                          <Text style={styles.itemText} numberOfLines={1}>资金随进随出不耽误</Text>
+                          <Text style={styles.itemText} numberOfLines={1}>{this.state.slbao}</Text>
                         </View>
                       </TouchableOpacity>
                       <TouchableOpacity style={styles.itemView} onPress={()=>{this.props.navigator.push({component:TZGLIntroduction,name:'TZGLIntroduction'})}}>
                         <Image source={require('../../images/icon/icon_user_invest.png')} style={styles.itemIcon} />
                         <View style={styles.textView}>
                           <Text style={styles.itemTitle}>回款清单</Text>
-                          <Text style={styles.itemText} numberOfLines={1}>10.10回款¥1.50</Text>
+                          <Text style={styles.itemText} numberOfLines={1}>{this.state.huikuanqd}</Text>
                         </View>
                       </TouchableOpacity>
                     </View>
@@ -163,14 +175,14 @@
                         <Image source={require('../../images/icon/icon_user_coupon.png')} style={styles.itemIcon} />
                         <View style={styles.textView}>
                           <Text style={styles.itemTitle}>我的赠券</Text>
-                          <Text style={styles.itemText} numberOfLines={1}>100代金券 于10.10过期</Text>
+                          <Text style={styles.itemText} numberOfLines={1}>{this.state.wodezq}</Text>
                         </View>
                       </TouchableOpacity>
                       <TouchableOpacity style={styles.itemView} onPress={()=>{this.props.navigator.push({component:Funddetail,name:'Funddetail'})}}>
                         <Image source={require('../../images/icon/icon_user_record.png')} style={styles.itemIcon} />
                         <View style={styles.textView}>
                           <Text style={styles.itemTitle}>资金记录</Text>
-                          <Text style={styles.itemText} numberOfLines={1}>10.10收到¥100000</Text>
+                          <Text style={styles.itemText} numberOfLines={1}>{this.state.zijinjl}</Text>
                         </View>
                       </TouchableOpacity>
                     </View>
@@ -181,14 +193,14 @@
                       <Image source={require('../../images/icon/icon_user_deptbuy.png')} style={styles.itemIcon} />
                       <View style={styles.textView}>
                         <Text style={styles.itemTitle}>债权管理</Text>
-                        <Text style={styles.itemText} numberOfLines={1}>暂无购买记录</Text>
+                        <Text style={styles.itemText} numberOfLines={1}>{this.state.zaiquanzr}</Text>
                       </View>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.itemView} onPress={()=>{this.props.navigator.push({component:Loan,name:'Loan'})}}>
                       <Image source={require('../../images/icon/icon_user_loan.png')} style={styles.itemIcon} />
                       <View style={styles.textView}>
                         <Text style={styles.itemTitle}>借款管理</Text>
-                        <Text style={styles.itemText} numberOfLines={1}>暂无借款记录</Text>
+                        <Text style={styles.itemText} numberOfLines={1}>{this.state.jiekuangl}</Text>
                       </View>
                     </TouchableOpacity>
                   </View>
@@ -430,7 +442,7 @@
       fontSize: 32/oPx,
     },
     iconItemView: {
-      height: 120/oPx,
+      height: 130/oPx,
       borderTopWidth: StyleConfig.borderWidth,
       borderColor: StyleConfig.borderColor,
       flexDirection: 'row',
@@ -458,7 +470,7 @@
       color: '#333'
     },
     itemText: {
-      fontSize: 22/oPx, 
+      fontSize: 20/oPx, 
       color: '#999', 
       marginTop: 10/oPx
     },

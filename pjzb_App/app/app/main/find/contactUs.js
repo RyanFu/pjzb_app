@@ -81,8 +81,8 @@
                 </View>
                 <View style={[styles.itemView,{height: 205/oPx}]}>
                     <Text style={styles.titleText}>商务合作</Text>
-                    <Text style={styles.titleLeft}>E-mail：<Text style={styles.titleRight}> ling.gu@pujinziben.com</Text></Text>
-                    <Text style={styles.titleLeft}>联系人：<Text style={styles.titleRight}> 古先生</Text></Text>
+                    <Text style={styles.titleLeft}>E-mail：<Text style={styles.titleRight}> yong.wen@pujinziben.com</Text></Text>
+                    <Text style={styles.titleLeft}>联系人：<Text style={styles.titleRight}> 温先生</Text></Text>
                 </View>
                 <View style={[styles.itemView,{height: 300/oPx}]}>
                     <Text style={styles.titleText}>关注我们</Text>

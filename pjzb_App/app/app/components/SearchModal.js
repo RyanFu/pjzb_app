@@ -34,7 +34,7 @@ export default class SearchModal extends Component{
         beginX:0,beginY:0,beginTime:0,
         viewPosin:new Animated.Value(-520/oPx),
         viewOpct:new Animated.Value(0),
-        choseType:0,
+        choseType:this.props.choseType?2:0,
         hideLayout:false,
         openDate:false,
         startDate:'',

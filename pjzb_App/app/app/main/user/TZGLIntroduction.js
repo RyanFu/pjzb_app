@@ -43,10 +43,10 @@ let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
          totalPageNum:0,
          isShowBottomRefresh:true,
          // successLoan：成功借出，tendersingBorrow：招标中的借款，recycleBorrow：回款中的借款，空串：已回收的借款
-         borrowFlag:'successLoan',
+         borrowFlag:'recycleBorrow',
          startDate:'',
          endDate:'',
-         choseType:0,
+         choseType:2,
          choseData:[{text:'成功借出'},{text:'招标中的借款'},{text:'回款中的借款'},{text:'已回收的借款'}],
      }
    }
@@ -331,6 +331,7 @@ let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
                  modalEvent={this._openSearch.bind(this)}
                  onSubmit={this._onSubmit.bind(this)}
                  status={true}
+                 choseType={true}
              />
          </View>
      );
