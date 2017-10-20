@@ -54,16 +54,17 @@
         nickname:'',
         headImg:'',
         msgCount:0,
-        slbao: '', // 生利宝总收益
-        huikuanqd: '', // 回款清单
-        wodezq: '', // 我的赠券
-        zijinjl: '', // 资金记录
-        zaiquanzr: '', // 债权转让
-        jiekuangl: '', // 借款管理
+        slbao: '资金随进随出 不耽误', // 生利宝总收益
+        huikuanqd: '项目回款 一目了然', // 回款清单
+        wodezq: '暂无可用赠券', // 我的赠券
+        zijinjl: '暂无资金记录', // 资金记录
+        zaiquanzr: '债权转让 周转灵活', // 债权转让
+        jiekuangl: '借款灵活 还款方便', // 借款管理
       }
     }
     componentDidMount(){
       this._getState();
+      this._refresh();
     }
     _getState(){
       Request.post('accountOverview.do',{uid:''},(data)=>{
@@ -78,12 +79,12 @@
           nickname:data.nickname,
           headImg:data.headImg,
           msgCount:data.count,
-          slbao: data.slbao,
-          huikuanqd: data.huikuanqd,
-          wodezq: data.wodezq,
-          zijinjl: data.zijinjl,
-          zaiquanzr: data.zaiquanzr,
-          jiekuangl: data.jiekuangl,
+          slbao: data.slbao?data.slbao:this.state.slbao,
+          huikuanqd: data.huikuanqd?data.huikuanqd:this.state.huikuanqd,
+          wodezq: data.wodezq?data.wodezq:this.state.wodezq,
+          zijinjl: data.zijinjl?data.zijinjl:this.state.zijinjl,
+          zaiquanzr: data.zaiquanzr?data.zaiquanzr:this.state.zaiquanzr,
+          jiekuangl: data.jiekuangl?data.jiekuangl:this.state.jiekuangl,
         });
         if(data.headImg){
           this.setState({leftImageSource:{uri:data.headImg}});
@@ -94,6 +95,14 @@
         }
       },(error)=>{});
     }
+
+    // 每隔五分钟请求一次数据
+    _refresh() {
+      this.interval=setInterval(() =>{
+          this._getState();
+      },1000*60*5);
+   }
+
     //功能列表生成
     _funList(row,index){
       let msg = null;
