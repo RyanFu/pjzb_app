@@ -418,6 +418,12 @@ export default class Withdraw extends Component {
                                 :null
                         }
                     </LinearGradient>
+
+                    <Image 
+                        style={{width:690/StyleConfig.oPx, height:268/StyleConfig.oPx, 
+                            marginTop: 20/StyleConfig.oPx, marginBottom: 5/StyleConfig.oPx, marginLeft: 30/StyleConfig.oPx}} 
+                        source={require('../../images/user/icon_promptImg.png')} />
+                 
                     <View style={styles.interval15}></View>
                     {/*<KeyboardAvoidingView keyboardVerticalOffset={500} behavior="position" contentContainerStyle={styles.bodyView}>*/}
                     {/*<View style={styles.bodyView}>*/}

@@ -92,7 +92,7 @@
            <View style={styles.product_detail_left}>
              <View style={styles.product_detail_t_t}>
                <Text style={styles.product_d_t_big}>
-               {data.annualRate}
+               {data.showRate}
              </Text><Text style={styles.product_d_t_small}>%</Text>
              </View>
              <View style={styles.product_detail_b_t}>

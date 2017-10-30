@@ -258,7 +258,7 @@ export default class InvestDetailTY extends Component {
                         <Text style={styles.topTitleText}>{this.props.debtTitle}</Text>
                     </View>
                     <View style={styles.topRate}>
-                        <Text style={styles.topRateText}>{this.state.borrowDetailMap.annualRate}</Text>
+                        <Text style={styles.topRateText}>{this.state.borrowDetailMap.showRate}</Text>
                         <Text style={styles.topRateSymbol}>%</Text>
                     </View>
                     <View style={{marginTop:10}}><Text style={{color:'#777',fontSize:22/oPx}}>预期年化收益</Text></View>
@@ -290,7 +290,7 @@ export default class InvestDetailTY extends Component {
                             <View style={[style.tdView]}><Text style={style.text}></Text></View>
                             <View style={[style.tdView,style.color]}><Text numberOfLines={1} style={[style.text,{color: '#333'}]}>{this.state.debtsDetail.debtLimit}个月</Text></View>
                             <View style={style.tdView}><Text style={style.text}>年化利率</Text></View>
-                            <View style={[style.tdView,style.color,style.tdView2,{backgroundColor: '#fff'}]}><Text style={[style.text,{color: '#333'}]}>{this.state.borrowDetailMap.annualRate}%</Text></View>
+                            <View style={[style.tdView,style.color,style.tdView2,{backgroundColor: '#fff'}]}><Text style={[style.text,{color: '#333'}]}>{this.state.borrowDetailMap.showRate}%</Text></View>
                         </View>*/}
                         <View style={style.itemView}>
                             <View style={[style.tdView,style.tdView3]}><Text style={style.text}>期限</Text></View>

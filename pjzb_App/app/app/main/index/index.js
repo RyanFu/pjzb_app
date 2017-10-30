@@ -99,6 +99,7 @@ var options = {
    //获取数据
    _getData(){
      Request.post('getBannerAndBorrows.do',{uid:''},(data)=>{
+      console.log(data);
        this.setState({
          dataSource:ds.cloneWithRows(data.recommendBorrowList),
          bannerList:data.bannerList,
@@ -106,11 +107,11 @@ var options = {
          totalInvestNum:data.experienceBorrow[1].experienceBorrowCount,
          gsdtList:data.pageBean.page,
          // 新手标
-         xsBorrow: data.xsBorrow[0],
+         xsBorrow: data.xsBorrow?data.xsBorrow[0]:{},
          // 是否投资新手标
          isxsBiao: data.isxsBiao,
          // 新手标年化收益
-         xsAnnualRate: data.xsBorrow[0].annualRate,
+         xsAnnualRate: data.xsBorrow?data.xsBorrow[0].showRate:0,
          // android 最新版本
          androidMap: data.androidMap,
          // iso 最新版本
@@ -575,7 +576,7 @@ var options = {
                 <Image style={styles.xsBaoImg} source={require('../../images/index/icon_index_xsBao.png')} />
                 <View style={styles.xsTitleView}>
                   <Text style={{color: '#333', fontSize: 28/oPx, flex: 1.5}}>新手专享标</Text>
-                  <Text style={{color: '#eb3331', fontSize: 50/oPx, flex: 2.5}}>{this.state.xsAnnualRate}.00%</Text>
+                  <Text style={{color: '#eb3331', fontSize: 50/oPx, flex: 2.5}}>{this.state.xsAnnualRate}%</Text>
                   <Text style={{color: '#999', fontSize: 22/oPx, flex: 1}}>预期年化收益率</Text>
                 </View>
                 <View style={styles.xsMothView}>
