@@ -500,7 +500,7 @@
                 {this.state.productDetail.borrowStatus=='4'||this.state.productDetail.borrowStatus=='5'?<TouchableOpacity onPress={this._HKJHPage.bind(this)} style={{marginBottom:10}}><Text style={[styles.canInvestTextColor,{color:'#75c0f6'}]}>还款计划</Text></TouchableOpacity>:null}
                 <View style={styles.itemView}><Text style={styles.canInvestTextColor}>产品名称：</Text><Text style={styles.canInvestText}>{this.state.productDetail.borrowTitle}</Text></View>
                 <View style={styles.itemView}><Text style={styles.canInvestTextColor}>募集资金：</Text><Text style={styles.canInvestText}>{this.state.productDetail.borrowAmount}元</Text></View>
-                <View style={styles.itemView}><Text style={styles.canInvestTextColor}>年化收益：</Text><Text style={styles.canInvestText}>{this.state.productDetail.showRate}%</Text></View>
+                <View style={styles.itemView}><Text style={styles.canInvestTextColor}>年化收益：</Text><Text style={styles.canInvestText}>{this.state.productDetail.annualRate}%</Text></View>
                 <View style={styles.itemView}><Text style={styles.canInvestTextColor}>起息日期：</Text><Text style={styles.canInvestText}>满标计息</Text></View>
                 <View style={styles.itemView}><Text style={styles.canInvestTextColor}>收益方式：</Text><Text style={styles.canInvestText}>{this._paymentMode(this.state.productDetail.paymentMode)}</Text></View>
                 <View style={styles.itemView}>

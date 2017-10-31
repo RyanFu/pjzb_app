@@ -29,10 +29,32 @@ export default class InvestFriendDetail extends Component{
         this.state = {
             idCode:global.USER.ID,
             imgUri:Request.URL+'qrCode.do?url=http://www.pujinziben.com/wap/app.html#!/regist?useCode='+global.USER.ID,
+            activityTime: '',
+            activityObject: '',
+            activityDescribe: '',
+            exampleDescribe: '',
+            awardDescribe: '',
         }
     }
+
     componentDidMount(){
+      this._get();
     }
+
+    _get() {
+      Request.post('queryInviteActivity.do',{uid:''},(data)=>{
+          if(data.error == 0){
+              this.setState({
+                activityTime: data.activityTime,
+                activityObject: data.activityObject,
+                activityDescribe: data.activityDescribe,
+                exampleDescribe: data.exampleDescribe,
+                awardDescribe: data.awardDescribe,
+              });
+          };
+        });
+    }
+
     //返回
     _goBack(){
         goBack(this.props.navigator);
@@ -69,27 +91,52 @@ export default class InvestFriendDetail extends Component{
               <Text style={styles.viewTopText}>尊敬的用户,您的推荐号为：<Text style={styles.viewTopTextColor}>{this.state.idCode}</Text></Text>
             </View>
             <View style={styles.viewTopTextView}>
-              <Text style={styles.viewTopTextCenter}>
-                <Text style={{color:'#333'}}>活动时间：</Text>
-                <Text style={styles.activityTimeText}>2017年9月9日 ~ 9月30日</Text>
-              </Text>
-              <Text style={styles.viewTopTextCenter}>
-                <Text style={{color:'#333'}}>活动对象：</Text>所有平台用户
-              </Text>
-              <Text style={styles.viewTopTextCenter}>
-                <Text style={{color:'#333'}}>奖励规则：</Text>
-                邀请奖励=好友投资金额*返现比例（0.8%）/12*投资期限
-              </Text>
-              <Text style={styles.viewTopTextCenter}>
-                <Text style={{color:'#333'}}>举个例子：</Text>
-                A同学将自己的邀请链接发送给B同学，B同学通过邀请链接注册后并成功投资5万元3月标。则A同学的邀请奖励为：50000*0.8%/12*3=100元。
-              </Text>
-              <Text style={styles.viewTopTextCenter}>
-                <Text style={{color:'#333'}}>邀请奖励</Text>
-                将于好友所投标的满标复审后7个工作日内直接发放至您的资金账户，详情可在
-                <Text style={styles.activityTimeText}>【我的账户-资金记录】</Text>
-                中查看。  
-              </Text>
+
+              {
+                this.state.activityTime?
+                <Text style={styles.viewTopTextCenter}>
+                  <Text style={{color:'#333'}}>活动时间：</Text>
+                  <Text style={styles.activityTimeText}>{this.state.activityTime}</Text>
+                </Text>
+                :null
+              }
+
+              {
+                this.state.activityObject?
+                 <Text style={styles.viewTopTextCenter}>
+                  <Text style={{color:'#333'}}>活动对象：</Text>{this.state.activityObject}
+                </Text>
+                :null
+              }
+
+              {
+                this.state.activityDescribe?
+                <Text style={styles.viewTopTextCenter}>
+                  <Text style={{color:'#333'}}>活动说明：</Text>
+                  {this.state.activityDescribe}
+                </Text>
+                :null
+              }
+             
+              {
+                this.state.exampleDescribe?
+                <Text style={styles.viewTopTextCenter}>
+                  <Text style={{color:'#333'}}>举个例子：</Text>
+                  {this.state.exampleDescribe}
+                </Text>
+                :null
+              }
+              
+              {
+                this.state.awardDescribe?
+                <Text style={styles.viewTopTextCenter}>
+                  <Text style={{color:'#333'}}>奖励说明：</Text>
+                  {this.state.awardDescribe}
+                </Text>
+                :null
+              }
+
+              
               <Text style={styles.viewTopTextCenter}>
                 <Text style={styles.activityTimeText}>注：</Text>
                 需将自己的邀请链接地址或推荐号发给您的好友，这样您才能成为他的邀请者。
