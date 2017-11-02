@@ -92,8 +92,8 @@ android {
         applicationId "com.pjzbapp"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 29
-        versionName "1.9.1"
+        versionCode 30
+        versionName "1.9.2"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }

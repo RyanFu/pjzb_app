@@ -335,11 +335,21 @@
         voucherAmt = this.state.voucherAmt;
       }
       if(!isNaN(value)){
-          if(this.state.voucherAmt>0){
+        if(this.state.voucherAmt>0){
+          if (this.state.productDetail.isDayThe == 2) {
+            let lilv = this.state.productDetail.annualRate/100*1/12;
+            money = (this.state.voucherAmt+value)*lilv*this.state.productDetail.deadline/30;
+          } else {
             money = (this.state.productDetail.annualRate/1200) * this.state.productDetail.deadline * (parseFloat(value)+parseFloat(voucherAmt));
-          }else{
+          }
+        }else{
+          if (this.state.productDetail.isDayThe == 2) {
+            let lilv = this.state.productDetail.annualRate/100*1/12;
+            money = value*lilv*this.state.productDetail.deadline/30;
+          } else {
             money = (this.state.productDetail.annualRate/1200) * this.state.productDetail.deadline * value;
           }
+        }
         this.setState({reckon:money.toFixed(2)});
       }
 
