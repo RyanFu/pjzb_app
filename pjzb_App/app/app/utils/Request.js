@@ -5,8 +5,8 @@
  
 // let HOST='http://192.168.1.121/pjzb'; 
 
-// let HOST='http://120.76.27.179:8090/pjzb';
-let HOST='https://www.pujinziben.com';
+let HOST='http://120.78.89.202:8080/pjzb';
+// let HOST='https://www.pujinziben.com';
 let URL = HOST+'/reactapp/';
 
 import Storage from './Storage';

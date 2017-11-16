@@ -68,16 +68,26 @@
    _progress(data){
      let oStyle = this.props.showList?styles.oProgress:null;
      return <View style={oStyle}>
-       <View style={[styles.product_detail_line,styles.product_detail_t_t]}>
-        <View style={styles.line_default}>
-        </View>
-        <View style={[styles.line_default,styles.line_pull,{width:data.schedules/100*182/oPx}]}>
-        </View>
-       </View>
-       <View style={styles.product_detail_b_t}>
-         <Text style={styles.product_d_b_small}>募集进度 {data.schedules}%</Text>
-       </View>
-     </View>
+               <View style={styles.product_detail_t_t}>
+                  <View style={{
+                      height:8/oPx,
+                      backgroundColor:'#fbdbdb',
+                      borderRadius:4/oPx,
+                      width:100/100*152/oPx
+                    }}>
+                    <View style={{
+                        height:8/oPx,
+                        backgroundColor:'#eb3331',
+                        borderRadius:4/oPx,
+                        width:data.schedules/100*152/oPx
+                    }} />
+                  </View>
+                  <Text style={styles.product_d_b_small}> {data.schedules}%</Text>
+               </View>
+               <View style={styles.product_detail_b_t}>
+                 <Text style={styles.product_d_b_small}>募集总额/{100}万元</Text>
+               </View>
+             </View>
    }
 
    _getBorrowWayTitle() {
@@ -204,9 +214,9 @@
      flex:1
    },
    product_detail_t_t:{
-     height:40/oPx,
+     // height:40/oPx,
      flexDirection:'row',
-
+      alignItems: 'center',
    },
    product_d_t_big:{
      fontSize:50/oPx,
@@ -229,9 +239,6 @@
      fontWeight:'200',
    },
    line_default:{
-     position:'absolute',
-     left:0,
-     bottom:3,
      width:182/oPx,
      height:8/oPx,
      backgroundColor:'#fbdbdb',

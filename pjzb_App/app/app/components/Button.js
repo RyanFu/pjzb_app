@@ -34,9 +34,10 @@
      let oText = this.props.text;
      let textColor = !this.props.textColor ? '#fff': this.props.textColor;
      let textSize = !this.props.textSize ? null : this.props.textSize;
+     let style = !this.props.style ? null : this.props.style;
      return (
        <TouchableOpacity onPress={this.props.onPress} >
-         <Image style={{height:height, width:width, justifyContent:'center',alignSelf:'center'}} source={imgSource}>
+         <Image style={[style, {height:height, width:width, justifyContent:'center',alignSelf:'center'}]} source={imgSource}>
            <Text style={{backgroundColor:'transparent',textAlign:'center',color:textColor,fontSize: textSize}}>
              {oText}
            </Text>

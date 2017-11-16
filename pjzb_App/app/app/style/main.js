@@ -239,27 +239,25 @@ export const styles = StyleSheet.create({
     marginTop: 16/oPx,
   },
   xsView: {
-    flex: 1,
     flexDirection: 'row',
     marginLeft: 30/oPx,
     marginRight: 30/oPx,
   },
   xsBaoImg: {
-    width: 111/oPx,
-    height: 111/oPx,
-    alignSelf: 'center',
+    width: 42/oPx,
+    height: 43/oPx,
   },
   xsTitleView: {
     marginTop: 10/oPx,
     marginBottom: 10/oPx,
-    marginLeft: 13/oPx,
+    marginLeft: 10/oPx,
   },
   xsMothView: {
-    marginLeft: 80/oPx,
+    marginLeft: 55/oPx,
   },
   xsBtnView: {
-    flex: 1,
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'center',
+    marginLeft: 95/oPx,
   },
 });

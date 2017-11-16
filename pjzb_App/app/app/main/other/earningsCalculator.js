@@ -34,17 +34,24 @@ export default class EarningsCalculator extends Component{
             annualRate: '',
             time: '',
             repayWay: '1',
+            repayWay1: '1',
             monAmt: '0.00',
             monRate: '0.00',
             allPay: '0.00',
             details: [],
             isIos:(Platform.OS === 'ios'),
             isToPicker:false,
+            isToPicker1:false,
             defaultValue:'点击选择',
+            defaultValue1:'点击选择',
             list:[
                 {key:'等额本息还款',value:'1'},
                 {key:'一次性还本付息',value:'2'},
                 {key:'先息后本',value:'3'},
+            ],
+            list1:[
+                {key:'月标',value:'1'},
+                {key:'天标',value:'2'},
             ],
         }
     }
@@ -61,11 +68,7 @@ export default class EarningsCalculator extends Component{
     }
     onPressCalculate=()=>{
         const dismissKeyboard = require('dismissKeyboard');
-        dismissKeyboard();
-        if(this.state.defaultValue == '点击选择' && this.state.isIos){
-            toastShort('请选择计算方式',-300);
-            return;
-        }
+        dismissKeyboard();        
         //判断输入框是否为空,输入的是否为数字
         if(this.state.money == ''){
             toastShort('投资金额不能为空',-300);
@@ -75,12 +78,29 @@ export default class EarningsCalculator extends Component{
             toastShort('年收益率不能为空',-300);
             return;
         }
+        if(this.state.defaultValue1 == '点击选择' && this.state.isIos){
+            toastShort('请选择投资类型',-300);
+            return;
+        }
         if(this.state.time == ''){
             toastShort('还款期限不能为空',-300);
             return;
         }
+        if (this.state.repayWay1 == 1) {
+            if(this.state.defaultValue == '点击选择' && this.state.isIos){
+                toastShort('请选择计算方式',-300);
+                return;
+            }
+        }
+
         //ajax
-        let params = {repayWay:this.state.repayWay, borrowSum:this.state.money, yearRate:this.state.annualRate, borrowTime:this.state.time};
+        let params = {
+            repayWay: this.state.repayWay1 == 2 ? 2 : this.state.repayWay, 
+            borrowSum:this.state.money, 
+            yearRate:this.state.annualRate, 
+            borrowTime:this.state.time,
+            isDayThe:this.state.repayWay1,
+        };
         //alert(this.state.repayWay);
 
         Request.post('toolsCalculate.do',params,(data)=>{
@@ -138,6 +158,65 @@ export default class EarningsCalculator extends Component{
         })
     }
 
+    setValue1 (key,val) {
+        if (key == null) {
+            let value = val+'';
+            let key = value.substring(0,value.indexOf('.'));
+            let v = value.substring(value.indexOf('.')+1,value.length);
+            this.setState({
+                isToPicker1: false,
+                defaultValue1: key,
+                repayWay1: v,
+            })
+        } else {
+            if (val != null && val != '') {
+                this.setState({
+                    isToPicker1: false,
+                    defaultValue1: key,
+                    repayWay1: val,
+                })
+            }
+        }
+        this.setState({
+            isToPicker1: false,
+        })
+    }
+
+    getHKFSView() {
+        if (this.state.isIos) {
+            if (this.state.repayWay1 == 2) {
+                return  <Text style={[styles.pickerText, {color: '#333'}]}>一次性还本付息</Text>;
+            } else {
+                return <Text onPress={() => {
+                    this.setState({isToPicker:true});
+                    const dismissKeyboard = require('dismissKeyboard');
+                    dismissKeyboard();
+                }} style={styles.pickerText}>{this.state.defaultValue}</Text>;
+            }
+        } else {
+            if (this.state.repayWay1 == 2) {
+                return  <Picker style = {[styles.pickerStyle]}
+                             selectedValue={2}
+                             onValueChange={(lang) => this.setState({repayWay: lang})}
+                             mode='dropdown'
+                        >
+                            <Picker.Item label="一次性还本付息" value="2" />
+                            <Picker.Item label="" value="2" />
+                        </Picker>;
+            } else {
+                return  <Picker style = {[styles.pickerStyle]}
+                             selectedValue={this.state.repayWay}
+                             onValueChange={(lang) => this.setState({repayWay: lang})}
+                             mode='dropdown'
+                        >
+                            <Picker.Item label="等额本息还款" value="1" />
+                            <Picker.Item label="一次性还本付息" value="2" />
+                            <Picker.Item label="先息后本" value="3" />
+                        </Picker>;
+            }
+        }
+    }
+
     render(){
         return (
             <View style={[styles.flex, styles.body]}>
@@ -146,6 +225,7 @@ export default class EarningsCalculator extends Component{
                   leftShowIcon={true}
                   leftBtnFunc={this._goBack.bind(this)}
                 />
+                <ScrollView style={{flex: 1}}>
                 <View style={[styles.topContainer]}>
                     <View style={[styles.item]}>
                         <Text  style={[styles.text]}>投资金额(元)</Text>
@@ -161,7 +241,7 @@ export default class EarningsCalculator extends Component{
                     </View>
 
                     <View style={[styles.item]}>
-                        <Text  style={[styles.text]}>年收益率(%)</Text>
+                        <Text  style={[styles.text]}>年收益率(%)  </Text>
                         <TextInput style = {[styles.inputs]}
                                    underlineColorAndroid = "transparent"
                                    clearButtonMode="while-editing"
@@ -172,8 +252,29 @@ export default class EarningsCalculator extends Component{
                                        (annualRate) =>{this.setState({annualRate})}
                                    }/>
                     </View>
+                    
                     <View style={[styles.item]}>
-                        <Text  style={[styles.text]}>还款期限(月)</Text>
+                        <Text  style={[styles.text,{width:180/StyleConfig.oPx,}]}>投资类型</Text>
+                        {
+                            this.state.isIos
+                                ?<Text onPress={() => {
+                                    this.setState({isToPicker1:true});
+                                    const dismissKeyboard = require('dismissKeyboard');
+                                    dismissKeyboard();
+                                }} style={styles.pickerText}>{this.state.defaultValue1}</Text>
+                                :<Picker style = {[styles.pickerStyle]}
+                                     selectedValue={this.state.repayWay1}
+                                     onValueChange={(lang) => this.setState({repayWay1: lang})}
+                                     mode='dropdown'
+                                >
+                                    <Picker.Item label="月标" value="1" />
+                                    <Picker.Item label="天标" value="2" />
+                                </Picker>
+                        }
+                    </View>
+
+                    <View style={[styles.item]}>
+                        <Text  style={[styles.text]}>还款期限        </Text>
                         <TextInput style = {[styles.inputs]}
                                    underlineColorAndroid = "transparent"
                                    clearButtonMode="while-editing"
@@ -186,23 +287,7 @@ export default class EarningsCalculator extends Component{
                     </View>
                     <View style={[styles.item]}>
                         <Text  style={[styles.text,{width:180/StyleConfig.oPx,}]}>还款方式</Text>
-                        {
-                            this.state.isIos
-                                ?<Text onPress={() => {
-                                    this.setState({isToPicker:true});
-                                    const dismissKeyboard = require('dismissKeyboard');
-                                    dismissKeyboard();
-                                }} style={styles.pickerText}>{this.state.defaultValue}</Text>
-                                :<Picker style = {[styles.pickerStyle]}
-                                     selectedValue={this.state.repayWay}
-                                     onValueChange={(lang) => this.setState({repayWay: lang})}
-                                     mode='dropdown'
-                                >
-                                    <Picker.Item label="等额本息还款" value="1" />
-                                    <Picker.Item label="一次性还本付息" value="2" />
-                                    <Picker.Item label="先息后本" value="3" />
-                                </Picker>
-                        }
+                        { this.getHKFSView() }
                     </View>
                     <View style={[styles.btnContainer]}>
                         <Button
@@ -221,7 +306,11 @@ export default class EarningsCalculator extends Component{
                     </View>
                     <View style={[styles.bottomItem2]}>
                         <View style={[styles.itemList]}>
-                            <Text  style={[styles.textFirst]}>每个月将偿还/收到</Text>
+                            <Text  style={[styles.textFirst]}>
+                            {
+                                this.state.repayWay1 == 1 ? '每个月' : ''
+                            }
+                            将偿还/收到</Text>
                             <Text  style={[styles.textSecond,{color:'#eb3331'}]}>{this.state.monAmt}元</Text>
                         </View>
                         <View style={[styles.itemList]}>
@@ -237,19 +326,21 @@ export default class EarningsCalculator extends Component{
                     <View style={[styles.bottomItem3]}>
                         <View style={[styles.itemHeader]}>
                             <Text  style={[styles.headerText,{ paddingLeft:30/StyleConfig.oPx}]}>期数</Text>
-                            <Text  style={[styles.headerText]}>月还本息</Text>
-                            <Text  style={[styles.headerText]}>月还本金</Text>
-                            <Text  style={[styles.headerText]}>月还利息</Text>
+                            <Text  style={[styles.headerText]}>{this.state.repayWay1 == 1 ? '月' : '应'}还本息</Text>
+                            <Text  style={[styles.headerText]}>{this.state.repayWay1 == 1 ? '月' : '应'}还本金</Text>
+                            <Text  style={[styles.headerText]}>{this.state.repayWay1 == 1 ? '月' : '应'}还利息</Text>
                             <Text  style={[styles.headerText]}>本息余额</Text>
                         </View>
-                        <ScrollView sytle={{flex:1}}>
+                        <View sytle={{flex:1}}>
                             {
                                 this.state.details.map((item,i)=>this.renderExpenseItem(item,i))
                             }
-                        </ScrollView>
+                        </View>
                     </View>
                 </View>
+                </ScrollView>
                 <MyPicker show={this.state.isToPicker} list={this.state.list} listMethod={this.pickerItem.bind(this)}  valMethod={this.setValue.bind(this)} />
+                <MyPicker show={this.state.isToPicker1} list={this.state.list1} listMethod={this.pickerItem.bind(this)}  valMethod={this.setValue1.bind(this)} />
             </View>
         );
     }
@@ -268,7 +359,7 @@ const styles = StyleSheet.create({
     topContainer: {
         paddingLeft:30/StyleConfig.oPx,
         paddingRight:30/StyleConfig.oPx,
-        height:512/StyleConfig.oPx,
+        paddingBottom:20/StyleConfig.oPx,
         width:StyleConfig.screen_width,
         backgroundColor:'#ffffff'
     },
@@ -277,7 +368,8 @@ const styles = StyleSheet.create({
         height:88/StyleConfig.oPx,
         width:StyleConfig.screen_width-60/StyleConfig.oPx,
         borderBottomWidth:1,
-        borderColor:'#cccccc'
+        borderColor:'#cccccc',
+        alignItems: 'flex-start',
     },
     text:{
         marginTop: 25/StyleConfig.oPx,
@@ -286,8 +378,8 @@ const styles = StyleSheet.create({
         fontSize:28/StyleConfig.oPx,
     },
     inputs: {
-        paddingLeft:36/StyleConfig.oPx,
-        width:470/StyleConfig.oPx,
+        marginLeft:100/StyleConfig.oPx,
+        width:400/StyleConfig.oPx,
         fontSize:28/StyleConfig.oPx,
         color:'#333333'
     },
@@ -382,7 +474,7 @@ const styles = StyleSheet.create({
         color: '#319bff',
         backgroundColor: 'transparent',
         marginTop: 28/StyleConfig.oPx,
-        marginLeft: 150/StyleConfig.oPx,
+        marginLeft: 100/StyleConfig.oPx,
     },
 });
 
