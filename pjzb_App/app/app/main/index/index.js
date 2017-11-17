@@ -19,6 +19,7 @@
    Platform,
    TouchableWithoutFeedback,
    Linking,
+   NetInfo,
  } from 'react-native';
   import NavigationBar from '../../components/NavigationBar';
   import Swiper from 'react-native-swiper';
@@ -44,6 +45,7 @@
   import RegIpayPersonal from '../user/regIpayPersonal';
   import SLBaoPage from '../user/SLBaoPage';
   import Button from '../../components/Button';
+  import Error from '../error/Error.js';
 
 const oPx = StyleConfig.oPx;
  let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
@@ -82,6 +84,8 @@ var options = {
        androidMap: global.indexData?global.indexData.androidMap:[],
        // iso 最新版本
        iosMap: global.indexData?global.indexData.iosMap:[],
+       // 是否发生网络错误
+       isError: false,
      }
    }
    componentWillMount(){
@@ -90,16 +94,29 @@ var options = {
      }},200);
    }
    componentDidMount(){
+      // 监听网络改变
+      NetInfo.isConnected.addEventListener('change',function(isConnected){
+        if (!isConnected) {
+          toastShort('已断开网络连接，请检查您的网络设置',0);
+        }
+      });
+      NetInfo.isConnected.removeEventListener('change');
+
        //获取标的信息和banner的数据
        this._getData();
 
        this._refresh();
    }
 
+   componentWillUnmount() {
+      NetInfo.isConnected.removeEventListener('change');
+   }
+
    //获取数据
    _getData(){
+      this.setState({isReturn: false});
      Request.post('getBannerAndBorrows.do',{uid:''},(data)=>{
-      console.log(data);
+
        this.setState({
          dataSource:ds.cloneWithRows(data.recommendBorrowList),
          bannerList:data.bannerList,
@@ -116,6 +133,9 @@ var options = {
          androidMap: data.androidMap,
          // iso 最新版本
          iosMap: data.iosMap,
+         // 网络正常
+         isError: false,
+         isReturn: true,
        });
        if(data.hasOwnProperty("isExgo")){
            this.setState({
@@ -123,11 +143,20 @@ var options = {
                isExgo:data.isExgo,
            });
        }
-       // 跳转到首页后检查更新信息
-       this._isVersionUpdate();
+      // 跳转到首页后检查更新信息
+      this._isVersionUpdate();
+
      },(error)=>{
-      
+        this.setState({isError: true});
      });
+
+      this.interval = setTimeout(() =>{
+        this.interval&&clearInterval(this.interval);
+          if (!this.state.isReturn) {
+            toastShort('已断开网络连接，请检查您的网络设置',0);
+          }
+      },6000);
+
    }
 
    _refresh() {
@@ -638,8 +667,8 @@ var options = {
       }
     }
 
-
    render(){
+    if (!this.state.isError) {
      return (
        <View style={{flex:1}}>
          <NavigationBar
@@ -741,12 +770,35 @@ var options = {
              </View>
            </View>
          </ScrollView>
-
-        
        </View>
      );
+    } else {
+      return (
+        <View style={{flex:1, backgroundColor:'#e9ecf3'}}>
+         <NavigationBar
+           title={"普金资本"}
+           rightDisplay={this.state.showLogin}
+           rightTitle={"登录/注册"}
+           rightBtnFunc={this.loginOrRegist}
+         />
+         <ScrollView contentContainerStyle={[styles.contentContainer, {flex: 1}]}
+           refreshControl={
+            <RefreshControl
+              refreshing={this.state.isRefreshing}
+              onRefresh={this._onRefresh}
+              tintColor="#ff0000"
+              title="刷新中..."
+              titleColor="#999"
+            />}
+           >
+          <Error />
+        </ScrollView>
+        </View>
+      );
+    }
    }
  }
+
 const style = StyleSheet.create({
     textView: {
         height: 180/oPx,

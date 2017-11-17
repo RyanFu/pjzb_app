@@ -10,6 +10,7 @@ let HOST='https://www.pujinziben.com';
 let URL = HOST+'/reactapp/';
 
 import Storage from './Storage';
+
 let Request = {
    post : async (url,data,successCallback,failCallback) => {
       let user = await Storage.getItem('USER');

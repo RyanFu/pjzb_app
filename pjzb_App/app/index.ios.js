@@ -7,17 +7,10 @@
 import React, { Component } from 'react';
 import {
   AppRegistry,
-  StyleSheet,
-  Text,
-  View,
-  ScrollView,
-  TouchableWithoutFeedback,
-    ImageEditor,
-    CameraRoll,
-    Image,
 } from 'react-native';
- import App from './app/app';
- // import App from './app/components/VersionUpdate.js';
+
+import App from './app/app';
+
 
 AppRegistry.registerComponent('app', () => App);
 
