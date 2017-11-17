@@ -343,11 +343,12 @@
       height: 327/oPx,
     },
     contentTextView:{
-      marginTop:35/oPx,
+      marginTop:20/oPx,
       marginLeft:40/oPx,
     },
     imageTextView:{
       flexDirection: 'row',
+      alignItems: 'center',
     },
     introduceImgStyle:{
       width: 41/oPx,

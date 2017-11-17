@@ -399,7 +399,7 @@ export default class Withdraw extends Component {
     render() {
         return (
             <View style={styles.scrollView}>
-                <ScrollView style={styles.scrollView} onResponderRelease={(e)=>this.tapEvent(e)} keyboardShouldPersistTaps="handled">
+                
                     <LinearGradient colors={['#f3553e', '#eb3549']} style={{height:this.state.isShow?360/StyleConfig.oPx:155/StyleConfig.oPx}}>
                         <NavigationBar
                             title="提现"
@@ -418,7 +418,7 @@ export default class Withdraw extends Component {
                                 :null
                         }
                     </LinearGradient>
-
+<ScrollView style={styles.scrollView} onResponderRelease={(e)=>this.tapEvent(e)} keyboardShouldPersistTaps="handled">
                     <Image 
                         style={{width:690/StyleConfig.oPx, height:268/StyleConfig.oPx, 
                             marginTop: 20/StyleConfig.oPx, marginBottom: 5/StyleConfig.oPx, marginLeft: 30/StyleConfig.oPx}} 
@@ -481,6 +481,7 @@ export default class Withdraw extends Component {
                     {/*</View>*/}
                     {/*</KeyboardAvoidingView>*/}
                     {this.getBtn()}
+                    <View style={styles.interval40}></View>
                 </ScrollView>
                 <Loading show={this.state.showDialog} top={true}/>
                 <MyPicker show={this.state.isToPicker} list={this.state.bankList} listMethod={this.pickerItem1.bind(this)}  valMethod={this.bankValue} isBank={true} />

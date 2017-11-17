@@ -117,7 +117,7 @@ export default class InvestDetailTY extends Component {
     }
 
     toBorrow() {
-        this.props.navigator.push({component:InvestDetail,name:'InvestDetail',params:{borrowId:this.state.borrowId,borrowTitle:this.state.debtTitle}});
+        this.props.navigator.push({component:InvestDetail,name:'InvestDetail',params:{borrowId:this.state.borrowId}});
     }
 
     //提交
