@@ -124,7 +124,8 @@
      let onPress = this.props.onPress;
      const elm = this._renderElm();
      return (
-       !this.props.showList? <TouchableOpacity onPress={()=>onPress(data.id)}>{elm}</TouchableOpacity> :<View>{elm}</View>
+       !this.props.showList? <TouchableOpacity activeOpacity={0.5} onPress={()=>onPress(data.id)}>{elm}</TouchableOpacity> :
+       <TouchableOpacity activeOpacity={0.5} onPress={()=>{this.props.onPressEvent(data.id,data.borrowTitle,data.paymentMode)}}>{elm}</TouchableOpacity>
       );
    }
  }

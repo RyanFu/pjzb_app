@@ -56,6 +56,11 @@ export default class ZQZRPage extends Component {
                     return;
                 }
                 this.setState({totalPageNum: data.pageBean.totalPageNum});
+                if(data.pageBean.totalPageNum>1){
+                   this.setState({isShowBottomRefresh:true});
+                }else{
+                   this.setState({isShowBottomRefresh:false});
+                }
                 if (flag) {
                     let result = this.state.oData.concat(data.pageBean.page);
                     this.setState({
@@ -108,6 +113,7 @@ export default class ZQZRPage extends Component {
     }
     _end(){
         if(this.state.isEmpty) return;
+        if(this.state.totalPageNum == 1) return;
         let index = this.state.curPage;
         index++;
         if(index>this.state.totalPageNum){

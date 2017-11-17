@@ -408,10 +408,11 @@
 
    render(){
      let rightImageSource = require('../../images/icon/icon_calculator.png');
+     let title = this.props.borrowTitle ? this.props.borrowTitle : "项目详情";
      return (
        <View style={styles.container}>
          <NavigationBar
-           title={"项目详情"}
+           title={title}
            leftShowIcon={true}
            leftBtnFunc={this._goBack.bind(this)}
            rightShowIcon={true}

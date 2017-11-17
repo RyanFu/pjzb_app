@@ -23,7 +23,7 @@
      let status = this.props.data.borrowStatus;
      let oBtn = status == '2'?
      <TouchableOpacity style={styles.oButton}
-       onPress={()=>this.props.onPressEvent(data.id,data.borrowTitle)}>
+       onPress={()=>this.props.onPressEvent(data.id)}>
        <Text style={styles.oButtonText}>立即投资</Text>
      </TouchableOpacity>:
      <View style={[styles.oButton,styles.oButtonDisabled]}>
@@ -84,8 +84,8 @@
                   </View>
                   <Text style={styles.product_d_b_small}> {data.schedules}%</Text>
                </View>
-               <View style={styles.product_detail_b_t}>
-                 <Text style={styles.product_d_b_small}>募集总额/{100}万元</Text>
+               <View style={styles.product_detail_b_t}> 
+                 <Text style={styles.product_d_b_small}>募集总额/{data.borrowAmount}</Text>
                </View>
              </View>
    }
@@ -121,7 +121,7 @@
            {
              !this.props.showList?<Text style={styles.product_title_text}>
              {data.borrowTitle}
-           </Text>:<TouchableOpacity onPress={()=>{this.props.onPressEvent(data.id,data.borrowTitle)}}><Text style={styles.product_title_text}>{data.borrowTitle}</Text></TouchableOpacity>
+           </Text>:<TouchableOpacity onPress={()=>{this.props.onPressEvent(data.id)}}><Text style={styles.product_title_text}>{data.borrowTitle}</Text></TouchableOpacity>
            }
            { this._getBorrowWayTitle() }
          </View>
@@ -161,7 +161,9 @@
      let onPress = this.props.onPress;
      const elm = this._renderElm();
      return (
-       !this.props.showList? <TouchableOpacity onPress={()=>onPress(data.id)}>{elm}</TouchableOpacity> :<View>{elm}</View>
+       !this.props.showList
+       ? <TouchableOpacity activeOpacity={0.5} onPress={()=>onPress(data.id)}>{elm}</TouchableOpacity> 
+       : <TouchableOpacity activeOpacity={0.5} onPress={()=>{this.props.onPressEvent(data.id)}}>{elm}</TouchableOpacity>
       );
    }
  }
@@ -214,7 +216,7 @@
      flex:1
    },
    product_detail_t_t:{
-     // height:40/oPx,
+     height:40/oPx,
      flexDirection:'row',
       alignItems: 'center',
    },

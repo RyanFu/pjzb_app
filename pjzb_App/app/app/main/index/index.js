@@ -570,8 +570,9 @@ var options = {
      }
 
     _getXSBiao() {
+      let component;
       if (this.state.xsBorrow && this.state.xsBorrow.isShow === 1) {
-        return  <View style={styles.xsBaoView}>
+        component = <View style={styles.xsBaoView}>
                   <View style={styles.xsView}>
                     <View style={styles.xsTitleView}>
                       <View style={{flexDirection: 'row'}}>
@@ -617,18 +618,23 @@ var options = {
                                   height:8/oPx,
                                   backgroundColor:'#eb3331',
                                   borderRadius:4/oPx,
-                                  width:2.6/100*152/oPx
+                                  width:this.state.xsBorrow.schedules/100*152/oPx
                               }} />
                           </View>
-                          <Text style={{fontSize:22/oPx, color:'#999', fontWeight:'200',marginLeft: 10/oPx}}>{100}%</Text>
+                          <Text style={{fontSize:22/oPx, color:'#999', fontWeight:'200',marginLeft: 10/oPx}}>{this.state.xsBorrow.schedules}%</Text>
                         </View>
                         <View style={{height:50/oPx, justifyContent:'center',}}>
-                          <Text style={{fontSize:22/oPx, color:'#999', fontWeight:'200',}}>募集总额/{10}万元</Text>
+                          <Text style={{fontSize:22/oPx, color:'#999', fontWeight:'200',}}>募集总额/{this.state.xsBorrow.borrowAmount}万元</Text>
                         </View>
                       </View>
                     </View>
                 </View>
               </View>;
+      }
+      if (this.state.islogin === 1 && this.state.isxsBiao > 0) {
+        return  component;
+      } else {
+        return  <TouchableOpacity activeOpacity={0.5} onPress={() => this._onPressXS()}>{component}</TouchableOpacity> 
       }
     }
 
