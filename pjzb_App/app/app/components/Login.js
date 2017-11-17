@@ -55,7 +55,11 @@ export default class Welcome extends Component {
                  iosMap: data.iosMap,
                }
             }
-        },(error)=>{});
+        },(error)=>{
+            global.indexData = {
+                isError: true,
+            }
+        });
 
         // 倒计时3s
         this.interval=setInterval(() =>{

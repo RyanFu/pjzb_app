@@ -85,7 +85,7 @@ var options = {
        // iso 最新版本
        iosMap: global.indexData?global.indexData.iosMap:[],
        // 是否发生网络错误
-       isError: false,
+       isError: global.indexData?global.indexData.isError:false,
      }
    }
    componentWillMount(){
@@ -100,7 +100,6 @@ var options = {
           toastShort('已断开网络连接，请检查您的网络设置',0);
         }
       });
-      NetInfo.isConnected.removeEventListener('change');
 
        //获取标的信息和banner的数据
        this._getData();
@@ -109,6 +108,7 @@ var options = {
    }
 
    componentWillUnmount() {
+      // 删除监听
       NetInfo.isConnected.removeEventListener('change');
    }
 
@@ -147,6 +147,7 @@ var options = {
       this._isVersionUpdate();
 
      },(error)=>{
+      if (this.state.bannerList == [] || this.state.bannerList == null || this.state.bannerList == '')
         this.setState({isError: true});
      });
 

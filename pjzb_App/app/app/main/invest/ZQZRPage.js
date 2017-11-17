@@ -78,7 +78,7 @@ export default class ZQZRPage extends Component {
                 }
             }
         },(error)=>{
-            alert(error);
+            // alert(error);
             //console.log(error);
         });
     }
