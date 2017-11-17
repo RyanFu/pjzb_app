@@ -49,7 +49,7 @@ export default styles = StyleSheet.create({
         width: 120/oPx,
     },
     input: {
-        width: 360/oPx,
+        width: 450/oPx,
         fontSize: 28/oPx,
         height: 90/oPx,
         marginLeft: 50/oPx,
