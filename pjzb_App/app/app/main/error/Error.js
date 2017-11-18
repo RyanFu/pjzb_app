@@ -41,11 +41,16 @@ export default class Error extends Component {
     },5000);
 
     // 判断如果没有网络情况下点击刷新，提示用户当前无网络
-    NetInfo.fetch().done(function(reachability){
-      alert(reachability)
-      if(reachability == 'none' || reachability == 'NONE'){
-        toastShort('当前设备未连接网络',0);
-      }
+    NetInfo.isConnected.fetch().done(function(isConnected){
+        if(!isConnected) {
+          alert('error' + isConnected)
+          NetInfo.fetch().done(function(reachability){
+            alert('error' +reachability)
+            if(reachability == 'none' || reachability == 'NONE'){
+              toastShort('当前设备未连接网络',0);
+            }
+          });
+        }
     });
 
   }
