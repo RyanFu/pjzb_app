@@ -15,6 +15,7 @@ import {
   Alert,
   TouchableOpacity,
   NetInfo,
+  ActivityIndicator,
 } from 'react-native';
 
 import {StyleConfig} from '../../style/index.js';
@@ -22,16 +23,28 @@ import {toastShort} from '../../utils/Toast.js';
 let oPx = StyleConfig.oPx;
 
 export default class Error extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isShow: false,
+    };
+  }
 
   onPress = () => {
     this.props.onPress();
 
-    NetInfo.isConnected.fetch().done(function(isConnected){
-      NetInfo.fetch().done(function(reachability){
-        if(reachability == 'none'){
-          toastShort('当前设备未连接网络',0);
-        }
-      });
+    // 如果没有网络，点击刷新那么展示刷新图标5秒后隐藏，此方案时为了解决在NetInfo方法内部无法设置state的值而做的折中方案
+    this.setState({ isShow: true });
+    this.interval = setTimeout(() =>{
+      this.interval&&clearInterval(this.interval);
+      this.setState({ isShow: false });
+    },5000);
+
+    // 判断如果没有网络情况下点击刷新，提示用户当前无网络
+    NetInfo.fetch().done(function(reachability){
+      if(reachability == 'none'){
+        toastShort('当前设备未连接网络',0);
+      }
     });
 
   }
@@ -41,6 +54,11 @@ export default class Error extends Component {
 		  <View style={styles.body}>
         <TouchableOpacity activeOpacity={0.5} onPress={() => this.onPress()}>
 			     <Image style={styles.image} source={require('../../images/error/image_error_notNetContent.png')} />
+            <View style={styles.activityView}>
+              {
+                this.state.isShow ? <ActivityIndicator /> : null
+              }
+            </View>
         </TouchableOpacity>
 	    </View>
     );
@@ -52,7 +70,7 @@ const styles = StyleSheet.create({
         flex:1,
         backgroundColor:'#E9ECF3',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     text: {
     	color: '#999',
@@ -61,6 +79,10 @@ const styles = StyleSheet.create({
     image: {
     	width: 284/oPx,
     	height: 250/oPx,
+      marginBottom: 30/oPx,
+    },
+    activityView: {
+      height: 50/oPx,
     },
     
 });
