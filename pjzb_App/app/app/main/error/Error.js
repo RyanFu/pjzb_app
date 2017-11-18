@@ -42,7 +42,8 @@ export default class Error extends Component {
 
     // 判断如果没有网络情况下点击刷新，提示用户当前无网络
     NetInfo.fetch().done(function(reachability){
-      if(reachability == 'none'){
+      alert(reachability)
+      if(reachability == 'none' || reachability == 'NONE'){
         toastShort('当前设备未连接网络',0);
       }
     });
@@ -77,8 +78,8 @@ const styles = StyleSheet.create({
     	fontSize: 32/oPx,
     },
     image: {
-    	width: 284/oPx,
-    	height: 250/oPx,
+    	width: 201/oPx,
+    	height: 239/oPx,
       marginBottom: 30/oPx,
     },
     activityView: {

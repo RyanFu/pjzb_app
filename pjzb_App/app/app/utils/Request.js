@@ -47,7 +47,7 @@ let Request = {
 
         NetInfo.isConnected.fetch().done(function(isConnected){
           NetInfo.fetch().done(function(reachability){
-            if(reachability != 'none'){
+            if(reachability != 'none' || reachability != 'NONE'){
               toastShort('请求超时，请重试或检查您的网络设置',0);
             }
           });
