@@ -77,11 +77,18 @@ export default class Welcome extends Component {
 
     }
     jumpPage(){
-        if(!this.flag)global.indexData = null;
+        let isError = false;
+        if(!this.flag) {
+            global.indexData = null;
+            isError = true;
+        }
         this.props.navigator.resetTo({
             name: 'AppMain',
             component: AppMain,
-            animated:'FadeIn'
+            animated:'FadeIn',
+            params: {
+                isError: isError
+            }
         })
         // 停止
         this.interval&&clearInterval(this.interval);

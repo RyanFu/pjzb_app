@@ -11,12 +11,16 @@
    RefreshControl,
    ActivityIndicator,
    Alert,
-   InteractionManager
+   InteractionManager,
+   NetInfo,
  } from 'react-native';
  import {styles} from '../../style/main';
  import ProductList from '../../components/Product';
  import Request from '../../utils/Request';
  import {toastShort} from '../../utils/Toast';
+ import Error from '../error/Error.js';
+ import NetUtil from '../../utils/NetUtil.js';
+
  let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
  export default class Product extends Component {
    constructor(props){
@@ -28,13 +32,24 @@
        curPage:1,
        totalPageNum:0,
        isShowBottomRefresh:true,
-       productType:this.props.productType
+       productType:this.props.productType,
+       isError: false,
      }
    }
+
+   componentDidMount(){
+
+      InteractionManager.runAfterInteractions(this._getData());
+   }
+
    //获取数据
    _getData(flag){
-     Request.post('investList.do',{curPage:this.state.curPage,tt:'',yy:'',xx:this.state.productType,rates:'',timeers:'',deadlines:'',flages:'',titles:''},(data)=>{
+    Request.post('investList.do',{curPage:this.state.curPage,tt:'',yy:'',xx:this.state.productType,rates:'',timeers:'',deadlines:'',flages:'',titles:''},(data)=>{
        if(data.error=='0'){
+          this.setState({
+            // 网络正常
+            isError: false,
+          });
          if(data.pageBean.page.length == 0){
            this.setState({
              isEmpty:true
@@ -66,8 +81,11 @@
          Alert.alert('提示',data.msg);
        }
      },(error)=>{
-       //console.log(error);
+      if (this.state.oData == [] || this.state.oData == null || this.state.oData == '')
+        this.setState({ isError: true });
+      this.setState({ isRefreshing:false });
      });
+
    }
    //生成list
    _renderRow(data){
@@ -78,9 +96,7 @@
    _onPress(id,title){
      this.props.navigator(id,title);
    }
-   componentDidMount(){
-    InteractionManager.runAfterInteractions(this._getData());
-   }
+
    _renderFooter() {
      if(this.state.isEmpty){
        return (<View style={styles.moreBottom}>
@@ -109,25 +125,50 @@
    _onRefresh(){
      this.setState({curPage:1,isRefreshing:true},()=>this._getData(false));
    }
-   
+
+  getErrorView() {
+    return (
+      <View style={{flex: 1}}>
+        <Error onPress={this._getData.bind(this)} />
+        <NetUtil />
+      </View>
+    );
+  }
+
    render(){
-     return (<ListView
-       dataSource={this.state.dataSource}
-       renderRow={this._renderRow.bind(this)}
-       style={styles.listView}
-       onEndReached={this._end.bind(this)}
-       onEndReachedThreshold={30}
-       pageSize={5}
-       enableEmptySections = {true}
-       renderFooter={this._renderFooter.bind(this)}
-       refreshControl={
-        <RefreshControl
-          refreshing={this.state.isRefreshing}
-          onRefresh={this._onRefresh.bind(this)}
-          tintColor="#ff0000"
-          title="刷新中..."
-          titleColor="#999"
-        />}
-     />);
-   }
+      return (
+        <View style={{flex: 1}}>
+        {
+          !this.state.isError
+          ?
+          <View style={{flex: 1}}>
+           <ListView
+             dataSource={this.state.dataSource}
+             renderRow={this._renderRow.bind(this)}
+             style={styles.listView}
+             onEndReached={this._end.bind(this)}
+             onEndReachedThreshold={30}
+             pageSize={5}
+             enableEmptySections = {true}
+             renderFooter={this._renderFooter.bind(this)}
+             refreshControl={
+              <RefreshControl
+                refreshing={this.state.isRefreshing}
+                onRefresh={this._onRefresh.bind(this)}
+                tintColor="#ff0000"
+                title="刷新中..."
+                titleColor="#999"
+              />}
+           />
+            <NetUtil />
+          </View>
+          :
+          <View style={{flex: 1}}>
+            <Error onPress={this._getData.bind(this)} />
+            <NetUtil />
+          </View>
+        }
+      </View>
+    );
+  }
  }

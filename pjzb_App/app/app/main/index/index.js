@@ -46,6 +46,7 @@
   import SLBaoPage from '../user/SLBaoPage';
   import Button from '../../components/Button';
   import Error from '../error/Error.js';
+  import NetUtil from '../../utils/NetUtil.js';
 
 const oPx = StyleConfig.oPx;
  let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
@@ -85,7 +86,10 @@ var options = {
        // iso 最新版本
        iosMap: global.indexData?global.indexData.iosMap:[],
        // 是否发生网络错误
-       isError: global.indexData?global.indexData.isError:false,
+       isError: this.props.isError,
+       // 请求后是否成功返回
+       // isReturn: true,
+
      }
    }
    componentWillMount(){
@@ -94,28 +98,17 @@ var options = {
      }},200);
    }
    componentDidMount(){
-      // 监听网络改变
-      NetInfo.isConnected.addEventListener('change',function(isConnected){
-        if (!isConnected) {
-          toastShort('已断开网络连接，请检查您的网络设置',0);
-        }
-      });
-
        //获取标的信息和banner的数据
-       this._getData();
+       if (!this.state.isError)
+          this._getData();
 
        this._refresh();
    }
 
-   componentWillUnmount() {
-      // 删除监听
-      NetInfo.isConnected.removeEventListener('change');
-   }
-
    //获取数据
    _getData(){
-      this.setState({isReturn: false});
-     Request.post('getBannerAndBorrows.do',{uid:''},(data)=>{
+      // this.setState({isReturn: false});
+      Request.post('getBannerAndBorrows.do',{uid:''},(data)=>{
 
        this.setState({
          dataSource:ds.cloneWithRows(data.recommendBorrowList),
@@ -135,7 +128,7 @@ var options = {
          iosMap: data.iosMap,
          // 网络正常
          isError: false,
-         isReturn: true,
+         // isReturn: true,
        });
        if(data.hasOwnProperty("isExgo")){
            this.setState({
@@ -151,12 +144,12 @@ var options = {
         this.setState({isError: true});
      });
 
-      this.interval = setTimeout(() =>{
-        this.interval&&clearInterval(this.interval);
-          if (!this.state.isReturn) {
-            toastShort('已断开网络连接，请检查您的网络设置',0);
-          }
-      },6000);
+      // this.interval = setTimeout(() =>{
+      //   this.interval&&clearInterval(this.interval);
+      //     if (!this.state.isReturn) {
+      //       toastShort('网络不佳，请检查您的网络设置',0);
+      //     }
+      // },8000);
 
    }
 
@@ -551,17 +544,20 @@ var options = {
           )
       }
     }
+
      //文本格式化
      _textClip(str){
          str=str+'';
          return str.replace(/<[^>]+>|\n|\s|&nbsp;/g,'');
      }
+
      //图片格式化
      _imgClip(str){
          str=str+'';
          str = str.replace(/<img/g,'<img style="width:'+ (StyleConfig.screen_width-20) +'px;" ');
          return str.replace(/height/g,'width');
      }
+
      _swiper_gsdt(row,index){
          let c = this._imgClip(row.content);
          let content = this._textClip(row.content);
@@ -669,134 +665,116 @@ var options = {
     }
 
    render(){
-    if (!this.state.isError) {
-     return (
-       <View style={{flex:1}}>
+    return (
+      <View style={{flex:1}}>
          <NavigationBar
            title={"普金资本"}
            rightDisplay={this.state.showLogin}
            rightTitle={"登录/注册"}
            rightBtnFunc={this.loginOrRegist}
          />
-         <ScrollView contentContainerStyle={styles.contentContainer}
-           refreshControl={
-            <RefreshControl
-              refreshing={this.state.isRefreshing}
-              onRefresh={this._onRefresh}
-              tintColor="#ff0000"
-              title="刷新中..."
-              titleColor="#999"
-            />}
-           >
-           <View style={styles.swiper}>
-              {this.state.bannerLoad?<View style={styles.slide}>
-                <Image style={styles.img} source={this.state.defaultBanner}/>
-               </View>:null}
-             <Swiper height={400/oPx} autoplay={true} index={this.state.sweiperIndex} showsButtons={false} showsPagination={false}>
-                {
-                  this.state.bannerList.map((row, index) =>{
-                      return this._swiper(row,index);
-                  })
-                }
-             </Swiper>
-           </View>
-           <View style={styles.index_about}>
-             <TouchableOpacity activeOpacity={0.8} style={[styles.about,{alignItems:'flex-start'}]} onPress={this._goToGZBJ}>
-               <Image style={styles.about_img} source={require('../../images/index/icon_index_gz.png')}/>
-               <Text style={styles.about_text}>国资背景</Text>
-             </TouchableOpacity>
-             <TouchableOpacity activeOpacity={0.8} style={[styles.about,{alignItems:'center'}]} onPress={this._goToSafty}>
-               <Image style={styles.about_img} source={require('../../images/index/icon_index_safe.png')}/>
-               <Text style={styles.about_text}>安全保障</Text>
-             </TouchableOpacity>
-             <TouchableOpacity activeOpacity={0.8} style={[styles.about,{alignItems:'flex-end'}]} onPress={this._goToYQYL}>
-               <Image style={styles.about_img} source={require('../../images/index/icon_index_invit.png')}/>
-               <Text style={styles.about_text}>邀请有礼</Text>
-             </TouchableOpacity>
-           </View>
-
-          {/* 体验标 */}
-          {/* <Image style={styles.experiences} source={require('../../images/index/finance_experience_background.png')}>*/}
-          {/*    <View style={styles.lefts_exp_rate}>*/}
-          {/*       <View style={styles.exp_rate}>*/}
-          {/*           <Text style={[styles.exp_rate_big,{backgroundColor: "transparent",}]}>{this.state.experienceBorrow.annualRate}.00</Text><Text style={[styles.exp_rate_small,{backgroundColor: "transparent",}]}>%</Text><Text style={[styles.exp_title_texts,{backgroundColor: "transparent",}]}>理财体验标</Text>*/}
-          {/*       </View>*/}
-          {/*        {this.state.islogin === 1 && this.state.isExgo>0?<Image style={styles.exp_image_btn} source={require('../../images/index/index_miss_button.png')}>*/}
-          {/*                <Text style={{backgroundColor:'transparent',textAlign:'center',color:'#fff', fontSize:24/oPx,}}>*/}
-          {/*                    您已投资*/}
-          {/*                </Text>*/}
-          {/*            </Image>:*/}
-          {/*       <TouchableOpacity onPress={()=>this._onPress()} >*/}
-          {/*         <Image style={styles.exp_image_btn} source={require('../../images/index/index_buy_button.png')}>*/}
-          {/*             <Text style={{backgroundColor:'transparent',textAlign:'center',color:'#fff', fontSize:24/oPx,}}>*/}
-          {/*                 立即投资*/}
-          {/*             </Text>*/}
-          {/*         </Image>*/}
-          {/*       </TouchableOpacity>}*/}
-          {/*    </View>*/}
-          {/* </Image>*/}
-
-          {/* 新手标 */}
-          { this._getXSBiao() }
-
-           <View style={styles.product}>
-             <View style={[styles.exp_title,styles.noborder]}>
-               <Text style={styles.exp_title_text}>投资推荐</Text>
+          {
+            this.state.isError
+            ?
+            <Error onPress={this._getData.bind(this)} />
+            :
+            <ScrollView contentContainerStyle={styles.contentContainer}
+               refreshControl={
+                <RefreshControl
+                  refreshing={this.state.isRefreshing}
+                  onRefresh={this._onRefresh}
+                  tintColor="#ff0000"
+                  title="刷新中..."
+                  titleColor="#999"
+                />}
+               >
+              <View style={styles.swiper}>
+                {this.state.bannerLoad?<View style={styles.slide}>
+                  <Image style={styles.img} source={this.state.defaultBanner}/>
+                 </View>:null}
+               <Swiper height={400/oPx} autoplay={true} index={this.state.sweiperIndex} showsButtons={false} showsPagination={false}>
+                  {
+                    this.state.bannerList.map((row, index) =>{
+                        return this._swiper(row,index);
+                    })
+                  }
+               </Swiper>
              </View>
-             <ListView
-                dataSource={this.state.dataSource}
-                renderRow={this._renderRow}
-                enableEmptySections={true}
-              />
-           </View>
+             <View style={styles.index_about}>
+               <TouchableOpacity activeOpacity={0.8} style={[styles.about,{alignItems:'flex-start'}]} onPress={this._goToGZBJ}>
+                 <Image style={styles.about_img} source={require('../../images/index/icon_index_gz.png')}/>
+                 <Text style={styles.about_text}>国资背景</Text>
+               </TouchableOpacity>
+               <TouchableOpacity activeOpacity={0.8} style={[styles.about,{alignItems:'center'}]} onPress={this._goToSafty}>
+                 <Image style={styles.about_img} source={require('../../images/index/icon_index_safe.png')}/>
+                 <Text style={styles.about_text}>安全保障</Text>
+               </TouchableOpacity>
+               <TouchableOpacity activeOpacity={0.8} style={[styles.about,{alignItems:'flex-end'}]} onPress={this._goToYQYL}>
+                 <Image style={styles.about_img} source={require('../../images/index/icon_index_invit.png')}/>
+                 <Text style={styles.about_text}>邀请有礼</Text>
+               </TouchableOpacity>
+             </View>
 
-           <View style={styles.index_footer}>
-             <View style={[styles.index_footer_title]}>
-                 <View>
-                    <View style={styles.line_style}></View>
-                    <Text style={styles.footer_title_text}>公司动态</Text>
-                 </View>
-                 <TouchableOpacity onPress={this._gsdt}>
-                    <Text style={styles.footer_more_text}>更多》</Text>
-                 </TouchableOpacity>
+            {/* 体验标 */}
+            {/* <Image style={styles.experiences} source={require('../../images/index/finance_experience_background.png')}>*/}
+            {/*    <View style={styles.lefts_exp_rate}>*/}
+            {/*       <View style={styles.exp_rate}>*/}
+            {/*           <Text style={[styles.exp_rate_big,{backgroundColor: "transparent",}]}>{this.state.experienceBorrow.annualRate}.00</Text><Text style={[styles.exp_rate_small,{backgroundColor: "transparent",}]}>%</Text><Text style={[styles.exp_title_texts,{backgroundColor: "transparent",}]}>理财体验标</Text>*/}
+            {/*       </View>*/}
+            {/*        {this.state.islogin === 1 && this.state.isExgo>0?<Image style={styles.exp_image_btn} source={require('../../images/index/index_miss_button.png')}>*/}
+            {/*                <Text style={{backgroundColor:'transparent',textAlign:'center',color:'#fff', fontSize:24/oPx,}}>*/}
+            {/*                    您已投资*/}
+            {/*                </Text>*/}
+            {/*            </Image>:*/}
+            {/*       <TouchableOpacity onPress={()=>this._onPress()} >*/}
+            {/*         <Image style={styles.exp_image_btn} source={require('../../images/index/index_buy_button.png')}>*/}
+            {/*             <Text style={{backgroundColor:'transparent',textAlign:'center',color:'#fff', fontSize:24/oPx,}}>*/}
+            {/*                 立即投资*/}
+            {/*             </Text>*/}
+            {/*         </Image>*/}
+            {/*       </TouchableOpacity>}*/}
+            {/*    </View>*/}
+            {/* </Image>*/}
+
+            {/* 新手标 */}
+            { this._getXSBiao() }
+
+             <View style={styles.product}>
+               <View style={[styles.exp_title,styles.noborder]}>
+                 <Text style={styles.exp_title_text}>投资推荐</Text>
+               </View>
+               <ListView
+                  dataSource={this.state.dataSource}
+                  renderRow={this._renderRow}
+                  enableEmptySections={true}
+                />
              </View>
-             <View style={styles.slide}>
-                 <Swiper height={200/oPx} autoplay={true} showsButtons={false} showsPagination={false} autoplayTimeout={5}>
-                     {
-                         this.state.gsdtList.map((row, index) =>{
-                             return this._swiper_gsdt(row,index);
-                         })
-                     }
-                 </Swiper>
+
+             <View style={styles.index_footer}>
+               <View style={[styles.index_footer_title]}>
+                   <View>
+                      <View style={styles.line_style}></View>
+                      <Text style={styles.footer_title_text}>公司动态</Text>
+                   </View>
+                   <TouchableOpacity onPress={this._gsdt}>
+                      <Text style={styles.footer_more_text}>更多》</Text>
+                   </TouchableOpacity>
+               </View>
+               <View style={styles.slide}>
+                   <Swiper height={200/oPx} autoplay={true} showsButtons={false} showsPagination={false} autoplayTimeout={5}>
+                       {
+                           this.state.gsdtList.map((row, index) =>{
+                               return this._swiper_gsdt(row,index);
+                           })
+                       }
+                   </Swiper>
+               </View>
              </View>
-           </View>
-         </ScrollView>
+           </ScrollView>
+          }
+          <NetUtil />
        </View>
-     );
-    } else {
-      return (
-        <View style={{flex:1, backgroundColor:'#e9ecf3'}}>
-         <NavigationBar
-           title={"普金资本"}
-           rightDisplay={this.state.showLogin}
-           rightTitle={"登录/注册"}
-           rightBtnFunc={this.loginOrRegist}
-         />
-         <ScrollView contentContainerStyle={[styles.contentContainer, {flex: 1}]}
-           refreshControl={
-            <RefreshControl
-              refreshing={this.state.isRefreshing}
-              onRefresh={this._onRefresh}
-              tintColor="#ff0000"
-              title="刷新中..."
-              titleColor="#999"
-            />}
-           >
-          <Error />
-        </ScrollView>
-        </View>
-      );
-    }
+    );
    }
  }
 

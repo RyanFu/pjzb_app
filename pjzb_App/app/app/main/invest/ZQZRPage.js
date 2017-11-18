@@ -9,7 +9,8 @@ import {
     Text,
     ListView,
     RefreshControl,
-    ActivityIndicator
+    ActivityIndicator,
+    NetInfo,
 } from 'react-native';
 import {StyleConfig} from '../../style/index';
 import {styles} from '../../style/main';
@@ -17,6 +18,8 @@ import ZQZRProduct from '../../components/ZQZRProduct';
 import Loading from '../../components/Loading';
 import Request from '../../utils/Request';
 import {toastShort} from '../../utils/Toast';
+import Error from '../error/Error.js';
+import NetUtil from '../../utils/NetUtil.js';
 
 let oPx = StyleConfig.oPx;
 let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
@@ -32,6 +35,7 @@ export default class ZQZRPage extends Component {
             isShowBottomRefresh:true,
             // canAssign：可转让，assigning：转让中，alreadyAssign：已转让
             assignFlag:'assigning',
+            isError: false,
         }
     }
     //获取数据
@@ -55,7 +59,7 @@ export default class ZQZRPage extends Component {
                     });
                     return;
                 }
-                this.setState({totalPageNum: data.pageBean.totalPageNum});
+                this.setState({totalPageNum: data.pageBean.totalPageNum, isError: false,});
                 if(data.pageBean.totalPageNum>1){
                    this.setState({isShowBottomRefresh:true});
                 }else{
@@ -78,8 +82,9 @@ export default class ZQZRPage extends Component {
                 }
             }
         },(error)=>{
-            // alert(error);
-            //console.log(error);
+            if (this.state.oData == [] || this.state.oData == null || this.state.oData == '')
+                this.setState({ isError: true });
+            this.setState({ isRefreshing:false });
         });
     }
     _leftbtn(){
@@ -127,26 +132,41 @@ export default class ZQZRPage extends Component {
     _onRefresh(){
         this.setState({curPage:1},()=>this._getData(false));
     }
+    
     render(){
-        return (
-            <ListView
-            dataSource={this.state.dataSource}
-            renderRow={this._renderRow.bind(this)}
-            style={styles.listView}
-            onEndReached={this._end.bind(this)}
-            onEndReachedThreshold={30}
-            enableEmptySections = {true}
-            pageSize={5}
-            renderFooter={this._renderFooter.bind(this)}
-            refreshControl={
-        <RefreshControl
-          refreshing={this.state.isRefreshing}
-          onRefresh={this._onRefresh.bind(this)}
-          tintColor="#ff0000"
-          title="刷新中..."
-          titleColor="#999"
-        />}
-        />
-        );
-    }
+      return (
+        <View style={{flex: 1}}>
+        {
+          !this.state.isError
+          ?
+          <View style={{flex: 1}}>
+           <ListView
+             dataSource={this.state.dataSource}
+             renderRow={this._renderRow.bind(this)}
+             style={styles.listView}
+             onEndReached={this._end.bind(this)}
+             onEndReachedThreshold={30}
+             pageSize={5}
+             enableEmptySections = {true}
+             renderFooter={this._renderFooter.bind(this)}
+             refreshControl={
+              <RefreshControl
+                refreshing={this.state.isRefreshing}
+                onRefresh={this._onRefresh.bind(this)}
+                tintColor="#ff0000"
+                title="刷新中..."
+                titleColor="#999"
+              />}
+           />
+            <NetUtil />
+          </View>
+          :
+          <View style={{flex: 1}}>
+            <Error onPress={this._getData.bind(this)} />
+            <NetUtil />
+          </View>
+        }
+      </View>
+    );
+  }
 }
