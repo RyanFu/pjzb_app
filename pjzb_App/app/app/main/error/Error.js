@@ -18,7 +18,7 @@ import {
 } from 'react-native';
 
 import {StyleConfig} from '../../style/index.js';
-  import {toastShort} from '../../utils/Toast.js';
+import {toastShort} from '../../utils/Toast.js';
 let oPx = StyleConfig.oPx;
 
 export default class Error extends Component {

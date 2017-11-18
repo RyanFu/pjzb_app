@@ -3,12 +3,19 @@
  */
  // let HOST='http://192.168.1.168:8080/pjzb';
  
-// let HOST='http://192.168.1.121/pjzb'; 
+let HOST='http://192.168.1.124:8080/pjzb'; 
 
 // let HOST='http://120.78.89.202:8080/pjzb';
-let HOST='https://www.pujinziben.com';
+
+// let HOST='https://www.pujinziben.com';
 let URL = HOST+'/reactapp/';
 
+import {
+  NetInfo,
+} from 'react-native';
+
+import fetchUtil from './fetch-polyfill';
+import {toastShort} from './Toast.js';
 import Storage from './Storage';
 
 let Request = {
@@ -21,12 +28,13 @@ let Request = {
             pageType:"reactAPP"
           };
       let postData = Object.assign(data,data_gloabl);
-      fetch(URL+url,{
+      fetchUtil(URL+url,{
         method: 'POST',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         },
+        timeout: 5 * 1000,
         body:JSON.stringify(postData)
       })
       .then((response) => response.json())
@@ -36,9 +44,15 @@ let Request = {
       .catch((error) => {
         if(failCallback)
           failCallback(error);
-      });
-    
 
+        NetInfo.isConnected.fetch().done(function(isConnected){
+          NetInfo.fetch().done(function(reachability){
+            if(reachability != 'none'){
+              toastShort('请求超时，请重试或检查您的网络设置',0);
+            }
+          });
+        });
+      });
   },
   get:(url,data,successCallback,failCallback) =>{
     let data_gloabl = {

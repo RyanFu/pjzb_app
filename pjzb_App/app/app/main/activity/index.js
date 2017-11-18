@@ -22,20 +22,25 @@
   import Questionnaire from '../other/questionnaire';
   import Login from '../other/login';
   import {toastShort} from '../../utils/Toast';
+  import Error from '../error/Error.js';
+  import NetUtil from '../../utils/NetUtil.js';
+
   const oPx = StyleConfig.oPx;
   let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
   export default class About extends Component {
     constructor(props){
       super(props);
       this.state = {
+        oData:[],
         dataSource:ds.cloneWithRows([]),
         activityList:[],
         isRefreshing:false,
         animating:true,
         curPage:1,
         isEmpty:false,
-        isShowBottomRefresh:true
-
+        isShowBottomRefresh:true,
+        // 是否发生网络错误
+        isError: this.props.isError,
       }
     }
     componentDidMount(){
@@ -68,7 +73,7 @@
             }else{
               this.setState({isShowBottomRefresh:false});
             }
-            this.setState({totalPageNum:data.pageBean.totalPageNum});
+            this.setState({totalPageNum:data.pageBean.totalPageNum,isError: false});
             if(flag){
               let result = this.state.oData.concat(data.pageBean.page);
               this.setState({
@@ -91,7 +96,9 @@
           }
           
         },(error)=>{
-          console.log(error);
+          if (this.state.oData == [] || this.state.oData == null || this.state.oData == '')
+            this.setState({isError: true});
+          this.setState({isRefreshing: false});
         });
       }
     }
@@ -235,7 +242,15 @@
           <NavigationBar
             title={"活动"}
           />
-          {this.returnElm()}
+          {
+            !this.state.isError
+            ? 
+            this.returnElm() 
+            :
+            <Error onPress={this._getRequest.bind(this)} />
+          }
+          
+          <NetUtil />
          </View>
       );
     }

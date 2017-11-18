@@ -19,7 +19,6 @@
    Platform,
    TouchableWithoutFeedback,
    Linking,
-   NetInfo,
  } from 'react-native';
   import NavigationBar from '../../components/NavigationBar';
   import Swiper from 'react-native-swiper';
@@ -87,8 +86,6 @@ var options = {
        iosMap: global.indexData?global.indexData.iosMap:[],
        // 是否发生网络错误
        isError: this.props.isError,
-       // 请求后是否成功返回
-       // isReturn: true,
 
      }
    }
@@ -107,7 +104,6 @@ var options = {
 
    //获取数据
    _getData(){
-      // this.setState({isReturn: false});
       Request.post('getBannerAndBorrows.do',{uid:''},(data)=>{
 
        this.setState({
@@ -128,7 +124,6 @@ var options = {
          iosMap: data.iosMap,
          // 网络正常
          isError: false,
-         // isReturn: true,
        });
        if(data.hasOwnProperty("isExgo")){
            this.setState({
@@ -143,13 +138,6 @@ var options = {
       if (this.state.bannerList == [] || this.state.bannerList == null || this.state.bannerList == '')
         this.setState({isError: true});
      });
-
-      // this.interval = setTimeout(() =>{
-      //   this.interval&&clearInterval(this.interval);
-      //     if (!this.state.isReturn) {
-      //       toastShort('网络不佳，请检查您的网络设置',0);
-      //     }
-      // },8000);
 
    }
 
