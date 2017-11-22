@@ -115,7 +115,13 @@ export default class EarningsCalculator extends Component{
                 toastShort(data.msg,-300);
             }
         },(error)=>{
-            Alert.alert('提示',alert(error));
+            Alert.alert(
+                '提示信息',
+                '您的网络不稳定，请稍后再试！',
+                [
+                    {text: '确定', },
+                ]
+            )
         });
     }
 

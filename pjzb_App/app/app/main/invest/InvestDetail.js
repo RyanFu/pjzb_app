@@ -39,6 +39,9 @@
  import OwebView from '../../components/OwebView';
  import TimerMixin from 'react-timer-mixin';
  import HKJHPage from '../user/HKJHPage.js';
+ import Error from '../error/Error.js';
+
+
  const oPx = StyleConfig.oPx;
  export default class InvestDetail extends Component {
    constructor(props){
@@ -81,6 +84,8 @@
          borrowAmount:'0.00'
        },
        borrowTypeSubId: 1,
+       // 是否发生网络错误
+       isError: false,
      }
    }
    componentWillMount() {
@@ -116,7 +121,7 @@
        borrowId:this.props.borrowId,
        uid:''
      },(data)=>{
-       this.setState({productDetail:data,animating:false,isRefreshing:false, borrowTypeSubId: data.borrowTypeSubId});
+       this.setState({productDetail:data,animating:false,isRefreshing:false, borrowTypeSubId: data.borrowTypeSubId,isError: false});
        if(data.userMap){
          this.setState({usableSum:data.userMap.usableSum,mapListCd:data.mapListCd});
        };
@@ -125,7 +130,7 @@
          this._initFundTime();
        }
      },(error)=>{
-        //alert(error);
+       this.setState({isError: true, animating:false});
      })
    }
    componentDidMount() {
@@ -419,168 +424,174 @@
            rightImageSource={rightImageSource}
            rightBtnFunc={this._Calculator.bind(this)}
          />
-         <ScrollView
-           ref={(scrollView) => { this.ScrollViewParent = scrollView; }}
-           showsVerticalScrollIndicator={false}
-           refreshControl={
-            <RefreshControl
-              ref="RefreshControl"
-              refreshing={this.state.isRefreshing}
-              onRefresh={this._onRefresh.bind(this)}
-              tintColor="#ff0000"
-              title="刷新中..."
-              titleColor="#999"
-            />}>
-             
-               <View style={styles.topRateView}>
-                 <View style={styles.topTitle}>
-                   <Text style={styles.topTitleText}>{this.state.productDetail.borrowTitle}</Text>
+         {
+            this.state.isError
+            ?
+            <Error onPress={this._getData.bind(this)} />
+            :
+           <ScrollView
+             ref={(scrollView) => { this.ScrollViewParent = scrollView; }}
+             showsVerticalScrollIndicator={false}
+             refreshControl={
+              <RefreshControl
+                ref="RefreshControl"
+                refreshing={this.state.isRefreshing}
+                onRefresh={this._onRefresh.bind(this)}
+                tintColor="#ff0000"
+                title="刷新中..."
+                titleColor="#999"
+              />}>
+               
+                 <View style={styles.topRateView}>
+                   <View style={styles.topTitle}>
+                     <Text style={styles.topTitleText}>{this.state.productDetail.borrowTitle}</Text>
+                   </View>
+                   <View style={styles.topRate}>
+                     <Text style={styles.topRateText}>{this.state.productDetail.showRate}</Text>
+                     <Text style={styles.topRateSymbol}>%</Text>
+                   </View>
+                   <View style={{marginTop:10}}><Text style={{color:'#777',fontSize:22/oPx}}>预期年化收益</Text></View>
                  </View>
-                 <View style={styles.topRate}>
-                   <Text style={styles.topRateText}>{this.state.productDetail.showRate}</Text>
-                   <Text style={styles.topRateSymbol}>%</Text>
+                 <View style={styles.topDetail}>
+                   <View style={[styles.topDetailLine,{flex:1.2}]}>
+                    <Text style={styles.topDetailText}>{this.state.productDetail.deadline}{this.state.productDetail.isDayThe == '1'?'个月':'天'}</Text>
+                    <Text style={styles.bottomDetailText}>项目期限</Text>
+                    </View>
+                   <View style={styles.topDetailLine}>
+                     <Text style={styles.topDetailText}>{this.state.productDetail.minTenderedSum}元</Text>
+                     <Text style={styles.bottomDetailText}>最小投标金额</Text>
+                   </View>
+                   <View style={[styles.topDetailLine,{flex:1.2}]}>
+                     <Text style={styles.topDetailText}>{this._paymentMode(this.state.productDetail.paymentMode)}</Text>
+                     <Text numberOfLines={1} style={styles.bottomDetailText}>还款方式</Text>
+                   </View>
                  </View>
-                 <View style={{marginTop:10}}><Text style={{color:'#777',fontSize:22/oPx}}>预期年化收益</Text></View>
+               
+               <View style={styles.proupseView}>
+                 <View style={styles.proupseLine}>
+                   <View style={styles.line_default}>
+                   </View>
+                   <View style={[styles.line_default,styles.line_pull,{width:this.state.productDetail.schedules/100*580/oPx}]}>
+                   </View>
+                 </View>
+                 <Text style={styles.proupseText}>{this.state.productDetail.schedules}%</Text>
                </View>
-               <View style={styles.topDetail}>
-                 <View style={[styles.topDetailLine,{flex:1.2}]}>
-                  <Text style={styles.topDetailText}>{this.state.productDetail.deadline}{this.state.productDetail.isDayThe == '1'?'个月':'天'}</Text>
-                  <Text style={styles.bottomDetailText}>项目期限</Text>
+               <View style={styles.canInvestView}><Text style={[styles.canInvestText,{color:'#777'}]}>剩余可投：</Text><Text style={styles.canInvestText}>{this.state.productDetail.residue}元</Text></View>
+               
+              {/* 活动期间view */}
+              { this._getActivityView() }
+
+               <View style={styles.investTip}>
+                 <Text style={styles.investText}>
+                  <Text style={{color:'#ffa44b'}}>提示：</Text>
+                  点击按钮，即表示您已经阅读并认可
+                  <Text style={styles.AgreementText} onPress={()=>this._Agreement('31')}>《普金资本服务协议》</Text>
+                  和<Text style={styles.AgreementText} onPress={()=>this._Agreement('12')}>《风险提示书》</Text>，投资有风险，理财需谨慎。
+                 </Text>
+               </View>
+
+               <View style={styles.submitBtnView}>
+                  <TouchableOpacity onPress={this._submit.bind(this)} 
+                    style={[styles.submitBtn,this.state.submitBtnDisabled?styles.submitBtnDisabled:null]} 
+                    disabled={this.state.submitBtnDisabled} activeOpacity={1}>
+                    <Text style={[styles.submitBtnText,this.state.submitBtnDisabled?styles.submitBtnTextDisabled:null]}>
+                      {this.state.investBtn}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+
+                <View style={{height:16/oPx,backgroundColor:'#e9ecf3'}}></View>
+                <View style={styles.detailView}>
+                  <View style={styles.detailViewTab}>
+                    <TouchableOpacity onPress={()=>this._tapPress('1')} style={[styles.detailViewTabBtn,styles.borderLeft,styles.border,this.state.tap==='1'?styles.active:null]}>
+                      <Text style={[styles.detailViewTabBtnText,this.state.tap==='1'?styles.activeText:null]}>项目详情</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={()=>this._tapPress('2')} style={[styles.detailViewTabBtn,styles.border,this.state.tap==='2'?styles.active:null]}>
+                      <Text style={[styles.detailViewTabBtnText,this.state.tap==='2'?styles.activeText:null]}>相关文件</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={()=>this._tapPress('3')} style={[styles.detailViewTabBtn,styles.border,this.state.tap==='3'?styles.active:null]}>
+                      <Text style={[styles.detailViewTabBtnText,this.state.tap==='3'?styles.activeText:null]}>投资记录</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={()=>this._tapPress('4')} style={[styles.detailViewTabBtn,styles.borderRight,this.state.tap==='4'?styles.active:null]}>
+                      <Text style={[styles.detailViewTabBtnText,this.state.tap==='4'?styles.activeText:null]}>风险提示</Text>
+                    </TouchableOpacity>
                   </View>
-                 <View style={styles.topDetailLine}>
-                   <Text style={styles.topDetailText}>{this.state.productDetail.minTenderedSum}元</Text>
-                   <Text style={styles.bottomDetailText}>最小投标金额</Text>
-                 </View>
-                 <View style={[styles.topDetailLine,{flex:1.2}]}>
-                   <Text style={styles.topDetailText}>{this._paymentMode(this.state.productDetail.paymentMode)}</Text>
-                   <Text numberOfLines={1} style={styles.bottomDetailText}>还款方式</Text>
-                 </View>
-               </View>
-             
-             <View style={styles.proupseView}>
-               <View style={styles.proupseLine}>
-                 <View style={styles.line_default}>
-                 </View>
-                 <View style={[styles.line_default,styles.line_pull,{width:this.state.productDetail.schedules/100*580/oPx}]}>
-                 </View>
-               </View>
-               <Text style={styles.proupseText}>{this.state.productDetail.schedules}%</Text>
-             </View>
-             <View style={styles.canInvestView}><Text style={[styles.canInvestText,{color:'#777'}]}>剩余可投：</Text><Text style={styles.canInvestText}>{this.state.productDetail.residue}元</Text></View>
-             
-            {/* 活动期间view */}
-            { this._getActivityView() }
-
-             <View style={styles.investTip}>
-               <Text style={styles.investText}>
-                <Text style={{color:'#ffa44b'}}>提示：</Text>
-                点击按钮，即表示您已经阅读并认可
-                <Text style={styles.AgreementText} onPress={()=>this._Agreement('31')}>《普金资本服务协议》</Text>
-                和<Text style={styles.AgreementText} onPress={()=>this._Agreement('12')}>《风险提示书》</Text>，投资有风险，理财需谨慎。
-               </Text>
-             </View>
-
-             <View style={styles.submitBtnView}>
-                <TouchableOpacity onPress={this._submit.bind(this)} 
-                  style={[styles.submitBtn,this.state.submitBtnDisabled?styles.submitBtnDisabled:null]} 
-                  disabled={this.state.submitBtnDisabled} activeOpacity={1}>
-                  <Text style={[styles.submitBtnText,this.state.submitBtnDisabled?styles.submitBtnTextDisabled:null]}>
-                    {this.state.investBtn}
+                </View>
+                {this.state.tap==='1'?<View style={styles.detailViewOne}>
+                  {this.state.productDetail.borrowStatus=='4'||this.state.productDetail.borrowStatus=='5'?<TouchableOpacity onPress={this._HKJHPage.bind(this)} style={{marginBottom:10}}><Text style={[styles.canInvestTextColor,{color:'#75c0f6'}]}>还款计划</Text></TouchableOpacity>:null}
+                  <View style={styles.itemView}><Text style={styles.canInvestTextColor}>产品名称：</Text><Text style={styles.canInvestText}>{this.state.productDetail.borrowTitle}</Text></View>
+                  <View style={styles.itemView}><Text style={styles.canInvestTextColor}>募集资金：</Text><Text style={styles.canInvestText}>{this.state.productDetail.borrowAmount}元</Text></View>
+                  <View style={styles.itemView}><Text style={styles.canInvestTextColor}>年化收益：</Text><Text style={styles.canInvestText}>{this.state.productDetail.annualRate}%</Text></View>
+                  <View style={styles.itemView}><Text style={styles.canInvestTextColor}>起息日期：</Text><Text style={styles.canInvestText}>满标计息</Text></View>
+                  <View style={styles.itemView}><Text style={styles.canInvestTextColor}>收益方式：</Text><Text style={styles.canInvestText}>{this._paymentMode(this.state.productDetail.paymentMode)}</Text></View>
+                  <View style={styles.itemView}>
+                    <Text style={[styles.canInvestTextColor,{marginTop:15}]}>资金用途：</Text>
+                  </View>
+                  <Text style={styles.lineHeightText}>
+                    {this._textClip(this.state.productDetail.purpose)}
                   </Text>
-                </TouchableOpacity>
-              </View>
-
-              <View style={{height:16/oPx,backgroundColor:'#e9ecf3'}}></View>
-              <View style={styles.detailView}>
-                <View style={styles.detailViewTab}>
-                  <TouchableOpacity onPress={()=>this._tapPress('1')} style={[styles.detailViewTabBtn,styles.borderLeft,styles.border,this.state.tap==='1'?styles.active:null]}>
-                    <Text style={[styles.detailViewTabBtnText,this.state.tap==='1'?styles.activeText:null]}>项目详情</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={()=>this._tapPress('2')} style={[styles.detailViewTabBtn,styles.border,this.state.tap==='2'?styles.active:null]}>
-                    <Text style={[styles.detailViewTabBtnText,this.state.tap==='2'?styles.activeText:null]}>相关文件</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={()=>this._tapPress('3')} style={[styles.detailViewTabBtn,styles.border,this.state.tap==='3'?styles.active:null]}>
-                    <Text style={[styles.detailViewTabBtnText,this.state.tap==='3'?styles.activeText:null]}>投资记录</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={()=>this._tapPress('4')} style={[styles.detailViewTabBtn,styles.borderRight,this.state.tap==='4'?styles.active:null]}>
-                    <Text style={[styles.detailViewTabBtnText,this.state.tap==='4'?styles.activeText:null]}>风险提示</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-              {this.state.tap==='1'?<View style={styles.detailViewOne}>
-                {this.state.productDetail.borrowStatus=='4'||this.state.productDetail.borrowStatus=='5'?<TouchableOpacity onPress={this._HKJHPage.bind(this)} style={{marginBottom:10}}><Text style={[styles.canInvestTextColor,{color:'#75c0f6'}]}>还款计划</Text></TouchableOpacity>:null}
-                <View style={styles.itemView}><Text style={styles.canInvestTextColor}>产品名称：</Text><Text style={styles.canInvestText}>{this.state.productDetail.borrowTitle}</Text></View>
-                <View style={styles.itemView}><Text style={styles.canInvestTextColor}>募集资金：</Text><Text style={styles.canInvestText}>{this.state.productDetail.borrowAmount}元</Text></View>
-                <View style={styles.itemView}><Text style={styles.canInvestTextColor}>年化收益：</Text><Text style={styles.canInvestText}>{this.state.productDetail.annualRate}%</Text></View>
-                <View style={styles.itemView}><Text style={styles.canInvestTextColor}>起息日期：</Text><Text style={styles.canInvestText}>满标计息</Text></View>
-                <View style={styles.itemView}><Text style={styles.canInvestTextColor}>收益方式：</Text><Text style={styles.canInvestText}>{this._paymentMode(this.state.productDetail.paymentMode)}</Text></View>
-                <View style={styles.itemView}>
-                  <Text style={[styles.canInvestTextColor,{marginTop:15}]}>资金用途：</Text>
-                </View>
-                <Text style={styles.lineHeightText}>
-                  {this._textClip(this.state.productDetail.purpose)}
-                </Text>
-                <View style={styles.itemView}>
-                  <Text style={[styles.canInvestTextColor,{marginTop:15}]}>还款来源：</Text>
-                </View>
-                <Text style={styles.lineHeightText}>
-                  {this._textClip(this.state.productDetail.retsource)}
-                </Text>
-                <View style={styles.itemView}>
-                  <Text style={[styles.canInvestTextColor,{marginTop:15}]}>借款人介绍：</Text>
-                </View>
-                <Text style={styles.lineHeightText}>
-                  {this._textClip(this.state.productDetail.projectIntro)}
-                </Text>
-                <View style={styles.itemView}>
-                  <Text style={[styles.canInvestTextColor,{marginTop:15}]}>项目描述：</Text>
-                </View>
-                <Text style={styles.lineHeightText}>
-                  {this._textClip(this.state.productDetail.detail)}
-                </Text>
-                <View style={styles.itemView}>
-                  <Text style={[styles.canInvestTextColor,{marginTop:15}]}>保障措施：</Text>
-                </View>
-                <Text style={styles.lineHeightText}>
-                  {this._textClip(this.state.productDetail.safeMeasures)}
-                </Text>
-              </View>:null}
-              {
-                this.state.tap==='2'?<InvestFile navigator={this.props.navigator} borrowId={this.props.borrowId} />:null
-              }
-              {this.state.tap==='3'?<InvestRecord borrowId={this.props.borrowId}/>:null}
-              {this.state.tap==='4'?<View style={styles.detailViewOne}>
-                <View style={styles.itemView}>
-                  <Text style={[styles.canInvestTextColor,{marginTop:15}]}>一、政策风险</Text>
-                </View>
-                <Text style={styles.lineHeightText}>
-                  因国家宏观政策和相关法律法规发生变化，可能引起价格方面的异常波动，用户可能因此遭受损失。
-                </Text>
-                <View style={styles.itemView}>
-                  <Text style={[styles.canInvestTextColor,{marginTop:15}]}>二、信用风险</Text>
-                </View>
-                <Text style={styles.lineHeightText}>普金资本不对本金和收益提供任何保证或承诺。若平台项目发生逾期还款，由平台合作机构保理公司或担保公司在 30 个工作日内进行债权回购。合作机构在发生最
-                  不利情况下（可能但并不一定发生），项目进入司法程序，可能不利于用户实现项目的预期收益甚至本金遭受损失。
-                </Text>
-                <View style={styles.itemView}>
-                  <Text style={[styles.canInvestTextColor,{marginTop:15}]}>三、信息传递风险</Text>
-                </View>
-                <Text style={styles.lineHeightText}>普金资本将按协议约定进行信息披露，用户应充分关注并及时主动查询交易信息，如未及时查询，或由于通讯故障、系统故障以及其他不可抗力等因素的影响使得无
-                  法及时了解交易信息，由此产生责任和风险应由用户承担。
-                </Text>
-                <View style={styles.itemView}>
-                  <Text style={[styles.canInvestTextColor,{marginTop:15}]}>四、不可抗力及意外事件风险</Text>
-                </View>
-                <Text style={styles.lineHeightText}>包括但不限于自然灾害、金融市场危机、战争、黑客攻击、病毒感染等不能预见、不能避免、不能克服的不可抗力事件，对于由于不可抗力及意外事件风险导致的任
-                  何损失，客户须自行承担。
-                </Text>
-                <View style={styles.itemView}>
-                  <Text style={[styles.canInvestTextColor,{marginTop:15}]}>五、流动性风险</Text>
-                </View>
-                <Text style={styles.lineHeightText}>用户提以债权转让方式通过普金资本平台进行转让的，普金资本不对债权转让完成的时间以及债权转让能否全部成功实现做出任何承诺，债权未成功转让的，用户面临资金不能变现、丧失其他投资机会的风险。
-                </Text>
-              </View>:null}
-         </ScrollView>
+                  <View style={styles.itemView}>
+                    <Text style={[styles.canInvestTextColor,{marginTop:15}]}>还款来源：</Text>
+                  </View>
+                  <Text style={styles.lineHeightText}>
+                    {this._textClip(this.state.productDetail.retsource)}
+                  </Text>
+                  <View style={styles.itemView}>
+                    <Text style={[styles.canInvestTextColor,{marginTop:15}]}>借款人介绍：</Text>
+                  </View>
+                  <Text style={styles.lineHeightText}>
+                    {this._textClip(this.state.productDetail.projectIntro)}
+                  </Text>
+                  <View style={styles.itemView}>
+                    <Text style={[styles.canInvestTextColor,{marginTop:15}]}>项目描述：</Text>
+                  </View>
+                  <Text style={styles.lineHeightText}>
+                    {this._textClip(this.state.productDetail.detail)}
+                  </Text>
+                  <View style={styles.itemView}>
+                    <Text style={[styles.canInvestTextColor,{marginTop:15}]}>保障措施：</Text>
+                  </View>
+                  <Text style={styles.lineHeightText}>
+                    {this._textClip(this.state.productDetail.safeMeasures)}
+                  </Text>
+                </View>:null}
+                {
+                  this.state.tap==='2'?<InvestFile navigator={this.props.navigator} borrowId={this.props.borrowId} />:null
+                }
+                {this.state.tap==='3'?<InvestRecord borrowId={this.props.borrowId}/>:null}
+                {this.state.tap==='4'?<View style={styles.detailViewOne}>
+                  <View style={styles.itemView}>
+                    <Text style={[styles.canInvestTextColor,{marginTop:15}]}>一、政策风险</Text>
+                  </View>
+                  <Text style={styles.lineHeightText}>
+                    因国家宏观政策和相关法律法规发生变化，可能引起价格方面的异常波动，用户可能因此遭受损失。
+                  </Text>
+                  <View style={styles.itemView}>
+                    <Text style={[styles.canInvestTextColor,{marginTop:15}]}>二、信用风险</Text>
+                  </View>
+                  <Text style={styles.lineHeightText}>普金资本不对本金和收益提供任何保证或承诺。若平台项目发生逾期还款，由平台合作机构保理公司或担保公司在 30 个工作日内进行债权回购。合作机构在发生最
+                    不利情况下（可能但并不一定发生），项目进入司法程序，可能不利于用户实现项目的预期收益甚至本金遭受损失。
+                  </Text>
+                  <View style={styles.itemView}>
+                    <Text style={[styles.canInvestTextColor,{marginTop:15}]}>三、信息传递风险</Text>
+                  </View>
+                  <Text style={styles.lineHeightText}>普金资本将按协议约定进行信息披露，用户应充分关注并及时主动查询交易信息，如未及时查询，或由于通讯故障、系统故障以及其他不可抗力等因素的影响使得无
+                    法及时了解交易信息，由此产生责任和风险应由用户承担。
+                  </Text>
+                  <View style={styles.itemView}>
+                    <Text style={[styles.canInvestTextColor,{marginTop:15}]}>四、不可抗力及意外事件风险</Text>
+                  </View>
+                  <Text style={styles.lineHeightText}>包括但不限于自然灾害、金融市场危机、战争、黑客攻击、病毒感染等不能预见、不能避免、不能克服的不可抗力事件，对于由于不可抗力及意外事件风险导致的任
+                    何损失，客户须自行承担。
+                  </Text>
+                  <View style={styles.itemView}>
+                    <Text style={[styles.canInvestTextColor,{marginTop:15}]}>五、流动性风险</Text>
+                  </View>
+                  <Text style={styles.lineHeightText}>用户提以债权转让方式通过普金资本平台进行转让的，普金资本不对债权转让完成的时间以及债权转让能否全部成功实现做出任何承诺，债权未成功转让的，用户面临资金不能变现、丧失其他投资机会的风险。
+                  </Text>
+                </View>:null}
+           </ScrollView>
+         }
          {this.state.showInput
            ?<KeyboardAvoidingView
                style={styles.submitView}

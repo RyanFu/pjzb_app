@@ -19,10 +19,8 @@ export default class Index extends Component {
 			if (!isConnected) {
 			  NetInfo.isConnected.fetch().done(function(isConnected){
 			    if (!isConnected) // 当前无网络
-			      toastShort('已断开网络连接，请检查您的网络设置',0);
+			      toastShort('已断开网络连接，请检查您的网络设置',350);
 			  });
-			} else { // 从无网络切换到有网络，重新获取数据
-			  // toastShort('设备已连接到网络',0);
 			}
 		});
    }

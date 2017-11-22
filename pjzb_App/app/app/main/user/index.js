@@ -64,6 +64,7 @@
         jiekuangl: '借款灵活 还款方便', // 借款管理
         // 是否发生网络错误
         isError: false,
+        NetData: [],
       }
     }
     componentDidMount(){
@@ -91,6 +92,7 @@
           jiekuangl: data.jiekuangl?data.jiekuangl:this.state.jiekuangl,
           // 网络正常
           isError: false,
+          NetData: data,
         });
         if(data.headImg){
           this.setState({leftImageSource:{uri:data.headImg}});
@@ -100,7 +102,9 @@
           this.setState({isRegistHuiFu:true});
         }
       },(error)=>{
-          this.setState({isError: true, animating:false,});
+        this.setState({animating:false});
+        if (this.state.NetData != [])
+          this.setState({isError: true});
       });
     }
 

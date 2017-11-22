@@ -19,6 +19,7 @@
    Platform,
    TouchableWithoutFeedback,
    Linking,
+   NetInfo,
  } from 'react-native';
   import NavigationBar from '../../components/NavigationBar';
   import Swiper from 'react-native-swiper';
@@ -568,19 +569,26 @@ var options = {
 
     //公司动态详情
     gsdt_detail(title,publishTime,html,id) {
-        this.setState({sweiperIndex:0});
-         this.props.navigator.push({
-             name: 'GgxqPage',
-             component: GgxqPage,
-             params:{
-                 titleText:title,
-                 time:publishTime,
-                 content:html,
-                 title:'公司动态',
-                 url:Request.wapWeChatPath+"?id="+id,
-                 weChat:true,
-             }
-         })
+      NetInfo.isConnected.fetch().done(function(isConnected){
+        if (!isConnected) { // 当前无网络
+          toastShort('已断开网络连接，请检查您的网络设置',350);
+          return;
+        }
+      });
+
+      this.setState({sweiperIndex:0});
+        this.props.navigator.push({
+           name: 'GgxqPage',
+           component: GgxqPage,
+           params:{
+               titleText:title,
+               time:publishTime,
+               content:html,
+               title:'公司动态',
+               url:Request.wapWeChatPath+"?id="+id,
+               weChat:true,
+           }
+        })
      }
 
     _getXSBiao() {

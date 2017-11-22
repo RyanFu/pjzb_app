@@ -16,6 +16,8 @@
  import LinearGradient from 'react-native-linear-gradient';
  import Request from '../../utils/Request';
  import Utils from '../../utils/utils';
+ import Error from '../error/Error.js';
+
  let oPx = StyleConfig.oPx;
  const screenWidth = Dimensions.get('window').width;
 class DashLine extends Component{
@@ -77,7 +79,8 @@ class DashLine extends Component{
       accumulationAlternativeAmount: 0,
       // 累计代偿笔数
       accumulationAlternativeCount: 0,
-
+      // 是否发生网络错误
+      isError: false,
      }
    }
    componentDidMount(){
@@ -87,15 +90,22 @@ class DashLine extends Component{
    	Request.post('informationRevealed.do',{uid:''},(data)=>{
    	  if(data.error == '0'){
    	  	console.log(data)
-   	  	this.setState(data)
-   	  }else{
-   	  	alert(data.msg);
+   	  	this.setState(data);
+        this.setState({isError: false});
    	  }
-   	})
+   	}, (error) => {
+      this.setState({isError: true});
+    });
    }
+   
    render(){
      return (
        <View style={styles.container}>
+        {
+          this.state.isError
+          ?
+          <Error onPress={this.getData.bind(this)} />
+          :
          <ScrollView >
          	<LinearGradient 
          	start={{x: 0.0, y: 0.0}} end={{x: 1.0, y: 0.0}}
@@ -275,6 +285,7 @@ class DashLine extends Component{
           </View>
           <View style={{marginBottom: 50/oPx}}></View>
          </ScrollView>
+       }
        </View>
      );
    }

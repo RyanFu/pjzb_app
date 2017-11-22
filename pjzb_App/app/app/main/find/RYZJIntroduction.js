@@ -19,9 +19,13 @@
      this.state = {
         bannerList:[
         // {bannerPath:require('../../images/find/aboutUs/ryzz_1.png')},
-        {bannerPath:require('../../images/find/aboutUs/ryzz_2.png')},
-        {bannerPath:require('../../images/find/aboutUs/ryzz_3.png')},
+        //{bannerPath:require('../../images/find/aboutUs/ryzz_2.png')},
+        //{bannerPath:require('../../images/find/aboutUs/ryzz_3.png')},
         // {bannerPath:require('../../images/find/aboutUs/ryzz_4.png')},
+
+        {bannerPath:require('../../images/find/aboutUs/ryzz_01.jpg')},
+        {bannerPath:require('../../images/find/aboutUs/ryzz_02.jpg')},
+        {bannerPath:require('../../images/find/aboutUs/ryzz_03.jpg')},
         {bannerPath:require('../../images/find/aboutUs/ryzz_5.png')}
         ]
      }

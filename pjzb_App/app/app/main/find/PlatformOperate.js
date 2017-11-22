@@ -18,6 +18,8 @@
  import Request from '../../utils/Request';
  import {toastShort} from '../../utils/Toast';
  import RunReportsPage from './RunReportsPage';
+ import Error from '../error/Error.js';
+
  let oPx = StyleConfig.oPx;
  export default class PlatformOperate extends Component {
   constructor(props){
@@ -28,7 +30,9 @@
       totalPageNum:1,
       oData:[],
       isEmpty:false,
-      getMore:false
+      getMore:false,
+      // 是否发生网络错误
+      isError: false,
     }
   }
   componentDidMount(){
@@ -51,6 +55,7 @@
         curPage:this.state.curPage,
         uid:'',
     },(data)=>{
+      this.setState({isError: false});
       if(data.pageBean.page.length == 0){
         this.setState({
           isRefreshing:false,
@@ -82,7 +87,7 @@
         setTimeout(()=>{this.setState({listViewFirst:true})},2000);
       }
     },(error)=>{
-      //console.log(error);
+      this.setState({isError: true});
     });
   }
   //底部加载更多
@@ -120,20 +125,25 @@
    render(){
     return(
     <View style={{flex:1,backgroundColor:'#fff',marginTop:15/oPx}}>	
-       <ScrollView style={{flex:1,padding:15/oPx}}
-        scrollEventThrottle={300}
-       >
-       <View style={styles.container}>
-			{
-	         this.state.oData.map((row, index) =>{
-	             return this._renderRow(row,index);
-	         })
-	        }
-       </View>
        {
-         this._renderFooter()
-       }
-     </ScrollView>
+          this.state.isError
+          ?
+          <Error onPress={this._getData.bind(this)} />
+          :
+         <ScrollView style={{flex:1,padding:15/oPx}}
+            scrollEventThrottle={300} >
+           <View style={styles.container}>
+    			{
+    	         this.state.oData.map((row, index) =>{
+    	             return this._renderRow(row,index);
+    	         })
+    	        }
+           </View>
+           {
+             this._renderFooter()
+           }
+         </ScrollView>
+      }
    </View>
     )
    }

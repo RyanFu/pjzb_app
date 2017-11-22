@@ -29,7 +29,9 @@ import styles1 from '../../style/funddetail';
 import {StyleConfig} from '../../style';
 import styles from '../../style/investDetail';
 import InvestDetail from './InvestDetail';
- import Utils from '../../utils/utils'; 
+import Utils from '../../utils/utils'; 
+import Error from '../error/Error.js';
+
 const oPx = StyleConfig.oPx;
 export default class InvestDetailTY extends Component {
     constructor(props){
@@ -54,6 +56,8 @@ export default class InvestDetailTY extends Component {
             animating:true,
             isRefreshing:false,
             isDate:true,
+            // 是否发生网络错误
+            isError: false,
         }
     }
 
@@ -62,19 +66,13 @@ export default class InvestDetailTY extends Component {
             debtId:this.props.debtId,
             debtTitle:this.props.debtTitle,
         });
-        this._getData(this.props.debtId);
+        this._getData();
     }
 
-    _getData(debtId){
-        let debtId1;
-        if (debtId) {
-            debtId1 = debtId;
-        } else {
-            debtId1 = this.state.debtId;
-        }
+    _getData(){
         this.setState({animating:true,});
         Request.post('findDebtsById.do',{
-            debtId:debtId1,
+            debtId:this.props.debtId,
             uid:'',
         },(data)=>{
             if(data.error=='0'){
@@ -87,6 +85,7 @@ export default class InvestDetailTY extends Component {
                     debtStatus:data.debtsDetail.debtStatus,
                     createTime:data.userInfo.createTime,
                     debtsDetail:data.debtsDetail,
+                    isError: false
                 });
                 this.getPublishTime();
             }else{
@@ -94,7 +93,7 @@ export default class InvestDetailTY extends Component {
                 this.setState({animating:false});
             }
         },(error)=>{
-
+            this.setState({isError: true, animating:false});
         })
     }
 
@@ -130,7 +129,7 @@ export default class InvestDetailTY extends Component {
         this.setState({animating:true});
         Request.post('buyAuctingDebt.do',{
             uid:'',
-            debtId:this.state.debtId,
+            debtId:this.props.debtId,
             auctionPrice:this.state.debtsDetail.auctionBasePrice,
             pwd:'',
         },(data)=>{
@@ -239,112 +238,118 @@ export default class InvestDetailTY extends Component {
                     title="项目详情"
                     leftShowIcon={true}
                     leftBtnFunc={this._goBack.bind(this)}
-                />
-                <ScrollView
-                    ref={(scrollView) => { this.ScrollViewParent = scrollView; }}
-                    pagingEnabled={true}
-                    showsVerticalScrollIndicator={false}
-                    scrollEnabled={this.state.scrollEnabled}
-                    refreshControl={
-                        <RefreshControl
-                          refreshing={this.state.isRefreshing}
-                          onRefresh={this._onRefresh.bind(this)}
-                          tintColor="#ff0000"
-                          title="刷新中..."
-                        />}
-                >
-                <View style={styles.topRateView}>
-                    <View style={styles.topTitle}>
-                        <Text style={styles.topTitleText}>{this.props.debtTitle}</Text>
-                    </View>
-                    <View style={styles.topRate}>
-                        <Text style={styles.topRateText}>{this.state.borrowDetailMap.showRate}</Text>
-                        <Text style={styles.topRateSymbol}>%</Text>
-                    </View>
-                    <View style={{marginTop:10}}><Text style={{color:'#777',fontSize:22/oPx}}>预期年化收益</Text></View>
-                </View>
-                <View style={styles.topDetail}>
-                    <View style={[styles.topDetailLine]}>
-                        <Text style={styles.topDetailText}>{this.state.debtsDetail.debtSum}元</Text>
-                        <Text style={styles.bottomDetailText}>转让总额</Text>
-                    </View>
-                    <View style={styles.topDetailLine}>
-                        <Text numberOfLines={1} style={styles.topDetailText}>{this.state.date}</Text>
-                        <Text style={styles.bottomDetailText}>剩余认购时间</Text>
-                    </View>
-                    <View style={[styles.topDetailLine]}>
-                        <Text numberOfLines={1} style={styles.topDetailText}>{this.format(this.props.paymentMode)}</Text>
-                        <Text style={styles.bottomDetailText}>还款方式</Text>
-                    </View>
-                </View>
-
-                <View style={style.bodyView}>
-                    <View style={style.tableView}>
-                        <View style={style.itemView}>
-                            <View style={style.tdView}><Text style={style.text}>转让价格</Text></View>
-                            <View style={[style.tdView,style.color]}><Text style={[style.text,{color: '#333'}]}>{Number(this.state.debtsDetail.auctionBasePrice)>=10000?Number(this.state.debtsDetail.auctionBasePrice)/10000+'万元':this.state.debtsDetail.auctionBasePrice}</Text></View>
-                            <View style={style.tdView}><Text style={style.text}>借款总额</Text></View>
-                            <View style={[style.tdView,style.tdView2,style.color,{backgroundColor: '#fff'}]}><Text style={[style.text,{color: '#333'}]}>{Number(this.state.borrowDetailMap.borrowSum)>=10000?Number(this.state.borrowDetailMap.borrowSum)/10000+'万元':this.state.borrowDetailMap.borrowSum}</Text></View>
-                        </View>
-                      {/*  <View style={style.itemView}>
-                            <View style={[style.tdView]}><Text style={style.text}></Text></View>
-                            <View style={[style.tdView,style.color]}><Text numberOfLines={1} style={[style.text,{color: '#333'}]}>{this.state.debtsDetail.debtLimit}个月</Text></View>
-                            <View style={style.tdView}><Text style={style.text}>年化利率</Text></View>
-                            <View style={[style.tdView,style.color,style.tdView2,{backgroundColor: '#fff'}]}><Text style={[style.text,{color: '#333'}]}>{this.state.borrowDetailMap.showRate}%</Text></View>
-                        </View>*/}
-                        <View style={style.itemView}>
-                            <View style={[style.tdView,style.tdView3]}><Text style={style.text}>期限</Text></View>
-                            <View style={[style.tdView,style.tdView3,style.color]}><Text style={[style.text,{color: '#333'}]}>{this.state.borrowDetailMap.deadline}个月</Text></View>
-                            <View style={[style.tdView,style.tdView3]}><Text style={style.text}>剩余期限</Text></View>
-                            <View style={[style.tdView,style.color,style.tdView2,style.tdView3,{backgroundColor: '#fff'}]}><Text numberOfLines={1} style={[style.text,{color: '#333'}]}>{this.state.debtsDetail.debtLimit}个月</Text></View>
-                        </View>
-                    </View>
-                </View>
-                {/*<Button onPress={this.toBorrow.bind(this)} imgSource={require('../../images/icon/icon_btn.png')} width={344/oPx} height={70/oPx} text="查看项目原始详情"/>*/}
-                <Text onPress={this.toBorrow.bind(this)} style={style.borrowText}>查看项目原始详情</Text>
-                <View style={styles.submitBtnView}>
-                    <TouchableOpacity onPress={this._onSubmit.bind(this)}
-                                      style={[styles.submitBtn,this.state.debtsDetail.debtStatus != 2 ? styles.submitBtnDisabled : null]}
-                                      disabled={this.state.debtsDetail.debtStatus != 2 ? true : false}
-                                      activeOpacity={1}>
-                        <Text style={[styles.submitBtnText,this.state.debtsDetail.debtStatus != 2 ? styles.submitBtnTextDisabled : null]}>{this.btnState()}</Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={{height:16/oPx,backgroundColor:'#e9ecf3'}}></View>
-                <View style={style.msgView}>
-                    <View>
-                        <Text style={style.msgTitle}>基本信息</Text>
-                        <Text style={style.msg}>用户名：<Text style={[style.msg,{color:'#333'}]}>{this.state.debtsDetail.username}</Text></Text>
-                        <Text style={style.msg}>手机号：<Text style={[style.msg,{color:'#333'}]}>{this.state.debtsDetail.mobilePhone}</Text></Text>
-                        <Text style={style.msg}>注册时间：<Text style={[style.msg,{color:'#333'}]}>{this.state.createTime}</Text></Text>
-                        <Text style={style.msg}>原标满标时间：<Text style={[style.msg,{color:'#333'}]}>{this.state.borrowDetailMap.auditTime}</Text></Text>
-                    </View>
-                    <Text style={[style.msgTitle,{marginTop: 30/oPx}]}>审核信息</Text>
-                    <View style={style.iconView}>
-                        <View style={style.itemImg}>
-                            <Image style={style.imgIcon} source={require('../../images/icon/icon_sjrz.png')} />
-                            <Text style={style.textIcon}> 手机认证</Text>
-                        </View>
-                        <View style={style.itemImg}>
-                            <Image style={style.imgIcon} source={require('../../images/icon/icon_sfrz.png')} />
-                            <Text style={style.textIcon}> 身份认证</Text>
-                        </View>
-                        <View style={style.itemImg}>
-                            <Image style={style.imgIcon} source={require('../../images/icon/icon_smrz.png')} />
-                            <Text style={style.textIcon}> 实名认证</Text>
-                        </View>
-                    </View>
-                </View>
-
+                /> 
                 {
-                    this.getTitle()
-                }
-                {
-                    this.state.debtUserMap != ''? this.getList() : <Text style={[style.msgTitle,{marginTop:20/oPx,alignSelf:'center',color:'#999'}]}>暂未被认购</Text>
-                }
+                    this.state.isError
+                    ?
+                    <Error onPress={this._getData.bind(this)} />
+                    :
+                    <ScrollView
+                        ref={(scrollView) => { this.ScrollViewParent = scrollView; }}
+                        pagingEnabled={true}
+                        showsVerticalScrollIndicator={false}
+                        scrollEnabled={this.state.scrollEnabled}
+                        refreshControl={
+                            <RefreshControl
+                              refreshing={this.state.isRefreshing}
+                              onRefresh={this._onRefresh.bind(this)}
+                              tintColor="#ff0000"
+                              title="刷新中..."
+                            />}
+                    >
+                    <View style={styles.topRateView}>
+                        <View style={styles.topTitle}>
+                            <Text style={styles.topTitleText}>{this.props.debtTitle}</Text>
+                        </View>
+                        <View style={styles.topRate}>
+                            <Text style={styles.topRateText}>{this.state.borrowDetailMap.showRate}</Text>
+                            <Text style={styles.topRateSymbol}>%</Text>
+                        </View>
+                        <View style={{marginTop:10}}><Text style={{color:'#777',fontSize:22/oPx}}>预期年化收益</Text></View>
+                    </View>
+                    <View style={styles.topDetail}>
+                        <View style={[styles.topDetailLine]}>
+                            <Text style={styles.topDetailText}>{this.state.debtsDetail.debtSum}元</Text>
+                            <Text style={styles.bottomDetailText}>转让总额</Text>
+                        </View>
+                        <View style={styles.topDetailLine}>
+                            <Text numberOfLines={1} style={styles.topDetailText}>{this.state.date}</Text>
+                            <Text style={styles.bottomDetailText}>剩余认购时间</Text>
+                        </View>
+                        <View style={[styles.topDetailLine]}>
+                            <Text numberOfLines={1} style={styles.topDetailText}>{this.format(this.props.paymentMode)}</Text>
+                            <Text style={styles.bottomDetailText}>还款方式</Text>
+                        </View>
+                    </View>
 
-                <View style={{marginBottom:200/oPx}}></View>
-                </ScrollView>
+                    <View style={style.bodyView}>
+                        <View style={style.tableView}>
+                            <View style={style.itemView}>
+                                <View style={style.tdView}><Text style={style.text}>转让价格</Text></View>
+                                <View style={[style.tdView,style.color]}><Text style={[style.text,{color: '#333'}]}>{Number(this.state.debtsDetail.auctionBasePrice)>=10000?Number(this.state.debtsDetail.auctionBasePrice)/10000+'万元':this.state.debtsDetail.auctionBasePrice}</Text></View>
+                                <View style={style.tdView}><Text style={style.text}>借款总额</Text></View>
+                                <View style={[style.tdView,style.tdView2,style.color,{backgroundColor: '#fff'}]}><Text style={[style.text,{color: '#333'}]}>{Number(this.state.borrowDetailMap.borrowSum)>=10000?Number(this.state.borrowDetailMap.borrowSum)/10000+'万元':this.state.borrowDetailMap.borrowSum}</Text></View>
+                            </View>
+                          {/*  <View style={style.itemView}>
+                                <View style={[style.tdView]}><Text style={style.text}></Text></View>
+                                <View style={[style.tdView,style.color]}><Text numberOfLines={1} style={[style.text,{color: '#333'}]}>{this.state.debtsDetail.debtLimit}个月</Text></View>
+                                <View style={style.tdView}><Text style={style.text}>年化利率</Text></View>
+                                <View style={[style.tdView,style.color,style.tdView2,{backgroundColor: '#fff'}]}><Text style={[style.text,{color: '#333'}]}>{this.state.borrowDetailMap.showRate}%</Text></View>
+                            </View>*/}
+                            <View style={style.itemView}>
+                                <View style={[style.tdView,style.tdView3]}><Text style={style.text}>期限</Text></View>
+                                <View style={[style.tdView,style.tdView3,style.color]}><Text style={[style.text,{color: '#333'}]}>{this.state.borrowDetailMap.deadline}个月</Text></View>
+                                <View style={[style.tdView,style.tdView3]}><Text style={style.text}>剩余期限</Text></View>
+                                <View style={[style.tdView,style.color,style.tdView2,style.tdView3,{backgroundColor: '#fff'}]}><Text numberOfLines={1} style={[style.text,{color: '#333'}]}>{this.state.debtsDetail.debtLimit}个月</Text></View>
+                            </View>
+                        </View>
+                    </View>
+                    {/*<Button onPress={this.toBorrow.bind(this)} imgSource={require('../../images/icon/icon_btn.png')} width={344/oPx} height={70/oPx} text="查看项目原始详情"/>*/}
+                    <Text onPress={this.toBorrow.bind(this)} style={style.borrowText}>查看项目原始详情</Text>
+                    <View style={styles.submitBtnView}>
+                        <TouchableOpacity onPress={this._onSubmit.bind(this)}
+                                          style={[styles.submitBtn,this.state.debtsDetail.debtStatus != 2 ? styles.submitBtnDisabled : null]}
+                                          disabled={this.state.debtsDetail.debtStatus != 2 ? true : false}
+                                          activeOpacity={1}>
+                            <Text style={[styles.submitBtnText,this.state.debtsDetail.debtStatus != 2 ? styles.submitBtnTextDisabled : null]}>{this.btnState()}</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={{height:16/oPx,backgroundColor:'#e9ecf3'}}></View>
+                    <View style={style.msgView}>
+                        <View>
+                            <Text style={style.msgTitle}>基本信息</Text>
+                            <Text style={style.msg}>用户名：<Text style={[style.msg,{color:'#333'}]}>{this.state.debtsDetail.username}</Text></Text>
+                            <Text style={style.msg}>手机号：<Text style={[style.msg,{color:'#333'}]}>{this.state.debtsDetail.mobilePhone}</Text></Text>
+                            <Text style={style.msg}>注册时间：<Text style={[style.msg,{color:'#333'}]}>{this.state.createTime}</Text></Text>
+                            <Text style={style.msg}>原标满标时间：<Text style={[style.msg,{color:'#333'}]}>{this.state.borrowDetailMap.auditTime}</Text></Text>
+                        </View>
+                        <Text style={[style.msgTitle,{marginTop: 30/oPx}]}>审核信息</Text>
+                        <View style={style.iconView}>
+                            <View style={style.itemImg}>
+                                <Image style={style.imgIcon} source={require('../../images/icon/icon_sjrz.png')} />
+                                <Text style={style.textIcon}> 手机认证</Text>
+                            </View>
+                            <View style={style.itemImg}>
+                                <Image style={style.imgIcon} source={require('../../images/icon/icon_sfrz.png')} />
+                                <Text style={style.textIcon}> 身份认证</Text>
+                            </View>
+                            <View style={style.itemImg}>
+                                <Image style={style.imgIcon} source={require('../../images/icon/icon_smrz.png')} />
+                                <Text style={style.textIcon}> 实名认证</Text>
+                            </View>
+                        </View>
+                    </View>
+
+                    {
+                        this.getTitle()
+                    }
+                    {
+                        this.state.debtUserMap != ''? this.getList() : <Text style={[style.msgTitle,{marginTop:20/oPx,alignSelf:'center',color:'#999'}]}>暂未被认购</Text>
+                    }
+
+                    <View style={{marginBottom:200/oPx}}></View>
+                    </ScrollView>
+                }
 
                 {/*<TouchableOpacity onPress={this._onSubmit.bind(this)} style={[styles.submitBtn,this.state.debtsDetail.debtStatus != 2 ? styles.submitBtnDisabled : null]} disabled={this.state.debtsDetail.debtStatus != 2} activeOpacity={1}>*/}
                     {/*<Text style={styles.submitBtnText}>{this.btnState()}</Text>*/}

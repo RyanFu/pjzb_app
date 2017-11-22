@@ -14,25 +14,34 @@
   import { goBack } from '../../utils/NavigatorBack';
   import Request from '../../utils/Request';
   import {StyleConfig} from '../../style';
+  import Error from '../error/Error.js';
+
   const oPx = StyleConfig.oPx;
   export default class Partners extends Component {
     constructor(props){
       super(props);
       this.state = {
           data:[],
+          // 是否发生网络错误
+          isError: false,
       };
     }
 
     componentWillMount () {
-        Request.post('queryLinksPage.do',{uid:''},(data)=>{
+       this._getData();
+    }
+
+    _getData() {
+       Request.post('queryLinksPage.do',{uid:''},(data)=>{
             let result = data.LinksPages;
             if (data.error == 0) {
                 this.setState({
                     data: data.LinksPages,
+                    isError: false,
                 });
             }
         },(error)=>{
-            Alert.alert('提示信息','您的网络不稳定，请稍后再试！'+error)
+            this.setState({isError: true});
         });
     }
 
@@ -59,6 +68,11 @@
     render(){
       return (
         <View style={styles.container}>
+          {
+            this.state.isError
+            ?
+            <Error onPress={this._getData.bind(this)} />
+            :
             <View style={styles.rowTr}>
                 {
                     this.state.data.map((row,index) => {
@@ -66,6 +80,7 @@
                     })
                 }
             </View>
+          }
 
         </View>
       );

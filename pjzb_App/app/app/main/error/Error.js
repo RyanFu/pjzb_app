@@ -59,7 +59,7 @@ export default class Error extends Component {
         if(!isConnected) {
           NetInfo.fetch().done(function(reachability){
             if(reachability == 'none' || reachability == 'NONE'){
-              toastShort('当前设备未连接网络',0);
+              toastShort('当前设备未连接网络',350);
             }
           });
         }
