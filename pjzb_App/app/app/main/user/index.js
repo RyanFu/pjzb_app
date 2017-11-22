@@ -30,6 +30,8 @@
   import SLBaoPage from './SLBaoPage';
   import Loan from './LoanManagement';
   import {StyleConfig} from '../../style';
+  import Error from '../error/Error.js';
+  import NetUtil from '../../utils/NetUtil.js';
   const oPx = StyleConfig.oPx;
   export default class User extends Component {
     constructor(props){
@@ -60,6 +62,8 @@
         zijinjl: '暂无资金记录', // 资金记录
         zaiquanzr: '债权转让 周转灵活', // 债权转让
         jiekuangl: '借款灵活 还款方便', // 借款管理
+        // 是否发生网络错误
+        isError: false,
       }
     }
     componentDidMount(){
@@ -85,6 +89,8 @@
           zijinjl: data.zijinjl?data.zijinjl:this.state.zijinjl,
           zaiquanzr: data.zaiquanzr?data.zaiquanzr:this.state.zaiquanzr,
           jiekuangl: data.jiekuangl?data.jiekuangl:this.state.jiekuangl,
+          // 网络正常
+          isError: false,
         });
         if(data.headImg){
           this.setState({leftImageSource:{uri:data.headImg}});
@@ -93,7 +99,9 @@
         if(data.ipayAccount!=''){
           this.setState({isRegistHuiFu:true});
         }
-      },(error)=>{});
+      },(error)=>{
+          this.setState({isError: true, animating:false,});
+      });
     }
 
     // 每隔五分钟请求一次数据
@@ -222,73 +230,79 @@
         <View style={{flex:1}}>
           <NavigationBar
             title={"我的"}
-            leftShowIcon={true}
+            leftShowIcon={this.state.isError?false:true}
             leftImageSource={this.state.leftImageSource}
             leftStyle={{borderRadius:23/oPx}}
-            leftBtnFunc={this._selfCenter.bind(this)}
-            rightShowIcon={true}
+            leftBtnFunc={this.state.isError?null:this._selfCenter.bind(this)}
+            rightShowIcon={this.state.isError?false:true}
             rightImageSource={rightImageSource}
-            rightBtnFunc={this._settings.bind(this)}
+            rightBtnFunc={this.state.isError?null:this._settings.bind(this)}
             beginColor={'#f3553e'}
             endColor={'#f14e40'}
           />
-        <ScrollView style={styles.container}
-          refreshControl={
-           <RefreshControl
-             refreshing={this.state.isRefreshing}
-             onRefresh={this._onRefresh.bind(this)}
-             tintColor="#ff0000"
-             title="刷新中..."
-             titleColor="#999"
-           />}>
-          <LinearGradient colors={['#f14e41', '#eb3549']} style={styles.top}>
-            <View style={styles.total}>
-              <View style={styles.totalAmtView}><Text style={styles.totalAmt}>{Utils.formatCurrency(this.state.allTotal)}</Text></View>
-              <View style={styles.totalTextView}><Text style={styles.totalText}>总资产(元)</Text></View>
-            </View>
-            <View style={styles.userAmt}>
-              <View style={styles.userLeft}>
-                <View style={styles.userNumView}><Text style={styles.userNum}>{Utils.formatCurrency(this.state.usableSum)}</Text></View>
-                <View style={styles.userTextView}><Text style={styles.userText}>可用余额(元)</Text></View>
+           {
+            this.state.isError
+            ?
+            <Error onPress={this._getState.bind(this)} />
+            :
+            <ScrollView style={styles.container}
+              refreshControl={
+               <RefreshControl
+                 refreshing={this.state.isRefreshing}
+                 onRefresh={this._onRefresh.bind(this)}
+                 tintColor="#ff0000"
+                 title="刷新中..."
+                 titleColor="#999"
+               />}>
+              <LinearGradient colors={['#f14e41', '#eb3549']} style={styles.top}>
+                <View style={styles.total}>
+                  <View style={styles.totalAmtView}><Text style={styles.totalAmt}>{Utils.formatCurrency(this.state.allTotal)}</Text></View>
+                  <View style={styles.totalTextView}><Text style={styles.totalText}>总资产(元)</Text></View>
+                </View>
+                <View style={styles.userAmt}>
+                  <View style={styles.userLeft}>
+                    <View style={styles.userNumView}><Text style={styles.userNum}>{Utils.formatCurrency(this.state.usableSum)}</Text></View>
+                    <View style={styles.userTextView}><Text style={styles.userText}>可用余额(元)</Text></View>
+                  </View>
+                  <View style={styles.line}>
+                  </View>
+                  <View style={styles.userRight}>
+                    <View style={styles.userNumView}><Text style={styles.userNum}>{Utils.formatCurrency(this.state.forPaySum)}</Text></View>
+                    <View style={styles.userTextView}><Text style={styles.userText}>待收总额(元)</Text></View>
+                  </View>
+                </View>
+              </LinearGradient>
+              <View style={{backgroundColor: '#fff'}}>
+                <View style={styles.userCenter}>
+                  <View style={{flex:1}}><Image style={styles.user_icon} source={require('../../images/icon/icon_user_pay.png')}/></View>
+                  <View style={[styles.line,{height:85/oPx,backgroundColor:'#c8c9cd'}]}></View>
+                  <View style={{flex:1}}><Image style={styles.user_icon} source={require('../../images/icon/icon_user_cash.png')}/></View>
+                </View>
+                <View style={styles.userCenter}>
+                  <View style={{flex:1}}>
+                    <TouchableOpacity onPress={this._toIpay.bind(this)} style={styles.button}>
+                      <Text style={styles.button_text}>充值</Text>
+                    </TouchableOpacity>
+                  </View>
+                  <View style={{flex:1}}>
+                    <TouchableOpacity onPress={this._toCash.bind(this)} style={[styles.button,{backgroundColor:'#ffa44b',shadowColor:'#ffa44b',}]}>
+                      <Text style={styles.button_text}>提现</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
               </View>
-              <View style={styles.line}>
-              </View>
-              <View style={styles.userRight}>
-                <View style={styles.userNumView}><Text style={styles.userNum}>{Utils.formatCurrency(this.state.forPaySum)}</Text></View>
-                <View style={styles.userTextView}><Text style={styles.userText}>待收总额(元)</Text></View>
-              </View>
-            </View>
-          </LinearGradient>
-          <View style={{backgroundColor: '#fff'}}>
-            <View style={styles.userCenter}>
-              <View style={{flex:1}}><Image style={styles.user_icon} source={require('../../images/icon/icon_user_pay.png')}/></View>
-              <View style={[styles.line,{height:85/oPx,backgroundColor:'#c8c9cd'}]}></View>
-              <View style={{flex:1}}><Image style={styles.user_icon} source={require('../../images/icon/icon_user_cash.png')}/></View>
-            </View>
-            <View style={styles.userCenter}>
-              <View style={{flex:1}}>
-                <TouchableOpacity onPress={this._toIpay.bind(this)} style={styles.button}>
-                  <Text style={styles.button_text}>充值</Text>
-                </TouchableOpacity>
-              </View>
-              <View style={{flex:1}}>
-                <TouchableOpacity onPress={this._toCash.bind(this)} style={[styles.button,{backgroundColor:'#ffa44b',shadowColor:'#ffa44b',}]}>
-                  <Text style={styles.button_text}>提现</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-          <View style={styles.userListTap}>
-            
-              {/*this.state.funList.map((row, index) =>{ */}
-                  {/*return this._funList(row,index); */}
-              {/*}) */}
-           
+              <View style={styles.userListTap}>
+                
+                  {/*this.state.funList.map((row, index) =>{ */}
+                      {/*return this._funList(row,index); */}
+                  {/*}) */}
+               
 
-            { this._getUserBottomView() }
+                { this._getUserBottomView() }
 
-          </View>
-         </ScrollView>
+              </View>
+             </ScrollView>
+           }
          <Loading show={this.state.animating} top={true}/>
        </View>
       );

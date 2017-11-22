@@ -30,6 +30,20 @@ export default class Error extends Component {
     };
   }
 
+  componentDidMount() {
+    // 监听网络连接，连接网络自动刷新数据
+    NetInfo.addEventListener(
+      'connectionChange',
+      this.props.onPress
+    );
+
+  }
+
+  componentWillUnmount() {
+    // 当组件销毁时remove掉监听事件
+    NetInfo.removeEventListener('connectionChange');
+  }
+
   onPress = () => {
     this.props.onPress();
 
@@ -43,9 +57,7 @@ export default class Error extends Component {
     // 判断如果没有网络情况下点击刷新，提示用户当前无网络
     NetInfo.isConnected.fetch().done(function(isConnected){
         if(!isConnected) {
-          alert('error' + isConnected)
           NetInfo.fetch().done(function(reachability){
-            alert('error' +reachability)
             if(reachability == 'none' || reachability == 'NONE'){
               toastShort('当前设备未连接网络',0);
             }
@@ -57,16 +69,14 @@ export default class Error extends Component {
  
   render() {
     return (
-		  <View style={styles.body}>
-        <TouchableOpacity activeOpacity={0.5} onPress={() => this.onPress()}>
-			     <Image style={styles.image} source={require('../../images/error/image_error_notNetContent.png')} />
-            <View style={styles.activityView}>
-              {
-                this.state.isShow ? <ActivityIndicator /> : null
-              }
-            </View>
-        </TouchableOpacity>
-	    </View>
+      <TouchableOpacity style={styles.body} activeOpacity={0.8} onPress={() => this.onPress()}>
+		     <Image style={styles.image} source={require('../../images/error/image_error_notNetContent.png')} />
+          <View style={styles.activityView}>
+            {
+              this.state.isShow ? <ActivityIndicator /> : null
+            }
+          </View>
+      </TouchableOpacity>
     );
   }
 }
@@ -84,7 +94,7 @@ const styles = StyleSheet.create({
     },
     image: {
     	width: 201/oPx,
-    	height: 239/oPx,
+    	height: 264/oPx,
       marginBottom: 30/oPx,
     },
     activityView: {

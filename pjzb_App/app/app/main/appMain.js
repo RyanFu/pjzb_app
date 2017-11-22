@@ -81,9 +81,7 @@
                 ]);
               }
             }, (error) => {
-              Alert.alert('提示', '已断开网络连接，请检查您的网络设置', [
-                    {text: '好的'},
-                ]);
+              this.setState({ selectedTab: 'user' });
             });
           }
        }else{
