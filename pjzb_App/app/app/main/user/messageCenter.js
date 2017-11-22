@@ -23,10 +23,12 @@ import UserCenter from './UserCenter';
 import MessageDetails from './messageDetails';
 import Loading from '../../components/Loading';
 import {toastShort} from '../../utils/Toast';
+import Error from '../error/Error.js';
+
 const oPx = StyleConfig.oPx;
 
+var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
-  var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
   export default class MessageCenter extends Component {
     constructor(props){
       super(props);
@@ -38,6 +40,8 @@ const oPx = StyleConfig.oPx;
           showDialog: false,
           isEmpty:false,
           isShowBottomRefresh:false,
+          // 是否发生网络错误
+          isError: false,
       }
     }
       componentDidMount(){
@@ -46,7 +50,7 @@ const oPx = StyleConfig.oPx;
 
       //获取数据
       _getData(flag){
-          this.setState({showDialog:true});
+          this.setState({showDialog:true,isError: false});
           let params = {uid:'',app:'app',curPage:this.state.curPage};
           Request.post('querySysMails2.do',params,(data)=>{
               this.setState({totalPageNum:data.pageBean.totalPageNum});
@@ -79,7 +83,7 @@ const oPx = StyleConfig.oPx;
                   Alert.alert("提示",data.msg);
               }
           },(error)=>{
-              Alert.alert("提示",'您的网络不稳定，请稍后再试！');
+              this.setState({isError: true,showDialog:false});
           });
       }
       _renderFooter() {
@@ -160,15 +164,21 @@ const oPx = StyleConfig.oPx;
                   leftShowIcon={true}
                   leftBtnFunc={this._goBack.bind(this)}
               />
-              <ListView  style={styles.container}
-                  dataSource={this.state.dataSource}
-                  initialListSize = {4}
-                  enableEmptySections = {true}
-                  renderRow={this._funList.bind(this)}
-                  onEndReached={this._end.bind(this)}
-                  onEndReachedThreshold={30}
-                  renderFooter={this._renderFooter.bind(this)}
-              />
+              {
+                this.state.isError
+                ?
+                <Error onPress={this._getData.bind(this)} />
+                :
+                <ListView  style={styles.container}
+                    dataSource={this.state.dataSource}
+                    initialListSize = {4}
+                    enableEmptySections = {true}
+                    renderRow={this._funList.bind(this)}
+                    onEndReached={this._end.bind(this)}
+                    onEndReachedThreshold={30}
+                    renderFooter={this._renderFooter.bind(this)}
+                />
+              }
 
               <Loading show={this.state.showDialog} top={true}/>
 

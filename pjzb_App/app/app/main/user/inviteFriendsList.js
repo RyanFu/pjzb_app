@@ -22,15 +22,17 @@ import {
 import NavigationBar from '../../components/NavigationBar';
 import SearchModal from '../../components/SearchModal';
 import {StyleConfig} from '../../style/index';
-const oPx = StyleConfig.oPx;
 import Loading from '../../components/Loading';
 import Request from '../../utils/Request';
 import styles from '../../style/funddetail';
 import {toastShort} from '../../utils/Toast';
 import { goBack } from '../../utils/NavigatorBack';
 import FriendsInvestList from './FriendsInvestList';
+import Error from '../error/Error.js';
 
+const oPx = StyleConfig.oPx;
 let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+
 export default class inviteFriendsList extends Component {
     constructor(props){
         super(props);
@@ -49,6 +51,8 @@ export default class inviteFriendsList extends Component {
             choseData:[],
             total:false,
             isEmployeeReferral:1,
+            // 是否发生网络错误
+            isError: false,
         }
     }
     _goBack(){
@@ -57,8 +61,7 @@ export default class inviteFriendsList extends Component {
     //获取数据
     _getData(flag){
         Request.post('friendManagerInit.do',{uid:'',begin:this.state.startDate,end:this.state.endDate,curPage:this.state.curPage},(data)=>{
-            console.log(data);
-            this.setState({isEmployeeReferral:data.isEmployeeReferral});
+            this.setState({isEmployeeReferral:data.isEmployeeReferral,isError: false});
             if(data.pageBean.page.length == 0){
                 this.setState({
                     isRefreshing:false,
@@ -98,7 +101,7 @@ export default class inviteFriendsList extends Component {
                 });
             }
         },(error)=>{
-            console.log(error);
+            this.setState({isError: true, animating:false});
         });
     }
     onPressEvent(username,userId) {
@@ -177,39 +180,46 @@ export default class inviteFriendsList extends Component {
                     rightTitle="筛选"
                     rightBtnFunc={this._openSearch.bind(this)}
                 />
-                <View style={{flex:1,backgroundColor:'#fff'}}>
-                    <View style={styles.tableTop}>
-                        <Text style={styles.tableRow}>用户名</Text>
-                        <Text style={styles.tableRow}>用户创建时间</Text>
-                        <Text style={styles.tableRow}>奖励金额</Text>
-                        <Text style={styles.tableRow}>操作</Text>
+                {
+                    this.state.isError
+                    ?
+                    <Error onPress={this._getData.bind(this)} />
+                    :
+                    <View style={{flex:1,backgroundColor:'#fff'}}>
+                        <View style={styles.tableTop}>
+                            <Text style={styles.tableRow}>用户名</Text>
+                            <Text style={styles.tableRow}>用户创建时间</Text>
+                            <Text style={styles.tableRow}>奖励金额</Text>
+                            <Text style={styles.tableRow}>操作</Text>
+                        </View>
+                        <ListView
+                            dataSource={this.state.dataSource}
+                            renderRow={this._renderRow.bind(this)}
+                            style={styles.listView}
+                            onEndReached={this._end.bind(this)}
+                            onEndReachedThreshold={30}
+                            enableEmptySections = {true}
+                            pageSize={15}
+                            renderFooter={this._renderFooter.bind(this)}
+                            refreshControl={
+                              <RefreshControl
+                                refreshing={this.state.isRefreshing}
+                                onRefresh={this._onRefresh.bind(this)}
+                                tintColor="#ff0000"
+                                title="刷新中..."
+                                titleColor="#999"
+                                progressBackgroundColor="#ffff00"
+                              />}
+                        />
+                        {/*
+                         dialog :显示true与隐藏false
+                         choseData:所有待选项
+                         modalEvent:视图相应事件
+                         onSubmit：搜索窗口关闭后的回调事件，返回参数见_onSubmit
+                         */}
+                        <Loading show={this.state.animating} top={true}/>
                     </View>
-                    <ListView
-                        dataSource={this.state.dataSource}
-                        renderRow={this._renderRow.bind(this)}
-                        style={styles.listView}
-                        onEndReached={this._end.bind(this)}
-                        onEndReachedThreshold={30}
-                        enableEmptySections = {true}
-                        pageSize={15}
-                        renderFooter={this._renderFooter.bind(this)}
-                        refreshControl={
-              <RefreshControl
-                refreshing={this.state.isRefreshing}
-                onRefresh={this._onRefresh.bind(this)}
-                tintColor="#ff0000"
-                title="刷新中..."
-                titleColor="#999"
-                progressBackgroundColor="#ffff00"
-              />}/>
-                    {/*
-                     dialog :显示true与隐藏false
-                     choseData:所有待选项
-                     modalEvent:视图相应事件
-                     onSubmit：搜索窗口关闭后的回调事件，返回参数见_onSubmit
-                     */}
-                    <Loading show={this.state.animating} top={true}/>
-                </View>
+                }
                 <SearchModal
                     dialog={this.state.dialog}
                     choseData={this.state.choseData}

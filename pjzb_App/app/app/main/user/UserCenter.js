@@ -10,7 +10,8 @@
    Image,
    ScrollView,
    TouchableOpacity,
-   RefreshControl
+   RefreshControl,
+   NetInfo
  } from 'react-native';
  import LinearGradient from 'react-native-linear-gradient';
  import NavigationBar from '../../components/NavigationBar';
@@ -18,10 +19,12 @@
  import {StyleConfig} from '../../style';
  import { goBack } from '../../utils/NavigatorBack';
  import Request from '../../utils/Request';
-import MessageCenter from './messageCenter';
-import InviteFriendsHome from './inviteFriendsHome';
+ import MessageCenter from './messageCenter';
+ import InviteFriendsHome from './inviteFriendsHome';
  import BankcardManage from './bankcardManage';
- import  ImagePicker from 'react-native-image-picker';
+ import ImagePicker from 'react-native-image-picker';
+ import {toastShort} from '../../utils/Toast';
+
  const oPx = StyleConfig.oPx;
  var photoOptions = {
     //底部弹出框选项
@@ -103,7 +106,12 @@ export default class UserCenter extends Component {
           alert(data.msg);
         }
       },(error)=>{
-        
+        NetInfo.isConnected.fetch().done(function(isConnected){
+          if (!isConnected) { // 当前无网络
+            toastShort('已断开网络连接，请检查您的网络设置',350);
+            return;
+          }
+        });
       });
       
     }

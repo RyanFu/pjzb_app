@@ -16,6 +16,7 @@ import {StyleConfig} from '../../style';
 import Request from '../../utils/Request';
 import OwebView from '../../components/OwebView';
 import RegIpayPersonal from './regIpayPersonal';
+import Error from '../error/Error.js';
 
 export default class BankcardManage extends Component {
     constructor(props) {
@@ -23,13 +24,20 @@ export default class BankcardManage extends Component {
         this.state = {
             details: [],
             isEmpty:false,
+            // 是否发生网络错误
+            isError: false,
         };
     }
 
     componentDidMount(){
+        this._getData();
+    }
+
+    _getData() {
         //ajax
         let params = {uid:''};
         Request.post('queryBankList.do',params,(data)=>{
+            this.setState({isError: false});
             if(data.error =='0'){
                 this.setState({
                     details:data.bankList,
@@ -44,7 +52,7 @@ export default class BankcardManage extends Component {
                 Alert.alert('提示', data.msg);
             }
         },(error)=>{
-            Alert.alert('提示', '您的网络不稳定，请稍后再试！');
+            this.setState({isError: true});
         });
     }
 
@@ -109,16 +117,21 @@ export default class BankcardManage extends Component {
                     rightImageSource={rightImageSource}
                     rightBtnFunc={this._addBank.bind(this)}
                 />
-                <ScrollView>
-                    {   !this.state.isEmpty?
-                        this.state.details.map((item, i) => this.renderExpenseItem(item, i))
-                        :
-                        <View style={styles.moreBottom}>
-                                <Text style={{color:'#999'}}>无银行卡信息,请先添加银行卡</Text>
-                        </View>
-                    }
-                </ScrollView>
-
+                {
+                    this.state.isError
+                    ?
+                    <Error onPress={this._getData.bind(this)} />
+                    :
+                    <ScrollView>
+                        {   !this.state.isEmpty?
+                            this.state.details.map((item, i) => this.renderExpenseItem(item, i))
+                            :
+                            <View style={styles.moreBottom}>
+                                    <Text style={{color:'#999'}}>无银行卡信息,请先添加银行卡</Text>
+                            </View>
+                        }
+                    </ScrollView>
+                }
             </View>
         );
     }

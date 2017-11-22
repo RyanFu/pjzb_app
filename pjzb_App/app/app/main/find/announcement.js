@@ -22,6 +22,8 @@ import ItemList from '../../components/ItemList_2';
 import {toastShort} from '../../utils/Toast';
 import { goBack } from '../../utils/NavigatorBack';
 import NavigationBar from '../../components/NavigationBar';
+import Error from '../error/Error.js';
+
 const oPx = StyleConfig.oPx;
 let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 let i = 0;
@@ -36,6 +38,8 @@ export default class Announcement extends Component {
             curPage:1,
             totalPageNum:0,
             isShowBottomRefresh:true,
+            // 是否发生网络错误
+            isError: false,
         }
     }
 
@@ -50,9 +54,10 @@ export default class Announcement extends Component {
 
     //获取数据
     _getData(flag, curPage){
+        curPage = curPage?curPage:1;
         Request.post('queryNewsList.do',{curPage:curPage},(data)=>{
             if (data.error == 0) {
-                this.setState({totalPageNum:data.pageBean.totalPageNum});
+                this.setState({totalPageNum:data.pageBean.totalPageNum,isError: false});
                 if(data.pageBean.totalPageNum==1){
                     this.setState({isShowBottomRefresh:false});
                 }
@@ -74,7 +79,7 @@ export default class Announcement extends Component {
                 }
             }
         },(error)=>{
-            console.log(error);
+            this.setState({isError: true, animating:false});
         });
     }
 
@@ -108,22 +113,28 @@ export default class Announcement extends Component {
             return <Loading show={this.state.animating}/>
         }
         return <View style={{flex:1}}>
-            <ListView
-                dataSource={this.state.dataSource}
-                renderRow={this._renderRow.bind(this)}
-                onEndReached={this._end.bind(this)}
-                onEndReachedThreshold={30}
-                enableEmptySections={true}
-                renderFooter={this._renderFooter.bind(this)}
-                refreshControl={
-                    <RefreshControl
-                        refreshing={this.state.isRefreshing}
-                        onRefresh={this._onRefresh.bind(this)}
-                        tintColor="#ff0000"
-                        title="刷新中..."
-                    />
-                }
-            />
+            {
+                this.state.isError
+                ?
+                <Error onPress={this._getData.bind(this)} />
+                :
+                <ListView
+                    dataSource={this.state.dataSource}
+                    renderRow={this._renderRow.bind(this)}
+                    onEndReached={this._end.bind(this)}
+                    onEndReachedThreshold={30}
+                    enableEmptySections={true}
+                    renderFooter={this._renderFooter.bind(this)}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={this.state.isRefreshing}
+                            onRefresh={this._onRefresh.bind(this)}
+                            tintColor="#ff0000"
+                            title="刷新中..."
+                        />
+                    }
+                />
+            }
         </View>
     }
 
