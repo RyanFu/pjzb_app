@@ -15,15 +15,15 @@
  import CGGMIntroduction from './CGGMIntroduction';
  import NavigationBar from '../../components/NavigationBar';
  import SearchModal from '../../components/SearchModal';
-import SearchOfDept from './SearchOfDept';
+ import SearchOfDept from './SearchOfDept';
  import ScrollableTabView,{DefaultTabBar} from 'react-native-scrollable-tab-view';
  import styles from '../../style/invest';
  import { goBack } from '../../utils/NavigatorBack';
-import OwebView from '../../components/OwebView';
-import {toastShort} from '../../utils/Toast';
-import InvestDetail from '../invest/InvestDetail';
-import AddAssignmentDebt from './addAssignmentDebt';
-import Request from '../../utils/Request';
+ import OwebView from '../../components/OwebView';
+ import {toastShort} from '../../utils/Toast';
+ import InvestDetail from '../invest/InvestDetail';
+ import AddAssignmentDebt from './addAssignmentDebt';
+ import Request from '../../utils/Request';
 
  export default class debtHasBuy extends Component {
    constructor(props){

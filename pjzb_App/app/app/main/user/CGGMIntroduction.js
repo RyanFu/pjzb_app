@@ -22,8 +22,8 @@ import {StyleConfig} from '../../style';
 import Loading from '../../components/Loading';
 import styles from '../../style/funddetail';
 import Utils from '../../utils/utils';
-
 import {toastShort} from '../../utils/Toast';
+import Error from '../error/Error.js';
 
 const oPx = StyleConfig.oPx;
 let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
@@ -44,6 +44,8 @@ let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
          toBorrow:null,
          isEmpty:false,
          _toDetail:null,
+        // 是否发生网络错误
+        isError: false,
      }
    }
 
@@ -85,6 +87,7 @@ let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
              startDate1 = startDate;
              endDate1 = endDate;
          }
+         curPage = curPage?curPage:1;
          Request.post('sucessBuyedDebt.do',{
              curPage:curPage,
              uid:'',
@@ -92,6 +95,7 @@ let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
              endTime:endDate1,
              borrowTitle:"",
          },(data)=>{
+            this.setState({isError:false});
              if (data.error == 0) {
                  if(data.pageBean.page.length == 0){
                      this.setState({
@@ -128,7 +132,7 @@ let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
                  }
              }
          },(error)=>{
-             console.log(error);
+             this.setState({isError:true,animating:false});
          });
      }
 
@@ -198,25 +202,31 @@ let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
              return <View style={{flex:1}}><Loading show={this.state.animating}/></View>
          }
          return <View style={{flex:1}}>
-             <ListView
-                 dataSource={this.state.dataSource}
-                 renderRow={this._renderRow.bind(this)}
-                 onEndReached={this._end.bind(this)}
-                 onEndReachedThreshold={30}
-                 enableEmptySections = {true}
-                 renderFooter={this._renderFooter.bind(this)}
-                 refreshControl={
-                    <RefreshControl
-                        refreshing={this.state.isRefreshing}
-                        onRefresh={this._onRefresh.bind(this)}
-                        tintColor="#ff0000"
-                        title="刷新中..."
-                        titleColor="#999"
-                        colors={['#ff0000', '#00ff00', '#0000ff']}
-                        progressBackgroundColor="#ffff00"
-                    />
-                }
-             />
+            {
+                this.state.isError
+                ?
+                <Error onPress={this._getData.bind(this)} />
+                :
+                 <ListView
+                     dataSource={this.state.dataSource}
+                     renderRow={this._renderRow.bind(this)}
+                     onEndReached={this._end.bind(this)}
+                     onEndReachedThreshold={30}
+                     enableEmptySections = {true}
+                     renderFooter={this._renderFooter.bind(this)}
+                     refreshControl={
+                        <RefreshControl
+                            refreshing={this.state.isRefreshing}
+                            onRefresh={this._onRefresh.bind(this)}
+                            tintColor="#ff0000"
+                            title="刷新中..."
+                            titleColor="#999"
+                            colors={['#ff0000', '#00ff00', '#0000ff']}
+                            progressBackgroundColor="#ffff00"
+                        />
+                    }
+                 />
+             }
          </View>
      }
 

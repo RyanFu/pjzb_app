@@ -27,6 +27,7 @@ import {StyleConfig} from '../../style';
 import OwebView from '../../components/OwebView';
 import InvestDetail from '../invest/InvestDetail';
 import Utils from '../../utils/utils';
+import Error from '../error/Error.js';
 
 let oPx = StyleConfig.oPx;
 let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
@@ -48,6 +49,8 @@ let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
          endDate:'',
          choseType:2,
          choseData:[{text:'成功借出'},{text:'招标中的借款'},{text:'回款中的借款'},{text:'已回收的借款'}],
+         // 是否发生网络错误
+         isError: false,
      }
    }
 
@@ -101,6 +104,7 @@ let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
      //获取数据
      _getData(flag, curPage){
+        curPage = curPage?curPage:1;
          Request.post('investManage.do',{
              curPage:curPage,
              uid:'',
@@ -109,6 +113,7 @@ let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
              publishTimeEnd:this.state.endDate,
              title:"",
          },(data)=>{
+            this.setState({isError: false});
              if (data.error == 0) {
                  if(data.pageBean.page.length == 0){
                      this.setState({
@@ -145,11 +150,12 @@ let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
                  }
              }
          },(error)=>{
-             console.log(error);
+            this.setState({isError: true,animating:false});
          });
      }
 
      returnTitle () {
+        if (this.state.isError) return;
          if (this.state.choseType == 0) {// 成功借出
              return  <View style={styles.tableTop}>
                  <Text style={styles.tableRow}>标题</Text>
@@ -282,25 +288,31 @@ let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
              return <View style={{flex:1}}><Loading show={this.state.animating}/></View>
          }
          return <View style={{flex:1}}>
-             <ListView
-                 dataSource={this.state.dataSource}
-                 renderRow={this._renderRow.bind(this)}
-                 onEndReached={this._end.bind(this)}
-                 onEndReachedThreshold={30}
-                 enableEmptySections = {true}
-                 renderFooter={this._renderFooter.bind(this)}
-                 refreshControl={
-                    <RefreshControl
-                        refreshing={this.state.isRefreshing}
-                        onRefresh={this._onRefresh.bind(this)}
-                        tintColor="#ff0000"
-                        title="刷新中..."
-                        titleColor="#999"
-                        colors={['#ff0000', '#00ff00', '#0000ff']}
-                        progressBackgroundColor="#ffff00"
-                    />
-                }
-             />
+             {
+                this.state.isError
+                ?
+                <Error onPress={this._getData.bind(this)} />
+                :
+                 <ListView
+                     dataSource={this.state.dataSource}
+                     renderRow={this._renderRow.bind(this)}
+                     onEndReached={this._end.bind(this)}
+                     onEndReachedThreshold={30}
+                     enableEmptySections = {true}
+                     renderFooter={this._renderFooter.bind(this)}
+                     refreshControl={
+                        <RefreshControl
+                            refreshing={this.state.isRefreshing}
+                            onRefresh={this._onRefresh.bind(this)}
+                            tintColor="#ff0000"
+                            title="刷新中..."
+                            titleColor="#999"
+                            colors={['#ff0000', '#00ff00', '#0000ff']}
+                            progressBackgroundColor="#ffff00"
+                        />
+                    }
+                 />
+             }
          </View>
      }
 

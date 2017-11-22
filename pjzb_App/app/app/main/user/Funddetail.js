@@ -31,6 +31,8 @@
   import styles from '../../style/funddetail';
   import {toastShort} from '../../utils/Toast';
   import { goBack } from '../../utils/NavigatorBack';
+  import Error from '../error/Error.js';
+
   let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
   export default class Product extends Component {
     constructor(props){
@@ -47,7 +49,9 @@
         startDate:'',
         endDate:'',
         choseType:0,
-        choseData:[{text:'全部'},{text:'投资'},{text:'充值'},{text:'提现'},{text:'还款'},{text:'奖励'},{text:'冻结'}]
+        choseData:[{text:'全部'},{text:'投资'},{text:'充值'},{text:'提现'},{text:'还款'},{text:'奖励'},{text:'冻结'}],
+        // 是否发生网络错误
+        isError: false,
       }
     }
     _goBack(){
@@ -56,6 +60,7 @@
     //获取数据
     _getData(flag){
       Request.post('findCapitalRecord.do',{uid:'',startTime:this.state.startDate,endTime:this.state.endDate,momeyType:this.state.choseType,curPage:this.state.curPage},(data)=>{
+        this.setState({isError:false});
         if(data.pageBean.page.length == 0){
           this.setState({
             isRefreshing:false,
@@ -92,7 +97,7 @@
           });
         }
       },(error)=>{
-        console.log(error);
+        this.setState({isError:true,animating:false});
       });
     }
     //投资记录list
@@ -161,39 +166,45 @@
            rightTitle="筛选"
            rightBtnFunc={this._openSearch.bind(this)}
          />
-         <View style={{flex:1,backgroundColor:'#fff'}}>
-             <View style={styles.tableTop}>
-               <Text style={styles.tableRow}>交易时间</Text>
-               <Text style={styles.tableRow}>交易类型</Text>
-               <Text style={styles.tableRow}>交易金额</Text>
-               <Text style={styles.tableRow}>可用余额</Text>
-             </View>
-             <ListView
-             dataSource={this.state.dataSource}
-             renderRow={this._renderRow.bind(this)}
-             style={styles.listView}
-             onEndReached={this._end.bind(this)}
-             onEndReachedThreshold={30}
-             enableEmptySections = {true}
-             pageSize={20}
-             renderFooter={this._renderFooter.bind(this)}
-             refreshControl={
-              <RefreshControl
-                refreshing={this.state.isRefreshing}
-                onRefresh={this._onRefresh.bind(this)}
-                tintColor="#ff0000"
-                title="刷新中..."
-                titleColor="#999"
-                progressBackgroundColor="#ffff00"
-              />}/>
-              {/*
-                dialog :显示true与隐藏false
-                choseData:所有待选项
-                modalEvent:视图相应事件
-                onSubmit：搜索窗口关闭后的回调事件，返回参数见_onSubmit
-                */}
-              <Loading show={this.state.animating} top={true}/>
-          </View>
+          {
+            this.state.isError
+            ?
+            <Error onPress={this._getData.bind(this)} />
+            :
+           <View style={{flex:1,backgroundColor:'#fff'}}>
+               <View style={styles.tableTop}>
+                 <Text style={styles.tableRow}>交易时间</Text>
+                 <Text style={styles.tableRow}>交易类型</Text>
+                 <Text style={styles.tableRow}>交易金额</Text>
+                 <Text style={styles.tableRow}>可用余额</Text>
+               </View>
+               <ListView
+               dataSource={this.state.dataSource}
+               renderRow={this._renderRow.bind(this)}
+               style={styles.listView}
+               onEndReached={this._end.bind(this)}
+               onEndReachedThreshold={30}
+               enableEmptySections = {true}
+               pageSize={20}
+               renderFooter={this._renderFooter.bind(this)}
+               refreshControl={
+                <RefreshControl
+                  refreshing={this.state.isRefreshing}
+                  onRefresh={this._onRefresh.bind(this)}
+                  tintColor="#ff0000"
+                  title="刷新中..."
+                  titleColor="#999"
+                  progressBackgroundColor="#ffff00"
+                />}/>
+                {/*
+                  dialog :显示true与隐藏false
+                  choseData:所有待选项
+                  modalEvent:视图相应事件
+                  onSubmit：搜索窗口关闭后的回调事件，返回参数见_onSubmit
+                  */}
+                <Loading show={this.state.animating} top={true}/>
+            </View>
+          }
           <SearchModal
             dialog={this.state.dialog}
             choseData={this.state.choseData}

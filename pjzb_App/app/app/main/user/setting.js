@@ -32,6 +32,8 @@
   import RegIpayPersonalPage from './regIpayPersonal';
   import LoginChinapnr from './loginChinapnr';
   import SetGesture from '../other/setGesture';
+  import Error from '../error/Error.js';
+
   const oPx = StyleConfig.oPx;
   export default class Setting extends Component {
     constructor(props){
@@ -55,6 +57,8 @@
               {leftText:'版本信息',rightText:global.packageVersion,listPress:()=>{this.checkVersion()},style:styles.lineTop,showIcon:false,isNotClick:true},
           ],
           showDialog: true,
+          // 是否发生网络错误
+          isError: false,
       }
     }
     componentDidMount () {
@@ -139,8 +143,8 @@
         Request.post('safeCenterData.do',{
             uid: '',
         },async (data)=>{
+          this.setState({isError: false});
             if(data.error == 0){
-              console.log(data);
                 let funList = this.state.funList;
                 if(data.gestureMap){
                     funList[4].leftText = '手势密码修改';
@@ -207,8 +211,7 @@
                 Alert.alert('提示',data.msg);
             }
         },(error)=>{
-            this.setState({showDialog:false});
-            Alert.alert('提示','您的网络不稳定，请稍后再试！');
+            this.setState({showDialog:false,isError:true});
         });
 
     }
@@ -279,24 +282,30 @@
     render(){
       return (
         <View style={{flex:1}}>
-            <ScrollView style={styles.container}>
-              <NavigationBar
-              title="设置"
-              leftShowIcon={true}
-              leftBtnFunc={this._goBack.bind(this)}
-              />
-              <View style={styles.userListTap}>
-                {
-                  this.state.funList.map((row, index) =>{
-                      return this._funList(row,index);
-                  })
-                }
-              </View>
+          <NavigationBar
+            title="设置"
+            leftShowIcon={true}
+            leftBtnFunc={this._goBack.bind(this)}
+          />
+            {
+              this.state.isError
+              ?
+              <Error onPress={this._getData.bind(this)} />
+              :
+              <ScrollView style={styles.container}>
+                <View style={styles.userListTap}>
+                  {
+                    this.state.funList.map((row, index) =>{
+                        return this._funList(row,index);
+                    })
+                  }
+                </View>
 
-              <TouchableOpacity style={[styles.userListItem,{marginTop:40/oPx}]} onPress={this.onPressExit}>
-                  <Text style={styles.centerTextStyle}>退出登录</Text>
-              </TouchableOpacity>
-             </ScrollView>
+                <TouchableOpacity style={[styles.userListItem,{marginTop:40/oPx}]} onPress={this.onPressExit}>
+                    <Text style={styles.centerTextStyle}>退出登录</Text>
+                </TouchableOpacity>
+              </ScrollView>
+            }
             <Loading show={this.state.showDialog} top={true}/>
         </View>
       );

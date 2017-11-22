@@ -143,6 +143,7 @@ export default class Withdraw extends Component {
                 )
             }
         },(error)=>{
+            this.setState({showDialog:false});
             Alert.alert('提示','您的网络不稳定，请稍后再试！');
         });
     }
@@ -255,7 +256,7 @@ export default class Withdraw extends Component {
                 toastShort(data.msg,-300)
             }
         },(error)=>{
-            console.log(error);
+            Alert.alert('提示','您的网络不稳定，请稍后再试！');
         });
     }
 
@@ -334,7 +335,7 @@ export default class Withdraw extends Component {
             }
             this.setState({showDialog:false});
         },(error)=>{
-            console.log(error);
+            Alert.alert('提示','您的网络不稳定，请稍后再试！');
         });
     }
 

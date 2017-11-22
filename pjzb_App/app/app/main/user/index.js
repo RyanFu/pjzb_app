@@ -103,7 +103,7 @@
         }
       },(error)=>{
         this.setState({animating:false});
-        if (this.state.NetData != [])
+        if (this.state.NetData == [] || this.state.NetData == '' || this.state.NetData == null)
           this.setState({isError: true});
       });
     }

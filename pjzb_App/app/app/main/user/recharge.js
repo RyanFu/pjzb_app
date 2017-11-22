@@ -71,6 +71,7 @@ export default class Recharge extends Component {
             }
             this.setState({showDialog:false});
         },(error)=>{
+            this.setState({showDialog:false});
             Alert.alert("提示",'您的网络不稳定，请稍后再试！');
         });
     }
@@ -151,6 +152,7 @@ export default class Recharge extends Component {
                 Alert.alert('提示',data.msg);
             }
         },(error)=>{
+            this.setState({showDialog:false});
             Alert.alert("提示",'您的网络不稳定，请稍后再试！');
         });
     }

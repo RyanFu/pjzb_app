@@ -111,7 +111,14 @@
           toastShort(data.msg,-300);
         }
       },(error)=>{
-        alert(error);
+        this.setState({animating:false});
+        Alert.alert(
+            '提示信息',
+            '您的网络不稳定，请稍后再试！',
+            [
+                {text: '确定', },
+            ]
+        )
       });
     }
 

@@ -24,6 +24,7 @@ import styles from '../../style/rechargeWithdraw.js';
 import {StyleConfig} from '../../style';
 import Loading from '../../components/Loading';
 import Utils from '../../utils/utils';
+import Error from '../error/Error.js';
 
 import {toastShort} from '../../utils/Toast';
 
@@ -42,12 +43,16 @@ export default class WithdrawList extends Component {
             totalPageNum:0,
             isShowBottomRefresh:true,
             isEmpty:false,
+            // 是否发生网络错误
+            isError: false,
         };
     }
 
     //获取数据
     _getData(flag, curPage){
+        curPage = curPage?curPage:1;
         Request.post('withdrawList.do',{curPage:curPage,uid:''},(data)=>{
+            this.setState({isError: false});
             if (data.error == 0) {
                 if(data.pageBean.page.length == 0){
                     this.setState({
@@ -83,7 +88,7 @@ export default class WithdrawList extends Component {
                 }
             }
         },(error)=>{
-            console.log(error);
+            this.setState({isError: true,animating:false});
         });
     }
 
@@ -195,25 +200,31 @@ export default class WithdrawList extends Component {
             return <Loading show={this.state.animating}/>
         }
         return <View style={{flex:1}}>
-            <ListView
-                dataSource={this.state.dataSource}
-                renderRow={this._renderRow.bind(this)}
-                onEndReached={this._end.bind(this)}
-                onEndReachedThreshold={30}
-                enableEmptySections = {true}
-                renderFooter={this._renderFooter.bind(this)}
-                refreshControl={
-                    <RefreshControl
-                        refreshing={this.state.isRefreshing}
-                        onRefresh={this._onRefresh.bind(this)}
-                        tintColor="#ff0000"
-                        title="刷新中..."
-                        titleColor="#999"
-                        colors={['#ff0000', '#00ff00', '#0000ff']}
-                        progressBackgroundColor="#ffff00"
-                    />
-                }
-            />
+            {
+                this.state.isError
+                ?
+                <Error onPress={this._getData.bind(this)} />
+                :
+                <ListView
+                    dataSource={this.state.dataSource}
+                    renderRow={this._renderRow.bind(this)}
+                    onEndReached={this._end.bind(this)}
+                    onEndReachedThreshold={30}
+                    enableEmptySections = {true}
+                    renderFooter={this._renderFooter.bind(this)}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={this.state.isRefreshing}
+                            onRefresh={this._onRefresh.bind(this)}
+                            tintColor="#ff0000"
+                            title="刷新中..."
+                            titleColor="#999"
+                            colors={['#ff0000', '#00ff00', '#0000ff']}
+                            progressBackgroundColor="#ffff00"
+                        />
+                    }
+                />
+            }
         </View>
     }
 
@@ -233,15 +244,21 @@ export default class WithdrawList extends Component {
                         withOutLinearGradient={true}
                     />
                 </LinearGradient>
-                <View style={styles.topList}>
-                    <View style={styles.titleView}>
-                        <View style={styles.titleCenterView}><Text style={[styles.title, {marginLeft: 30/StyleConfig.oPx}]}>账户名</Text></View>
-                        <View style={styles.titleCenterView}><Text style={[styles.title, {marginLeft: 30/StyleConfig.oPx}, {width: 150/StyleConfig.oPx}]}>提现金额</Text></View>
-                        <View style={styles.titleCenterView}><Text style={[styles.title, {marginLeft: 80/StyleConfig.oPx}, {width: 190/StyleConfig.oPx}]}>提现时间</Text></View>
-                        <View style={styles.titleCenterView}><Text style={[styles.title, {marginLeft: 30/StyleConfig.oPx}]}>状态</Text></View>
-                        <View style={styles.titleCenterView}><Text style={[styles.title, {marginLeft: 50/StyleConfig.oPx}]}>操作</Text></View>
+                {
+                    this.state.isError
+                    ?
+                    null
+                    :
+                    <View style={styles.topList}>
+                        <View style={styles.titleView}>
+                            <View style={styles.titleCenterView}><Text style={[styles.title, {marginLeft: 30/StyleConfig.oPx}]}>账户名</Text></View>
+                            <View style={styles.titleCenterView}><Text style={[styles.title, {marginLeft: 30/StyleConfig.oPx}, {width: 150/StyleConfig.oPx}]}>提现金额</Text></View>
+                            <View style={styles.titleCenterView}><Text style={[styles.title, {marginLeft: 80/StyleConfig.oPx}, {width: 190/StyleConfig.oPx}]}>提现时间</Text></View>
+                            <View style={styles.titleCenterView}><Text style={[styles.title, {marginLeft: 30/StyleConfig.oPx}]}>状态</Text></View>
+                            <View style={styles.titleCenterView}><Text style={[styles.title, {marginLeft: 50/StyleConfig.oPx}]}>操作</Text></View>
+                        </View>
                     </View>
-                </View>
+                }
                 {
                     this.returnElm()
                 }

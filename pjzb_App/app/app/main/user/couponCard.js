@@ -19,6 +19,8 @@ import IsCoupon from './couponCardY';
 import DeCoupon from './couponCardZ';
 import Request from '../../utils/Request';
 import { goBack } from '../../utils/NavigatorBack';
+import Error from '../error/Error.js';
+
 const oPx = StyleConfig.oPx;
 export default class CouponCard extends Component{
   constructor(props){
@@ -31,7 +33,9 @@ export default class CouponCard extends Component{
       taste1:[],
       taste2:[],
       taste3:[],
-      oData:[]
+      oData:[],
+      // 是否发生网络错误
+      isError: false,
     }
   }
   componentWillMount() {
@@ -54,8 +58,10 @@ export default class CouponCard extends Component{
         // status = '3';
         // money = data.investAmount;
       }
-      this.setState({taste1:data.mapList1,taste2:data.mapList2,taste3:[{usestatus:status,money:money + '元体验金'}],oData:data.mapList1});
-    },(error)=>{});
+      this.setState({isError:false,taste1:data.mapList1,taste2:data.mapList2,taste3:[{usestatus:status,money:money + '元体验金'}],oData:data.mapList1});
+    },(error)=>{
+      this.setState({isError:true});
+    });
   }
   _goBack(){
     goBack(this.props.navigator);
@@ -92,34 +98,40 @@ export default class CouponCard extends Component{
           rightTitle={"全部"}
           rightBtnFunc={this.loginOrRegist.bind(this)}
         />
-        <View style={{flex:1}}>
-          <ScrollableTabView
-            style={styles.scrollable}
-            tabBarUnderlineStyle={styles.tabBarUnderlineStyle}
-            tabBarTextStyle={styles.tabBarTextStyle}
-            tabBarActiveTextColor={'#e5383e'}
-            tabBarInactiveTextColor={'#333'}
-            renderTabBar={() => <DefaultTabBar tabStyle={styles.tabStyle} style={styles.defaultBar}/>}
-            >
-            <UseCoupon tabLabel="未使用" navigator={this.props.navigator} data={this.state.oData} title={this.state.title} loading={true} changeCouponId={this.props.changeCouponId}/>
-            <IsCoupon tabLabel="已使用" title={this.state.title} data={this.state.oData}/>
-            <DeCoupon tabLabel="已过期" title={this.state.title} data={this.state.oData}/>
-          </ScrollableTabView>
-          <View style={[styles.tableView,{height:this.state.height}]}>
-            <TouchableOpacity style={styles.tableViewItem} onPress={()=>this._cardTap(1)}>
-              <Text>代金券</Text>
-              {this.state.cardTap=='1'?<Image style={styles.choseImg} source={require('../../images/user/user_coupon_chose.png')}/>:null}
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.tableViewItem} onPress={()=>this._cardTap(2)}>
-              <Text>现金券</Text>
-              {this.state.cardTap=='2'?<Image style={styles.choseImg} source={require('../../images/user/user_coupon_chose.png')}/>:null}
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.tableViewItem} onPress={()=>this._cardTap(3)}>
-              <Text>体验金</Text>
-              {this.state.cardTap=='3'?<Image style={styles.choseImg} source={require('../../images/user/user_coupon_chose.png')}/>:null}
-            </TouchableOpacity>
+         {
+            this.state.isError
+            ?
+            <Error onPress={this._getData.bind(this)} />
+            :
+            <View style={{flex:1}}>
+              <ScrollableTabView
+                style={styles.scrollable}
+                tabBarUnderlineStyle={styles.tabBarUnderlineStyle}
+                tabBarTextStyle={styles.tabBarTextStyle}
+                tabBarActiveTextColor={'#e5383e'}
+                tabBarInactiveTextColor={'#333'}
+                renderTabBar={() => <DefaultTabBar tabStyle={styles.tabStyle} style={styles.defaultBar}/>}
+                >
+                <UseCoupon tabLabel="未使用" navigator={this.props.navigator} data={this.state.oData} title={this.state.title} loading={true} changeCouponId={this.props.changeCouponId}/>
+                <IsCoupon tabLabel="已使用" title={this.state.title} data={this.state.oData}/>
+                <DeCoupon tabLabel="已过期" title={this.state.title} data={this.state.oData}/>
+              </ScrollableTabView>
+              <View style={[styles.tableView,{height:this.state.height}]}>
+                <TouchableOpacity style={styles.tableViewItem} onPress={()=>this._cardTap(1)}>
+                  <Text>代金券</Text>
+                  {this.state.cardTap=='1'?<Image style={styles.choseImg} source={require('../../images/user/user_coupon_chose.png')}/>:null}
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.tableViewItem} onPress={()=>this._cardTap(2)}>
+                  <Text>现金券</Text>
+                  {this.state.cardTap=='2'?<Image style={styles.choseImg} source={require('../../images/user/user_coupon_chose.png')}/>:null}
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.tableViewItem} onPress={()=>this._cardTap(3)}>
+                  <Text>体验金</Text>
+                  {this.state.cardTap=='3'?<Image style={styles.choseImg} source={require('../../images/user/user_coupon_chose.png')}/>:null}
+                </TouchableOpacity>
+              </View>
           </View>
-      </View>
+        }
       </View>
 
     )
