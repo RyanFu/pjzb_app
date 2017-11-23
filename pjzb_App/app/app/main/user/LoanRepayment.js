@@ -29,6 +29,7 @@
   import { goBack } from '../../utils/NavigatorBack';
   import InvestDetail from '../invest/InvestDetail';
   import LoanRepaymentDetail from './LoanRepaymentDetail';
+  import Error from '../error/Error.js';
 
   let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
   export default class LoanRepayment extends Component {
@@ -47,6 +48,8 @@
         endDate:this.props.endDate,
         choseType:this.props.choseType,
         choseData:this.props.choseData,
+        // 是否发生网络错误
+        isError: false,
       }
     }
     _goBack(){
@@ -65,6 +68,7 @@
           this.setState({choseType:0});
       }
       Request.post('repaymentDetail.do',{uid:'',publishTimeStart:this.state.startDate,publishTimeEnd:this.state.endDate,borrowFlag:borrowFlag,title:'',curPage:this.state.curPage},(data)=>{
+        this.setState({isError:false});
         if(data.pageBean.page.length == 0){
           this.setState({
             isRefreshing:false,
@@ -99,7 +103,7 @@
           });
         }
       },(error)=>{
-        console.log(error);
+        this.setState({isError:true,animating:false});
       });
     }
 
@@ -202,31 +206,41 @@
       _toDetail(id,title){
           this.props.navigator.push({component:InvestDetail,name:'InvestDetail',params:{borrowId:id,borrowTitle:title}});
       }
+
+    _getTitle() {
+      if (this.state.isError) return;
+      if (this.state.choseType == 0) {
+        return <View style={styles.tableTop}>
+             <Text style={[styles.tableRow,{flex:1.5}]}>标题</Text>
+             <Text style={[styles.tableRow,{flex:2}]}>借款金额</Text>
+             <Text style={[styles.tableRow,{flex:1.5}]}>年利率</Text>
+             <Text style={[styles.tableRow,{flex:2}]}>还款期限</Text>
+             <Text style={[styles.tableRow,{flex:2.2}]}>借款时间</Text>
+             <Text style={[styles.tableRow,{flex:1.8}]}>应还本息</Text>
+         </View>;
+      }else {
+         return <View style={styles.tableTop}>
+             <Text style={[styles.tableRow,{flex:1.5}]}>标题</Text>
+             <Text style={[styles.tableRow,{flex:2}]}>借款金额</Text>
+             <Text style={[styles.tableRow,{flex:2}]}>借款期限</Text>
+             <Text style={[styles.tableRow,{flex:2}]}>审核日期</Text>
+             <Text style={[styles.tableRow,{flex:2}]}>已还本息</Text>
+             <Text style={[styles.tableRow,{flex:1.5}]}>操作</Text>
+         </View>;
+      }
+    }
     
     render(){
       return (
         <View style={{flex:1}}>
          <View style={{flex:1,backgroundColor:'#fff'}}>
-             {this.state.choseType == 0 ?
-                 <View style={styles.tableTop}>
-                     <Text style={[styles.tableRow,{flex:1.5}]}>标题</Text>
-                     <Text style={[styles.tableRow,{flex:2}]}>借款金额</Text>
-                     <Text style={[styles.tableRow,{flex:1.5}]}>年利率</Text>
-                     <Text style={[styles.tableRow,{flex:2}]}>还款期限</Text>
-                     <Text style={[styles.tableRow,{flex:2.2}]}>借款时间</Text>
-                     <Text style={[styles.tableRow,{flex:1.8}]}>应还本息</Text>
-                 </View>
-                 :
-                 <View style={styles.tableTop}>
-                     <Text style={[styles.tableRow,{flex:1.5}]}>标题</Text>
-                     <Text style={[styles.tableRow,{flex:2}]}>借款金额</Text>
-                     <Text style={[styles.tableRow,{flex:2}]}>借款期限</Text>
-                     <Text style={[styles.tableRow,{flex:2}]}>审核日期</Text>
-                     <Text style={[styles.tableRow,{flex:2}]}>已还本息</Text>
-                     <Text style={[styles.tableRow,{flex:1.5}]}>操作</Text>
-                 </View>
-             }
-
+             { this._getTitle() }
+              
+            {
+              this.state.isError
+              ?
+              <Error onPress={this._getData.bind(this)} />
+              :
              <ListView
              dataSource={this.state.dataSource}
              renderRow={this._renderRow.bind(this)}
@@ -245,13 +259,14 @@
                 titleColor="#999"
                 progressBackgroundColor="#ffff00"
               />}/>
+            }
               {/*
                 dialog :显示true与隐藏false
                 choseData:所有待选项
                 modalEvent:视图相应事件
                 onSubmit：搜索窗口关闭后的回调事件，返回参数见_onSubmit
                 */}
-              <Loading show={this.state.animating} top={true}/>
+            <Loading show={this.state.animating} top={true}/>
           </View>
           </View>
       );

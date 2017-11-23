@@ -21,7 +21,6 @@
 
   import NavigationBar from '../../components/NavigationBar';
   import {StyleConfig} from '../../style/index';
-  const oPx = StyleConfig.oPx;
   import Loading from '../../components/Loading';
   import Request from '../../utils/Request';
   import Utils from '../../utils/utils';
@@ -30,9 +29,12 @@
   import { goBack } from '../../utils/NavigatorBack';
   import LoanRepayment from './LoanRepayment';
   import InvestDetail from '../invest/InvestDetail';
- import ContractQuery from '../invest/contractQuery';
+  import ContractQuery from '../invest/contractQuery';
+  import Error from '../error/Error.js';
 
+  const oPx = StyleConfig.oPx;
   let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+
   export default class LoanList extends Component {
     constructor(props){
       super(props);
@@ -50,6 +52,8 @@
         choseType:this.props.choseType,
         choseData:this.props.choseData,
         isPage:false,
+        // 是否发生网络错误
+        isError: false,
       }
     }
 
@@ -60,6 +64,7 @@
       //console.log("choseType2(props):"+this.props.choseType+" ,choseData:"+this.props.choseData.length);
       //console.log("choseType2:"+choseType+" ,borrowFlag2:"+borrowFlag);
       Request.post('loanManagement.do',{uid:'',publishTimeStart:this.state.startDate,publishTimeEnd:this.state.endDate,borrowFlag:borrowFlag,title:'',curPage:this.state.curPage},(data)=>{
+        this.setState({isError:false});
         if(data.pageBean.page.length == 0){
           this.setState({
             isRefreshing:false,
@@ -99,7 +104,7 @@
           });
         }
       },(error)=>{
-        console.log(error);
+        this.setState({isError:true,animating:false});
       });
     }
     _getStatus(borrow){
@@ -211,46 +216,66 @@
           this.props.navigator.push({component:InvestDetail,name:'InvestDetail',params:{borrowId:id,borrowTitle:title}});
       }
 
+    _getTitle() {
+      if (this.state.isError) return;
+      if (this.state.choseType == 0) {
+        return <View style={styles.tableTop}>
+                 <Text style={styles.tableRow}>标题</Text>
+                 <Text style={styles.tableRow}>操作</Text>
+                 <Text style={styles.tableRow}>金额(元)</Text>
+                 <Text style={styles.tableRow}>年利率</Text>
+                 <Text style={styles.tableRow}>期限</Text>
+                 <Text style={styles.tableRow}>状态</Text>
+               </View>
+      } else {
+        return <View style={styles.tableTop}>
+                 <Text style={styles.tableRow}>标题</Text>
+                 <Text style={styles.tableRow}>金额(元)</Text>
+                 <Text style={styles.tableRow}>年利率</Text>
+                 <Text style={styles.tableRow}>期限</Text>
+                 <Text style={styles.tableRow}>状态</Text>
+               </View>
+      }
+    }
+
     render(){
       let rightIcon = require('../../images/icon/icon_date.png');
       return (
         <View style={{flex:1}}>
 
          <View style={{flex:1,backgroundColor:'#fff'}}>
-             <View style={styles.tableTop}>
-               <Text style={styles.tableRow}>标题</Text>
-                 {
-                     this.state.choseType == 0 ? <Text style={styles.tableRow}>操作</Text> : null
-                 }
-               <Text style={styles.tableRow}>金额(元)</Text>
-               <Text style={styles.tableRow}>年利率</Text>
-               <Text style={styles.tableRow}>期限</Text>
-               <Text style={styles.tableRow}>状态</Text>
-             </View>
-             <ListView
-             dataSource={this.state.dataSource}
-             renderRow={this._renderRow.bind(this)}
-             style={styles.listView}
-             onEndReached={this._end.bind(this)}
-             onEndReachedThreshold={30}
-             enableEmptySections = {true}
-             pageSize={20}
-             renderFooter={this._renderFooter.bind(this)}
-             refreshControl={
-              <RefreshControl
-                refreshing={this.state.isRefreshing}
-                onRefresh={this._onRefresh.bind(this)}
-                tintColor="#ff0000"
-                title="刷新中..."
-                titleColor="#999"
-                progressBackgroundColor="#ffff00"
-              />}/>
-              {/*
-                dialog :显示true与隐藏false
-                choseData:所有待选项
-                modalEvent:视图相应事件
-                onSubmit：搜索窗口关闭后的回调事件，返回参数见_onSubmit
-                */}
+            { this._getTitle() }
+             
+             {
+                this.state.isError
+                ?
+                <Error onPress={this._getData.bind(this)} />
+                :
+               <ListView
+               dataSource={this.state.dataSource}
+               renderRow={this._renderRow.bind(this)}
+               style={styles.listView}
+               onEndReached={this._end.bind(this)}
+               onEndReachedThreshold={30}
+               enableEmptySections = {true}
+               pageSize={20}
+               renderFooter={this._renderFooter.bind(this)}
+               refreshControl={
+                <RefreshControl
+                  refreshing={this.state.isRefreshing}
+                  onRefresh={this._onRefresh.bind(this)}
+                  tintColor="#ff0000"
+                  title="刷新中..."
+                  titleColor="#999"
+                  progressBackgroundColor="#ffff00"
+                />}/>
+              }
+                {/*
+                  dialog :显示true与隐藏false
+                  choseData:所有待选项
+                  modalEvent:视图相应事件
+                  onSubmit：搜索窗口关闭后的回调事件，返回参数见_onSubmit
+                  */}
               <Loading show={this.state.animating} top={true}/>
           </View>
           </View>

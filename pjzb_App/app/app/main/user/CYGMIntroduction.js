@@ -130,6 +130,7 @@ let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
      }
 
      returnTitle () {
+        if (this.state.isError) return;
              return  <View style={styles.tableTop}>
                  <Text style={styles.tableRow}>标题</Text>
                  <Text style={styles.tableRow}>借款人</Text>
