@@ -21,6 +21,8 @@ import { goBack } from '../../utils/NavigatorBack';
 import {StyleConfig} from '../../style';
 import Request from '../../utils/Request';
 import {toastShort} from '../../utils/Toast';
+import Error from '../error/Error.js';
+
 let oPx = StyleConfig.oPx;
 
 export default class InvestFriendDetail extends Component{
@@ -34,6 +36,8 @@ export default class InvestFriendDetail extends Component{
             activityDescribe: '',
             exampleDescribe: '',
             awardDescribe: '',
+            // 是否发生网络错误
+            isError: false,
         }
     }
 
@@ -43,6 +47,7 @@ export default class InvestFriendDetail extends Component{
 
     _get() {
       Request.post('queryInviteActivity.do',{uid:''},(data)=>{
+        this.setState({isError:false});
           if(data.error == 0){
               this.setState({
                 activityTime: data.activityTime,
@@ -52,6 +57,8 @@ export default class InvestFriendDetail extends Component{
                 awardDescribe: data.awardDescribe,
               });
           };
+        }, (error) => {
+          this.setState({isError:true});
         });
     }
 
@@ -82,77 +89,82 @@ export default class InvestFriendDetail extends Component{
 					leftShowIcon={true}
 					leftBtnFunc={this._goBack.bind(this)}
 				/>
-        <ScrollView style={styles.containerScroll}>
-          <View style={styles.imgView}>
-            <Image style={styles.img} source={require('../../images/user/invest_friend_detail.jpg')}/>
-          </View>
-          <View style={styles.contentView}>
-            <View style={styles.viewTop}>
-              <Text style={styles.viewTopText}>尊敬的用户,您的推荐号为：<Text style={styles.viewTopTextColor}>{this.state.idCode}</Text></Text>
+        {
+          this.state.isError
+          ?
+          <Error onPress={this._get.bind(this)} />
+          :
+          <ScrollView style={styles.containerScroll}>
+            <View style={styles.imgView}>
+              <Image style={styles.img} source={require('../../images/user/invest_friend_detail.jpg')}/>
             </View>
-            <View style={styles.viewTopTextView}>
-
-              {
-                this.state.activityTime?
-                <Text style={styles.viewTopTextCenter}>
-                  <Text style={{color:'#333'}}>活动时间：</Text>
-                  <Text style={styles.activityTimeText}>{this.state.activityTime}</Text>
-                </Text>
-                :null
-              }
-
-              {
-                this.state.activityObject?
-                 <Text style={styles.viewTopTextCenter}>
-                  <Text style={{color:'#333'}}>活动对象：</Text>{this.state.activityObject}
-                </Text>
-                :null
-              }
-
-              {
-                this.state.activityDescribe?
-                <Text style={styles.viewTopTextCenter}>
-                  <Text style={{color:'#333'}}>活动说明：</Text>
-                  {this.state.activityDescribe}
-                </Text>
-                :null
-              }
-             
-              {
-                this.state.exampleDescribe?
-                <Text style={styles.viewTopTextCenter}>
-                  <Text style={{color:'#333'}}>举个例子：</Text>
-                  {this.state.exampleDescribe}
-                </Text>
-                :null
-              }
-              
-              {
-                this.state.awardDescribe?
-                <Text style={styles.viewTopTextCenter}>
-                  <Text style={{color:'#333'}}>奖励说明：</Text>
-                  {this.state.awardDescribe}
-                </Text>
-                :null
-              }
-
-              
-              <Text style={styles.viewTopTextCenter}>
-                <Text style={styles.activityTimeText}>注：</Text>
-                需将自己的邀请链接地址或推荐号发给您的好友，这样您才能成为他的邀请者。
-              </Text>
-            </View>
-            <View style={[styles.viewTopTextView,{marginBottom:100/oPx,flexDirection:'row'}]}>
-              <View style={styles.clipView}>
-                <Text style={styles.clipViewText} numberOfLines={1}>http://www.pujinziben.com/wap/app.html#!/regist?useCode=</Text>
+            <View style={styles.contentView}>
+              <View style={styles.viewTop}>
+                <Text style={styles.viewTopText}>尊敬的用户,您的推荐号为：<Text style={styles.viewTopTextColor}>{this.state.idCode}</Text></Text>
               </View>
-              <TouchableOpacity style={styles.clipViewBtn} onPress={()=>{this._setClipboardContent()}}>
-                <Text style={styles.clipViewBtnText}>复制链接</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </ScrollView>
+              <View style={styles.viewTopTextView}>
 
+                {
+                  this.state.activityTime?
+                  <Text style={styles.viewTopTextCenter}>
+                    <Text style={{color:'#333'}}>活动时间：</Text>
+                    <Text style={styles.activityTimeText}>{this.state.activityTime}</Text>
+                  </Text>
+                  :null
+                }
+
+                {
+                  this.state.activityObject?
+                   <Text style={styles.viewTopTextCenter}>
+                    <Text style={{color:'#333'}}>活动对象：</Text>{this.state.activityObject}
+                  </Text>
+                  :null
+                }
+
+                {
+                  this.state.activityDescribe?
+                  <Text style={styles.viewTopTextCenter}>
+                    <Text style={{color:'#333'}}>活动说明：</Text>
+                    {this.state.activityDescribe}
+                  </Text>
+                  :null
+                }
+               
+                {
+                  this.state.exampleDescribe?
+                  <Text style={styles.viewTopTextCenter}>
+                    <Text style={{color:'#333'}}>举个例子：</Text>
+                    {this.state.exampleDescribe}
+                  </Text>
+                  :null
+                }
+                
+                {
+                  this.state.awardDescribe?
+                  <Text style={styles.viewTopTextCenter}>
+                    <Text style={{color:'#333'}}>奖励说明：</Text>
+                    {this.state.awardDescribe}
+                  </Text>
+                  :null
+                }
+
+                
+                <Text style={styles.viewTopTextCenter}>
+                  <Text style={styles.activityTimeText}>注：</Text>
+                  需将自己的邀请链接地址或推荐号发给您的好友，这样您才能成为他的邀请者。
+                </Text>
+              </View>
+              <View style={[styles.viewTopTextView,{marginBottom:100/oPx,flexDirection:'row'}]}>
+                <View style={styles.clipView}>
+                  <Text style={styles.clipViewText} numberOfLines={1}>http://www.pujinziben.com/wap/app.html#!/regist?useCode=</Text>
+                </View>
+                <TouchableOpacity style={styles.clipViewBtn} onPress={()=>{this._setClipboardContent()}}>
+                  <Text style={styles.clipViewBtnText}>复制链接</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </ScrollView>
+        }
 			</View>
 		);
 	}
