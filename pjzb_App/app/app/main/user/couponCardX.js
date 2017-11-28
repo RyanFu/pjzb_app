@@ -51,16 +51,20 @@ export default class CouponCard extends Component{
       return '体验标投标专享金'
     }
   }
-  _useThisCard(id,index){
+  _useThisCard(id,index,money,rbName){
     if(this.props.changeCouponId){
-      if(this.props.title != '代金券'){
+      if(this.props.title != '代金券' && this.props.title != '加息券'){
         toastShort('当前投标只能使用代金券哦！',-300)
         return;
       }
-      this.props.changeCouponId(id);
+      if (this.props.title == '加息券')
+        this.props.changeCouponId(id, money, rbName);
+      else
+        this.props.changeCouponId(id);
+
       this.props.navigator.pop();
     }else{
-      if(this.props.title == '代金券'){
+      if(this.props.title == '代金券' || this.props.title == '加息券'){
         this.props.navigator.resetTo({component:AppMain,name:'AppMain',params:{selectedTab:'index'}});
       }else if(this.props.title == '现金券'){
         this.setState({animating:true});
@@ -118,34 +122,69 @@ export default class CouponCard extends Component{
     }
   }
 
+  _getRowText3(row) {
+    if (row.moneyInfo) {
+      return <View style={styles.leftView}>
+              <View style={styles.leftViewTopView}>
+                <Text style={styles.leftViewTopViewText}>￥{row.money}</Text>
+              </View>
+            </View>;
+    } else if (row.redmoneytype == 3) {
+      return <View style={styles.leftView}>
+              <View style={styles.leftViewTopView}>
+                <Text style={[styles.leftViewTopViewText, {fontSize: 48/oPx}]}>+{row.money}%</Text>
+              </View>
+              <View style={styles.leftViewBottomView}>
+                <Text style={styles.leftViewBottomViewText}>额外加息</Text>
+              </View>
+            </View>;
+    } else {
+      return <View style={styles.leftView}>
+              <View style={styles.leftViewTopView}>
+                <Text style={styles.leftViewTopViewText}>￥{row.money}</Text>
+              </View>
+              <View style={styles.leftViewBottomView}>
+                <Text style={styles.leftViewBottomViewText}>{ this._getInvestAmount(row.investAmount) }</Text>
+                {/*<Text style={styles.leftViewBottomViewText}>{row.useendtime?'有效期至'+row.useendtime:null}</Text>*/}
+              </View>
+            </View>;
+    }
+  }
+
   _showRow(row,index){
     if(row.usestatus != '1') return;
     return <View style={styles.coupon_card} key={index}>
       <Image source={require('../../images/user/coupon_canuse.png')} style={styles.img}/>
       <View style={styles.cardView}>
-        <View style={styles.leftView}>
-          <View style={styles.leftViewTopView}>
-            <Text style={styles.leftViewTopViewText}>￥{row.money}</Text>
+        { this._getRowText3(row) }
+        
+        {
+          row.moneyInfo
+          ?
+          <View style={styles.centerView}>
+            <Text style={[styles.centerViewText,{fontSize: 30/oPx}]}>{row.moneyInfo}</Text>
           </View>
-          <View style={styles.leftViewBottomView}>
-            <Text style={styles.leftViewBottomViewText}>{ this._getInvestAmount(row.investAmount) }</Text>
-            {/*<Text style={styles.leftViewBottomViewText}>{row.useendtime?'有效期至'+row.useendtime:null}</Text>*/}
+          :
+          <View style={styles.centerView}>
+            <Text style={styles.centerViewText}>{ this._getRowText1(row.deadline, row.investAmount) }</Text>
+            <Text style={styles.centerViewText}>{ this._getRowText2(row.deadline, row.borrowFlag) }</Text>
+            <Text style={styles.centerViewText}>有效期至{ row.useendtime }</Text>
           </View>
-        </View>
-
-        <View style={styles.centerView}>
-          <Text style={styles.centerViewText}>{ this._getRowText1(row.deadline, row.investAmount) }</Text>
-          <Text style={styles.centerViewText}>{ this._getRowText2(row.deadline, row.borrowFlag) }</Text>
-          <Text style={styles.centerViewText}>有效期至{ row.useendtime }</Text>
-        </View>
+        }
 
         <View style={styles.rightView}>
-          <TouchableOpacity style={styles.rightViewBtn} onPress={()=>this._useThisCard(row.id,index)}>
+          <TouchableOpacity style={styles.rightViewBtn} onPress={()=>this._useThisCard(row.id,index,row.money,row.rbName)}>
             <Text style={styles.rightViewText}>
-              立即
+              立
             </Text>
             <Text style={styles.rightViewText}>
-              使用
+              即
+            </Text>
+            <Text style={styles.rightViewText}>
+              使
+            </Text>
+            <Text style={styles.rightViewText}>
+              用
             </Text>
           </TouchableOpacity>
         </View>

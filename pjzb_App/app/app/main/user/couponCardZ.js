@@ -33,23 +33,109 @@ export default class CouponCard extends Component{
       return row.money;
     }
   }
+  _getInvestAmount(investAmount) {
+    if (investAmount && investAmount > 0) {
+      return  '满' + investAmount + '元抵用';
+    }
+  }
+
+   _getRowText1(deadline, investAmount) {
+    if (deadline == 0) {
+      return  '单笔投资满' + investAmount + '元使用';
+    } else {
+      return  '[新人红包]单笔投资满' + investAmount + '元使用';
+    }
+  }
+
+  _getRowText2(deadline, borrowFlag) {
+    if (borrowFlag == 1) {
+      if (deadline == 0) {
+        return  '不可投新手标项目';
+      } else {
+        return  '仅限' + deadline + '个月以上的所有标可用';
+      }
+    } else if (borrowFlag == 2) {
+      if (deadline == 0) {
+        return  '不可投新手标项目';
+      } else {
+        return  '仅限' + deadline + '个月以上的新手标可用';
+      }
+    } else if (borrowFlag == 3) {
+      if (deadline == 0) {
+        return  '不可投新手标项目';
+      } else {
+        return  '仅限' + deadline + '个月以上的仅老标可用';
+      }
+    }
+  }
+
+  _getRowText3(row) {
+    if (row.moneyInfo) {
+      return <View style={styles.leftView}>
+              <View style={styles.leftViewTopView}>
+                <Text style={styles.leftViewTopViewText}>￥{row.money}</Text>
+              </View>
+            </View>;
+    } else if (row.redmoneytype == 3) {
+      return <View style={styles.leftView}>
+              <View style={styles.leftViewTopView}>
+                <Text style={[styles.leftViewTopViewText, {fontSize: 48/oPx}]}>+{row.money}%</Text>
+              </View>
+              <View style={styles.leftViewBottomView}>
+                <Text style={styles.leftViewBottomViewText}>额外加息</Text>
+              </View>
+            </View>;
+    } else {
+      return <View style={styles.leftView}>
+              <View style={styles.leftViewTopView}>
+                <Text style={styles.leftViewTopViewText}>￥{row.money}</Text>
+              </View>
+              <View style={styles.leftViewBottomView}>
+                <Text style={styles.leftViewBottomViewText}>{ this._getInvestAmount(row.investAmount) }</Text>
+                {/*<Text style={styles.leftViewBottomViewText}>{row.useendtime?'有效期至'+row.useendtime:null}</Text>*/}
+              </View>
+            </View>;
+    }
+  }
+
   _showRow(row,index){
     if(row.usestatus != '3') return null;
     return <View style={styles.coupon_card} key={index}>
       <Image source={require('../../images/user/coupon_deuse.png')} style={styles.img}/>
       <View style={styles.cardView}>
-        <View style={styles.leftView}>
-          <View style={styles.leftViewTopView}></View>
-          <View style={styles.leftViewBottomView}></View>
+        { this._getRowText3(row) }
+        
+        {
+          row.moneyInfo
+          ?
+          <View style={styles.centerView}>
+            <Text style={[styles.centerViewText,{fontSize: 30/oPx}]}>{row.moneyInfo}</Text>
+          </View>
+          :
+          <View style={styles.centerView}>
+            <Text style={styles.centerViewText}>{ this._getRowText1(row.deadline, row.investAmount) }</Text>
+            <Text style={styles.centerViewText}>{ this._getRowText2(row.deadline, row.borrowFlag) }</Text>
+            <Text style={styles.centerViewText}>有效期至{ row.useendtime }</Text>
+          </View>
+        }
+
+        <View style={styles.rightView}>
+          <TouchableOpacity style={styles.rightViewBtn} onPress={()=>this._useThisCard(row.id,index)}>
+            <Text style={[styles.rightViewText, {color: '#999'}]}>
+              已
+            </Text>
+            <Text style={[styles.rightViewText, {color: '#999'}]}>
+              过
+            </Text>
+            <Text style={[styles.rightViewText, {color: '#999'}]}>
+              期
+            </Text>
+          </TouchableOpacity>
         </View>
-        <View style={styles.centerView}>
-          <Text style={styles.centerViewText}>{this._getText(row)}</Text>
-          <Text style={styles.centerViewText}>{row.useendtime}已过期</Text>
-        </View>
-        <View style={styles.rightView}></View>
       </View>
     </View>
   }
+
   _noData(){
     let show = true;
     for (let i=0;i<this.props.data.length;i++){

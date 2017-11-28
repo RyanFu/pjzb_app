@@ -54,7 +54,7 @@
               {leftText:'手势密码',rightText:'',listPress:()=>{this.props.navigator.push({component:SetGesture,name:'SetGesture',params:{isSetOrLogn:this.state.gest}})},style:styles.lineTop},
               {leftText:'手势密码状态',rightText:'',showSwitch:true,switchValue:false,switchEvent:(e)=>{this.switchEvent(e)},style:styles.lineTop},
               {leftText:'注册汇付账户',rightText:'',listPress:()=>{(this.state.ipayAccount==''||this.state.ipayAccount==null)&&this.state.busiCode!=''?this.corpRegisterQueryApp():this.state.ipayAccount==''||this.state.ipayAccount==null?this.props.navigator.push({component:RegIpayPersonalPage,name:'RegIpayPersonalPage'}):this.loginChinapnr()},style:{marginTop:40/oPx}},
-              {leftText:'版本信息',rightText:global.packageVersion,listPress:()=>{this.checkVersion()},style:styles.lineTop,showIcon:false,isNotClick:true},
+              {leftText:'版本信息',rightText:global.packageVersion,listPress:()=>{this.checkVersion()},style:styles.lineTop,showIcon:true,isNotClick:true},
           ],
           showDialog: true,
           // 是否发生网络错误

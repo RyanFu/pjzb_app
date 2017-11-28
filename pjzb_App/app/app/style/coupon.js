@@ -16,28 +16,28 @@ export default styles = StyleSheet.create({
     marginBottom:15/oPx
   },
   cardView:{
-    width:698/oPx,
-    height:128/oPx,
+    width:690/oPx,
+    height:138/oPx,
     backgroundColor:'transparent',
     position:'absolute',
     left:26/oPx,
     flexDirection:'row'
   },
   img:{
-    width:698/oPx,
-    height:128/oPx,
+    width:690/oPx,
+    height:138/oPx,
     alignSelf:'center',
     justifyContent:'center'
   },
   leftView:{
-    width:250/oPx,
-    height:128/oPx,
-    paddingLeft:30/oPx,
+    width:220/oPx,
+    height:138/oPx,
+    alignItems: 'center',
+    justifyContent:'center'
   },
   leftViewTopView:{
     height:56/oPx,
     justifyContent:'center',
-    marginTop:20/oPx
   },
   leftViewTopViewText:{
     fontSize:42/oPx,
@@ -52,29 +52,33 @@ export default styles = StyleSheet.create({
     justifyContent:'center'
   },
   centerView:{
-    width:340/oPx,
-    height:128/oPx,
+    width: 370/oPx,
+    height:138/oPx,
     alignItems:'flex-start',
     justifyContent:'center',
-    paddingLeft: 10/oPx,
+    paddingLeft: 15/oPx,
   },
   centerViewText:{
-    fontSize:20/oPx,
+    fontSize:22/oPx,
     color:'#999',
     lineHeight: 18,
   },
   rightView:{
     flex:1,
-    height:128/oPx
+    height:128/oPx,
+    width: 90/oPx,
+    marginLeft: 10/oPx,
   },
   rightViewBtn:{
     height:128/oPx,
+    width: 90/oPx,
     alignItems:'center',
     justifyContent:'center',
   },
   rightViewText:{
     fontSize:28/oPx,
     color:'#e24040',
+    lineHeight: 15,
   },
   noData:{
     height:60/oPx,

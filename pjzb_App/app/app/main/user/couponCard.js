@@ -33,6 +33,7 @@ export default class CouponCard extends Component{
       taste1:[],
       taste2:[],
       taste3:[],
+      taste4:[],
       oData:[],
       // 是否发生网络错误
       isError: false,
@@ -58,7 +59,18 @@ export default class CouponCard extends Component{
         // status = '3';
         // money = data.investAmount;
       }
-      this.setState({isError:false,taste1:data.mapList1,taste2:data.mapList2,taste3:[{usestatus:status,money:money + '元体验金'}],oData:data.mapList1});
+      this.setState({
+        isError:false,
+        taste1:data.mapList1,
+        taste2:data.mapList2,
+        taste3:[{
+          usestatus:status,
+          money:money,
+          moneyInfo:money + '元体验金'
+        }],
+        taste4: data.addInterestVouch?data.addInterestVouch:[],
+        oData:data.mapList1
+      });
     },(error)=>{
       this.setState({isError:true});
     });
@@ -84,7 +96,10 @@ export default class CouponCard extends Component{
         break;
       case 3:this.setState({cardTap:index,title:'体验金',oData:this.state.taste3,height:0,showChange:!this.state.showChange});
         break;
-      default:this.setState({cardTap:index,title:'代金券',oData:this.state.taste1,height:0,showChange:!this.state.showChange});break;
+      case 4:this.setState({cardTap:index,title:'加息券',oData:this.state.taste4,height:0,showChange:!this.state.showChange});
+        break;
+      default:this.setState({cardTap:index,title:'代金券',oData:this.state.taste1,height:0,showChange:!this.state.showChange});
+        break;
     }
   }
   render(){
@@ -95,7 +110,7 @@ export default class CouponCard extends Component{
           leftShowIcon={true}
           leftBtnFunc={this._goBack.bind(this)}
           rightDisplay={false}
-          rightTitle={"全部"}
+          rightTitle={"分类"}
           rightBtnFunc={this.loginOrRegist.bind(this)}
         />
          {
@@ -121,6 +136,12 @@ export default class CouponCard extends Component{
                   <Text>代金券</Text>
                   {this.state.cardTap=='1'?<Image style={styles.choseImg} source={require('../../images/user/user_coupon_chose.png')}/>:null}
                 </TouchableOpacity>
+
+                <TouchableOpacity style={styles.tableViewItem} onPress={()=>this._cardTap(4)}>
+                  <Text>加息券</Text>
+                  {this.state.cardTap=='4'?<Image style={styles.choseImg} source={require('../../images/user/user_coupon_chose.png')}/>:null}
+                </TouchableOpacity>
+
                 <TouchableOpacity style={styles.tableViewItem} onPress={()=>this._cardTap(2)}>
                   <Text>现金券</Text>
                   {this.state.cardTap=='2'?<Image style={styles.choseImg} source={require('../../images/user/user_coupon_chose.png')}/>:null}

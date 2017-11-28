@@ -64,6 +64,7 @@
        minvoucherAmt:100,//代金券使用最低金额
        usableSum:'',//可用
        reckon:'0.00',//预期收益
+       reckon2:'0.00',//加息收益
        voucherAmt:0,//优惠券金额
        submitBtnDisabled:false,
        bottomPs:0,
@@ -231,6 +232,7 @@
         return;
       };
       this.setState({animating:true});
+      alert(this.state.juanId)
      Request.post('financeInvest.do',{
        uid:'',
        borrowId:this.props.borrowId,
@@ -270,15 +272,60 @@
       this.props.navigator.push({component:CouponCard,name:'CouponCard',params:{changeCouponId:this._changeCouponId.bind(this), amount: this.state.Amount, deadline: this.state.productDetail.deadline}});
    }
    //获取优惠券
-   _changeCouponId(id){
-     let arr = this.state.mapListCd;
-     for(let i=0;i<arr.length;i++){
-       if(arr[i].id == id){
-         this.setState({juanId:id,voucherAmt:arr[i].money,juanName:arr[i].rbName},()=>{this._reckon(this.state.Amount)});
-         break;
-       };
-     }
+   _changeCouponId(id, annualRate, rbName){
+      let voucherAmt = 0;
+      let money = 0;
+      let value = this.state.Amount;
+
+      if (annualRate) {
+        this.setState({voucherAmt: 0, reckon: '0.00'});
+
+        if(this.state.voucherAmt>0){
+          if (this.state.productDetail.isDayThe == 2) {
+            let lilv = annualRate/100*1/12;
+            money = (this.state.voucherAmt+value)*lilv*this.state.productDetail.deadline/30;
+          } else {
+            money = (annualRate/1200) * this.state.productDetail.deadline * (parseFloat(value)+parseFloat(voucherAmt));
+          }
+        }else{
+          if (this.state.productDetail.isDayThe == 2) {
+            let lilv = annualRate/100*1/12;
+            money = value*lilv*this.state.productDetail.deadline/30;
+          } else {
+            money = (annualRate/1200) * this.state.productDetail.deadline * value;
+          }
+        }
+        this.setState({reckon2:money.toFixed(2), juanId:id, juanName: rbName});
+
+        if(this.state.voucherAmt>0){
+          if (this.state.productDetail.isDayThe == 2) {
+            let lilv = this.state.productDetail.annualRate/100*1/12;
+            money = (this.state.voucherAmt+value)*lilv*this.state.productDetail.deadline/30;
+          } else {
+            money = (this.state.productDetail.annualRate/1200) * this.state.productDetail.deadline * (parseFloat(value)+parseFloat(voucherAmt));
+          }
+        }else{
+          if (this.state.productDetail.isDayThe == 2) {
+            let lilv = this.state.productDetail.annualRate/100*1/12;
+            money = value*lilv*this.state.productDetail.deadline/30;
+          } else {
+            money = (this.state.productDetail.annualRate/1200) * this.state.productDetail.deadline * value;
+          }
+        }
+        this.setState({reckon:money.toFixed(2)});
+      } else {
+        this.setState({reckon2: '0.00'});
+        
+        let arr = this.state.mapListCd;
+        for(let i=0;i<arr.length;i++){
+         if(arr[i].id == id){
+           this.setState({juanId:id,voucherAmt:arr[i].money,juanName:arr[i].rbName},()=>{this._reckon(this.state.Amount)});
+           break;
+         };
+        }
+      }
    }
+
    //获取按钮状态
    _setBtnStatus(borrow){
       if(borrow == 1){
@@ -617,12 +664,22 @@
                       keyboardType="numeric"/>
                       <TouchableOpacity style={styles.textInputButton} onPress={this._onSubmit.bind(this)}><Text style={styles.textInputButtonText}>投资</Text></TouchableOpacity>
                   </View>
-                  <View style={[styles.submitItem,{backgroundColor:'#fff5db'}]}><Text style={[styles.submitItemText,{color:'#ff9a38'}]}>预期收益：{this.state.reckon}</Text></View>
+
+                  <View style={[styles.submitItem,{backgroundColor:'#fff5db', flexDirection: 'row', alignItems: 'center'}]}>
+                    <View style={{flex: 1}}>
+                      <Text style={[styles.submitItemText,{color:'#ff9a38',}]}>预期收益：{this.state.reckon}</Text>
+                    </View>
+                    <View style={{flex: 1, alignItems: 'flex-end', paddingRight: 30/oPx}}>
+                      <Text style={[styles.submitItemText,{color:'#ff9a38'}]}>加息收益：{this.state.reckon2}</Text>
+                    </View>
+                  </View>
+
                   <TouchableOpacity style={[styles.submitItem,styles.submitChose,!this.state.cantVoucher?styles.disabled:null]}
                     onPress={this._useCoupon.bind(this)}>
                     <Text style={[styles.submitItemText,{flex:1}]}>{this.state.juanName}</Text>
                     <Image style={styles.listBtn} source={require('../../images/icon/icon_user_right.png')}/>
                   </TouchableOpacity>
+
                 </View>
               </View>
           </KeyboardAvoidingView>:null}

@@ -47,6 +47,7 @@
   import Button from '../../components/Button';
   import Error from '../error/Error.js';
   import NetUtil from '../../utils/NetUtil.js';
+  import ThermalRenewal from '../../components/ThermalRenewal';
 
 const oPx = StyleConfig.oPx;
  let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
@@ -684,6 +685,7 @@ var options = {
                   titleColor="#999"
                 />}
                >
+              <ThermalRenewal />
               <View style={styles.swiper}>
                 {this.state.bannerLoad?<View style={styles.slide}>
                   <Image style={styles.img} source={this.state.defaultBanner}/>

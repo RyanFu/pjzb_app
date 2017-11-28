@@ -3,11 +3,11 @@
  */
  // let HOST='http://192.168.1.168:8080/pjzb';
  
-// let HOST='http://192.168.1.124:8080/pjzb';
+let HOST='http://192.168.1.124:8080/pjzb';
 
 // let HOST='http://120.78.89.202:8080/pjzb';
 
-let HOST='https://www.pujinziben.com';
+// let HOST='https://www.pujinziben.com';
 let URL = HOST+'/reactapp/';
 
 import {
@@ -49,7 +49,7 @@ let Request = {
           if (isConnected) {
             NetInfo.fetch().done(function(reachability){
               if(reachability != 'none' && reachability != 'NONE'){
-                toastShort('请求超时，请重试或检查您的网络设置',0);
+                toastShort('请求超时，请重试或检查您的网络设置',350);
               }
             });
           }
