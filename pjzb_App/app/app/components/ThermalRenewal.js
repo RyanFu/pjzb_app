@@ -44,20 +44,21 @@ export default class ThermalRenewal extends Component {
       //   {text: '是', onPress: ()=>{throw new Error('模拟启动失败,请重启应用')}},
       //   {text: '否', onPress: ()=>{markSuccess()}},
       // ]);
-      markSuccess()
+      markSuccess();
     } else if (isRolledBack) {
-      Alert.alert('提示', '刚刚更新失败了，版本已回滚');
+      // Alert.alert('提示', '刚刚更新失败了，版本已回滚');
     }
   }
 
   doUpdate = info => {
     downloadUpdate(info).then(hash => {
-      Alert.alert('提示', '下载完毕，是否重启立即应用？', [
-        {text: '重启', onPress: ()=>{switchVersion(hash);}},
-        {text: '下次启动时', onPress: ()=>{switchVersionLater(hash);}},
-      ]);
+      // Alert.alert('提示', '下载完毕，是否重启立即应用？', [
+      //   {text: '重启', onPress: ()=>{switchVersion(hash);}},
+      //   {text: '下次启动时', onPress: ()=>{switchVersionLater(hash);}},
+      // ]);
+      switchVersionLater(hash);
     }).catch(err => {
-      Alert.alert('提示', '更新失败');
+      // Alert.alert('提示', '更新失败');
     });
   }
 
@@ -71,13 +72,14 @@ export default class ThermalRenewal extends Component {
       } else if (info.upToDate) {
         // Alert.alert('提示', '您的应用版本已是最新.');
       } else {
-        Alert.alert('提示', '检查到新的版本 V'+info.name+'，是否下载？\n'+ info.description, [
-          {text: '是', onPress: ()=>{this.doUpdate(info)}},
-          {text: '否',},
-        ]);
+        // Alert.alert('提示', '检查到新的版本 V'+info.name+'，是否下载？\n'+ info.description, [
+        //   {text: '是', onPress: ()=>{this.doUpdate(info)}},
+        //   {text: '否',},
+        // ]);
+        this.doUpdate(info);
       }
     }).catch(err => {
-      Alert.alert('提示', '更新失败');
+      // Alert.alert('提示', '更新失败');
     });
   }
 

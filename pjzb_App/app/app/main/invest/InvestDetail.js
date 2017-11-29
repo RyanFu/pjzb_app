@@ -64,7 +64,8 @@
        minvoucherAmt:100,//代金券使用最低金额
        usableSum:'',//可用
        reckon:'0.00',//预期收益
-       reckon2:'0.00',//加息收益
+       reckon2:'',//加息收益
+       reckon2Text: '',
        voucherAmt:0,//优惠券金额
        submitBtnDisabled:false,
        bottomPs:0,
@@ -295,7 +296,7 @@
             money = (annualRate/1200) * this.state.productDetail.deadline * value;
           }
         }
-        this.setState({reckon2:money.toFixed(2), juanId:id, juanName: rbName});
+        this.setState({reckon2Text: '加息收益：', reckon2:money.toFixed(2), juanId:id, juanName: rbName});
 
         if(this.state.voucherAmt>0){
           if (this.state.productDetail.isDayThe == 2) {
@@ -314,7 +315,7 @@
         }
         this.setState({reckon:money.toFixed(2)});
       } else {
-        this.setState({reckon2: '0.00'});
+        this.setState({reckon2Text: '', reckon2: ''});
         
         let arr = this.state.mapListCd;
         for(let i=0;i<arr.length;i++){
@@ -670,7 +671,7 @@
                       <Text style={[styles.submitItemText,{color:'#ff9a38',}]}>预期收益：{this.state.reckon}</Text>
                     </View>
                     <View style={{flex: 1, alignItems: 'flex-end', paddingRight: 30/oPx}}>
-                      <Text style={[styles.submitItemText,{color:'#ff9a38'}]}>加息收益：{this.state.reckon2}</Text>
+                      <Text style={[styles.submitItemText,{color:'#ff9a38'}]}>{this.state.reckon2Text} {this.state.reckon2}</Text>
                     </View>
                   </View>
 

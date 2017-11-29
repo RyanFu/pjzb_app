@@ -3,15 +3,16 @@
  */
  // let HOST='http://192.168.1.168:8080/pjzb';
  
-let HOST='http://192.168.1.124:8080/pjzb';
+// let HOST='http://192.168.1.124:8080/pjzb';
 
 // let HOST='http://120.78.89.202:8080/pjzb';
 
-// let HOST='https://www.pujinziben.com';
+let HOST='https://www.pujinziben.com';
 let URL = HOST+'/reactapp/';
 
 import {
   NetInfo,
+  Platform,
 } from 'react-native';
 
 import fetchUtil from './fetch-polyfill';
@@ -23,7 +24,9 @@ let Request = {
       let user = await Storage.getItem('USER');
       let data_gloabl = data.hasOwnProperty("uid")?{
              pageType:"reactAPP",
-             uid:user?user.UID:''
+             uid:user?user.UID:'',
+             appVersion:global.packageVersion,
+             appType:Platform.OS,
            }:{
             pageType:"reactAPP"
           };
