@@ -96,8 +96,8 @@ export default class ThermalRenewal extends Component {
 
   render() {
     return (
-      <Loading show={this.state.animating} top={true} loadingText="更新优化中..."
-        loadingTimeText="请稍等1分钟左右"
+      <Loading show={this.state.animating} top={true} loadingText="正在更新..."
+        loadingTimeText="可能需要1分钟左右"
       />
     );
   }
