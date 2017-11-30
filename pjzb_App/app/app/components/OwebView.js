@@ -15,6 +15,8 @@ import Result from './Result';
 import { goBack } from '../utils/NavigatorBack';
 import AppMain from '../main/appMain';
 import {StyleConfig} from '../style';
+import Storage from '../utils/Storage.js';
+
  export default class OwebView extends Component{
    constructor(props){
      super(props);
@@ -39,26 +41,27 @@ import {StyleConfig} from '../style';
      
    }
    render(){
-     const jsCode = `window.reactNativePostmsg = window.postMessage;window.Native = true;`;
-     const {url,html} = this.props;
-     let source = html?{html:html}:{uri:url};
-     return (
-       <View style={{flex:1,backgroundColor:'#fff'}}>
-         <NavigationBar
-           title={this.props.title}
-           leftShowIcon={true}
-           leftBtnFunc={this._goBack.bind(this)}
-         />
-         <WebView
-             onError={()=>alert('error')}
-             source={source}
-             injectedJavaScript={jsCode}
-             messagingEnabled={false}
-             onMessage={(event) => this._onMessage(event)}
-             style={[{backgroundColor:'#fff'}]}
-             startInLoadingState={true}
-         />
-       </View>
+    let appUserId = global.USER ? global.USER.UID : -1;
+
+    const jsCode = `window.reactNativePostmsg=window.postMessage;window.Native=true;appCallFunction('${appUserId}');`;
+    const {url,html} = this.props;
+    let source = html?{html:html}:{uri:url};
+    return (
+      <View style={{flex:1,backgroundColor:'#fff'}}>
+        <NavigationBar
+          title={this.props.title}
+          leftShowIcon={true}
+          leftBtnFunc={this._goBack.bind(this)}
+        />
+        <WebView
+          source={source}
+          injectedJavaScript={jsCode}
+          messagingEnabled={false}
+          onMessage={(event) => this._onMessage(event)}
+          style={[{backgroundColor:'#fff'}]}
+          startInLoadingState={true}
+        />
+      </View>
      )
    }
  }
