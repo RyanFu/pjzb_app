@@ -27,6 +27,10 @@
  import Request from '../utils/Request';
  // 版本更新提示组件
  import VersionUpdate from '../components/VersionUpdate';
+
+ // 热更新
+ import ThermalRenewal from '../components/ThermalRenewal';
+
  export default class AppMain extends Component {
    constructor(props){
      super(props);
@@ -164,6 +168,7 @@
 
       {/* 版本更新提示组件 */}
       <VersionUpdate vMap={this.state.vMap} isShowVersion={this.state.isShowVersion} onPress={() => {this.setState({isShowVersion: false})}} />
+      <ThermalRenewal />
      </View>
      )
    }

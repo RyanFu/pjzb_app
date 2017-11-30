@@ -233,7 +233,6 @@
         return;
       };
       this.setState({animating:true});
-      alert(this.state.juanId)
      Request.post('financeInvest.do',{
        uid:'',
        borrowId:this.props.borrowId,

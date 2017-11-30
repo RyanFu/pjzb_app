@@ -36,6 +36,7 @@ export default class Loading extends Component{
      this.loop();
    }
    renderElm(){
+    let viewStyle = this.props.loadingText ? styles.loadingShaDowBig : styles.loadingShaDow;
     if(this.props.show)
      {
        const rotate = this.state.rotateAnim.interpolate({
@@ -44,8 +45,14 @@ export default class Loading extends Component{
               });
        return <View style={[!this.props.top?styles.loading:styles.loadingTop,{height:this.props.height||StyleConfig.screen_height}]}>
        <View style={[styles.loadingDialog,{height:this.props.height||StyleConfig.screen_height}]}></View>
-       <View style={styles.loadingShaDow}>
+       <View style={viewStyle}>
          <Animated.Image source={require('../images/icon/icon_loading.png')} style={[styles.loadingImg,{transform:[{rotate:rotate}]}]}></Animated.Image>
+         {
+          this.props.loadingText ? <Text style={{fontSize: 26/oPx, color: '#999', marginTop: 10/oPx}}>{this.props.loadingText}</Text> : null
+         }
+         {
+          this.props.loadingTimeText ? <Text style={{fontSize: 24/oPx, color: '#999', marginTop: 5/oPx}}>{this.props.loadingTimeText}</Text> : null
+         }
        </View>
      </View>}
      return null;
@@ -96,9 +103,20 @@ const styles = StyleSheet.create({
     backgroundColor:'#fff',
     zIndex:10
   },
+  loadingShaDowBig:{
+    width:240/oPx,
+    height:240/oPx,
+    borderRadius:5,
+    justifyContent:'center',
+    alignItems:'center',
+    backgroundColor:'#fff',
+    zIndex:10
+  },
   loadingImg:{
     width:80/oPx,
-    height:80/oPx
+    height:80/oPx,
+    marginBottom: 20/oPx,
+    marginTop: 20/oPx,
 
   }
 })

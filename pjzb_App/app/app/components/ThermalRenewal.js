@@ -32,10 +32,18 @@ import {
   markSuccess,
 } from 'react-native-update';
 
+import Loading from './Loading';
 import _updateConfig from '../../update.json';
 const {appKey} = _updateConfig[Platform.OS];
 
 export default class ThermalRenewal extends Component {
+  constructor(props){
+     super(props);
+     this.state = {
+        animating: false,
+     }
+   }
+
   componentWillMount(){
     this.checkUpdate();
 
@@ -56,6 +64,8 @@ export default class ThermalRenewal extends Component {
       //   {text: '重启', onPress: ()=>{switchVersion(hash);}},
       //   {text: '下次启动时', onPress: ()=>{switchVersionLater(hash);}},
       // ]);
+
+      this.setState({animating: false});
       switchVersionLater(hash);
     }).catch(err => {
       // Alert.alert('提示', '更新失败');
@@ -77,6 +87,7 @@ export default class ThermalRenewal extends Component {
         //   {text: '否',},
         // ]);
         this.doUpdate(info);
+        this.setState({animating: true});
       }
     }).catch(err => {
       // Alert.alert('提示', '更新失败');
@@ -85,8 +96,9 @@ export default class ThermalRenewal extends Component {
 
   render() {
     return (
-      <View>
-      </View>
+      <Loading show={this.state.animating} top={true} loadingText="更新优化中..."
+        loadingTimeText="请稍等1分钟左右"
+      />
     );
   }
 }
