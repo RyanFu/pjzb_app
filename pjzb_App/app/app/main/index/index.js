@@ -24,6 +24,7 @@
   import NavigationBar from '../../components/NavigationBar';
   import Swiper from 'react-native-swiper';
   import Product from '../../components/Product';
+  import ZQProduct from '../../components/ZQProduct';
   import InvestDetail from '../invest/InvestDetail';
   import InvestDetailTY from '../invest/InvestDetailTY';
   import Request from '../../utils/Request';
@@ -47,6 +48,7 @@
   import Button from '../../components/Button';
   import Error from '../error/Error.js';
   import NetUtil from '../../utils/NetUtil.js';
+  import ZQZRInvestmentDetails from '../invest/ZQZRInvestmentDetails';
 
 const oPx = StyleConfig.oPx;
  let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
@@ -80,6 +82,8 @@ var options = {
        isExgo:global.indexData?global.indexData.isExgo:0,
        isxsBiao:global.indexData?global.indexData.isxsBiao:0,
        xsBorrow:global.indexData?global.indexData.xsBorrow:{},
+       mapZQ:ds.cloneWithRows(global.indexData?(global.indexData.mapZQ?global.indexData.mapZQ:[]):[]),
+       listZQ: null,
        xsAnnualRate: 0,
        // android 最新版本
        androidMap: global.indexData?global.indexData.androidMap:[],
@@ -106,9 +110,10 @@ var options = {
    //获取数据
    _getData(){
       Request.post('getBannerAndBorrows.do',{uid:''},(data)=>{
-
        this.setState({
          dataSource:ds.cloneWithRows(data.recommendBorrowList),
+         mapZQ:data.mapZQ?ds.cloneWithRows(data.mapZQ):null,
+         listZQ: data.mapZQ,
          bannerList:data.bannerList,
          experienceBorrow:data.experienceBorrow[0],
          totalInvestNum:data.experienceBorrow[1].experienceBorrowCount,
@@ -210,6 +215,15 @@ var options = {
       this.props.navigator.push({component:InvestDetail,name:'InvestDetail',params:{borrowId:id,borrowTitle:title}})
     );
    }
+
+    //债权点击事件
+   _pressRowZQ(id,title){
+    this.setState({sweiperIndex:0})
+    InteractionManager.runAfterInteractions(
+      this.props.navigator.push({component:ZQZRInvestmentDetails,name:'ZQZRInvestmentDetails',params:{debtId:id,debtTitle:title}})
+    );
+   }
+
    // 跳转体验标
    async _onPress(id){
     let data = await Storage.getItem('USER')
@@ -660,6 +674,29 @@ var options = {
       }
     }
 
+
+    // 生成list
+    _renderRowZQ = (data) => {
+      return (
+        <ZQProduct data={data} onPress={this._pressRowZQ.bind(this)}/>
+      );
+    }
+
+    _getZQZR() {
+      if (this.state.listZQ != '[]' && this.state.listZQ != null && this.state.listZQ != '') {
+        return <View style={styles.product}>
+                 <View style={[styles.exp_title,styles.noborder]}>
+                   <Text style={styles.exp_title_text}>债权转让</Text>
+                 </View>
+                 <ListView
+                    dataSource={this.state.mapZQ}
+                    renderRow={this._renderRowZQ}
+                    enableEmptySections={true}
+                  />
+               </View>;
+      }
+    }
+
    render(){
     return (
       <View style={{flex:1}}>
@@ -746,6 +783,9 @@ var options = {
                   enableEmptySections={true}
                 />
              </View>
+
+            {/* 推荐债权转让 */}
+            { this._getZQZR() }
 
              <View style={styles.index_footer}>
                <View style={[styles.index_footer_title]}>

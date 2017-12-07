@@ -53,6 +53,8 @@ export default class Welcome extends Component {
                  androidMap: data.androidMap,
                  // iso 最新版本
                  iosMap: data.iosMap,
+                 // 债权转让list
+                 mapZQ: data.mapZQ,
                }
             }
         },(error)=>{

@@ -184,7 +184,6 @@ export default class RechargeList extends Component {
     }
 
     render() {
-        alert(this.state.isError)
         return (
             <View style={[{flex: 1}, {backgroundColor:'white'}]}>
                 <LinearGradient colors={['#f3553e', '#eb3549']}>

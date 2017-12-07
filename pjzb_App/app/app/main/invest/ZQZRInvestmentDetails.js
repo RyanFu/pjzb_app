@@ -270,7 +270,7 @@ export default class InvestDetailTY extends Component {
                     <View style={styles.topDetail}>
                         <View style={[styles.topDetailLine]}>
                             <Text style={styles.topDetailText}>{this.state.debtsDetail.debtSum}元</Text>
-                            <Text style={styles.bottomDetailText}>转让总额</Text>
+                            <Text style={styles.bottomDetailText}>债权价值</Text>
                         </View>
                         <View style={styles.topDetailLine}>
                             <Text numberOfLines={1} style={styles.topDetailText}>{this.state.date}</Text>
@@ -287,8 +287,9 @@ export default class InvestDetailTY extends Component {
                             <View style={style.itemView}>
                                 <View style={style.tdView}><Text style={style.text}>转让价格</Text></View>
                                 <View style={[style.tdView,style.color]}><Text style={[style.text,{color: '#333'}]}>{Number(this.state.debtsDetail.auctionBasePrice)>=10000?Number(this.state.debtsDetail.auctionBasePrice)/10000+'万元':this.state.debtsDetail.auctionBasePrice}</Text></View>
-                                <View style={style.tdView}><Text style={style.text}>借款总额</Text></View>
-                                <View style={[style.tdView,style.tdView2,style.color,{backgroundColor: '#fff'}]}><Text style={[style.text,{color: '#333'}]}>{Number(this.state.borrowDetailMap.borrowSum)>=10000?Number(this.state.borrowDetailMap.borrowSum)/10000+'万元':this.state.borrowDetailMap.borrowSum}</Text></View>
+                                <View style={style.tdView}><Text style={style.text}>待收利息</Text></View>
+                                {/*<View style={[style.tdView,style.tdView2,style.color,{backgroundColor: '#fff'}]}><Text style={[style.text,{color: '#333'}]}>{Number(this.state.borrowDetailMap.borrowSum)>=10000?Number(this.state.borrowDetailMap.borrowSum)/10000+'万元':this.state.borrowDetailMap.borrowSum}</Text></View>*/}
+                                <View style={[style.tdView,style.color]}><Text style={[style.text,{color: '#333'}]}>{Number(this.state.debtsDetail.recivedInterest)>=10000?Number(this.state.debtsDetail.recivedInterest)/10000+'万元':this.state.debtsDetail.recivedInterest}</Text></View>
                             </View>
                           {/*  <View style={style.itemView}>
                                 <View style={[style.tdView]}><Text style={style.text}></Text></View>
@@ -382,7 +383,7 @@ const style = StyleSheet.create({
         borderTopWidth: StyleConfig.borderWidth,
         borderTopColor: StyleConfig.borderColor,
         backgroundColor: '#e9ecf3',
-        alignItems: 'flex-end',
+        alignItems: 'center',
         paddingRight: 10/oPx,
     },
     text: {
@@ -401,7 +402,7 @@ const style = StyleSheet.create({
     color: {
         flex:1.5,
         backgroundColor: '#fff',
-        alignItems: 'flex-start',
+        alignItems: 'center',
         paddingLeft: 10/oPx,
     },
     msgView: {

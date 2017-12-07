@@ -50,18 +50,21 @@
    }
    //金额格式化
    _formatAmt(val){
-     if(val%2==0 && (val*0.0001)>0)
-      return (val/10000)+'万元';
+     if(val>10000)
+      return val/10000 + '万元';
      if(val<10000)
       return val+'元';
    }
    //进度条
    _progress(data){
+
+    let recivedInterest = data.recivedInterest ? data.recivedInterest : 0 ;
+    let sum = data.debtSum + recivedInterest;
      let oStyle = this.props.showList?styles.oProgress:null;
      return <View style={oStyle}>
        <View style={[styles.product_detail_line,styles.product_detail_t_t]}>
          <View style={styles.product_detail_b_t}>
-           <Text style={styles.product_d_b_small}>待收本金/<Text style={{color:'#333'}}>{this._formatAmt(data.debtSum)}</Text></Text>
+           <Text style={styles.product_d_b_small}>债权总价值/<Text style={{color:'#333'}}>{this._formatAmt(sum)}</Text></Text>
          </View>
        </View>
 

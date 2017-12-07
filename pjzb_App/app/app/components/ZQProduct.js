@@ -1,0 +1,290 @@
+/**
+ * Created by wsl on 2017/01/13.
+ */
+ 'use strict';
+ import React, {Component} from 'react';
+ import {
+   StyleSheet,
+   View,
+   Text,
+   Image,
+   ScrollView,
+   TouchableOpacity,
+   ListView
+ } from 'react-native';
+ import {StyleConfig} from '../style';
+ import Utils from '../utils/utils.js'
+
+ const oPx = StyleConfig.oPx;
+ export default class ProductList extends Component{
+   constructor(props){
+     super(props)
+   }
+   //按钮状态
+   _btnStatus(data){
+     let status = this.props.data.borrowStatus;
+     let oBtn = status == '2'?
+     <TouchableOpacity style={styles.oButton}
+       onPress={()=>this.props.onPressEvent(data.id)}>
+       <Text style={styles.oButtonText}>立即投资</Text>
+     </TouchableOpacity>:
+     <View style={[styles.oButton,styles.oButtonDisabled]}>
+       <Text style={styles.oButtonTextDisabled}>{this._getStatus(status)}</Text></View>
+     return oBtn;
+   }
+   _getStatus(borrow){
+    	if(borrow == 1){
+    		return '初审中';
+    	}else if(borrow == 2){
+    		return '立即投资';
+    	}else if(borrow == 3){
+    		return '复审中';
+    	}else if(borrow == 4){
+    		return '还款中';
+    	}else if(borrow == 5){
+    		return '已还完';
+    	}else{
+    		return '流标';
+    	}
+    };
+   //获取产品类型
+   _getBorrowWay(way){
+     if(way =='3')
+      return '多金宝';
+     if(way =='4')
+      return '普金保';
+     if(way =='6')
+      return '恒金保';
+     if(way =='5')
+      return '新手标';
+   }
+   //金额格式化
+   _formatAmt(val){
+     if(val%2==0 && (val*0.0001)>0)
+      return (val/10000)+'万元';
+     if(val<10000)
+      return val+'元';
+     return val;
+   }
+   //进度条
+   _progress(data){
+     let oStyle = this.props.showList?styles.oProgress:null;
+     return <View style={oStyle}>
+               <View style={styles.product_detail_t_t}>
+                  <View style={{
+                      height:8/oPx,
+                      backgroundColor:'#fbdbdb',
+                      borderRadius:4/oPx,
+                      width:100/100*152/oPx
+                    }}>
+                    <View style={{
+                        height:8/oPx,
+                        backgroundColor:'#eb3331',
+                        borderRadius:4/oPx,
+                        width:data.schedules/100*152/oPx
+                    }} />
+                  </View>
+                  <Text style={styles.product_d_b_small}> {data.schedules}%</Text>
+               </View>
+               <View style={styles.product_detail_b_t}> 
+                 <Text style={styles.product_d_b_small}>募集总额/{data.borrowAmount}</Text>
+               </View>
+             </View>
+   }
+
+   _getBorrowWayTitle() {
+      let dateStart = new Date(Date.parse("2017/09/09")).getTime();
+      let dateEnd = new Date(Date.parse("2017/09/30")).getTime(); 
+      let date = new Date().getTime();
+      if (!this.props.showList) {
+        if (date >= dateStart && date <= dateEnd && this.props.data.borrowTypeSubId != 5) {
+          return  <View style={[styles.product_title_way, {borderColor:'#fc3350', width: 310/oPx}]}>
+                    <Text style={[styles.product_title_way_text, {color:'#fc3350'}]}>
+                      {this._getBorrowWay(this.props.data.borrowTypeSubId)}
+                      /奖励200元现金红包
+                    </Text>
+                  </View>;
+        } else {
+          return  <View style={styles.product_title_way}>
+                    <Text style={styles.product_title_way_text}>
+                      {this._getBorrowWay(this.props.data.borrowTypeSubId)}
+                    </Text>
+                  </View>;
+        }
+      }
+   }
+
+   _renderElm(){
+     let data = this.props.data;
+     let isAlignCenter = this.props.showList?{justifyContent:'center'}:null;
+     return (
+       <View style={styles.product_box}>
+         <View style={styles.product_title}>
+           {
+             !this.props.showList?<Text style={styles.product_title_text}>
+             {data.borrowTitle}
+           </Text>:<TouchableOpacity onPress={()=>{this.props.onPressEvent(data.id)}}><Text style={styles.product_title_text}>{data.borrowTitle}</Text></TouchableOpacity>
+           }
+           
+         </View>
+         <View style={styles.product_detail}>
+           <View style={styles.product_detail_left}>
+             <View style={styles.product_detail_t_t}>
+               <Text style={[styles.product_d_t_big,{color:'#333'}]}>
+               {this.props.data.debtLimit}/{this.props.data.deadline}
+             </Text>
+             </View>
+             <View style={styles.product_detail_b_t}>
+               <Text style={styles.product_d_b_small}>剩余还款期数</Text>
+             </View>
+           </View>
+           <View style={styles.product_detail_center}>
+             <View style={[styles.product_detail_t_t, {paddingRight: 30/oPx}]}>
+               <Text style={[styles.product_d_t_big, {fontSize:50/oPx,}]} numberOfLines={1}>
+                {/*{Utils.formatCurrency(500000)}*/}
+                {this.props.data.debtSum + this.props.data.recivedInterest}
+               </Text>
+              <Text style={[styles.product_d_t_small,{color:'#333'}]}>元</Text>
+             </View>
+             <View style={styles.product_detail_b_t}>
+               <Text style={styles.product_d_b_small}>债权总价值</Text>
+             </View>
+           </View>
+           <View style={styles.product_detail_center}>
+            <View style={[styles.product_detail_t_t, {marginRight: 30/oPx}]}>
+              <Text style={[styles.product_d_t_big, {fontSize:50/oPx,}]} numberOfLines={1}>
+                {/*{Utils.formatCurrency(500000)}*/}
+                {this.props.data.auctionBasePrice}
+              </Text>
+              <Text style={[styles.product_d_t_small,{color:'#333'}]}>元</Text>
+            </View>
+            <View style={styles.product_detail_b_t}>
+              <Text style={styles.product_d_b_small}>转让价格</Text>
+            </View>
+           </View>
+         </View>
+         {this.props.showList?this._progress(data):null}
+       </View>
+     )
+   }
+   render(){
+     let data = this.props.data;
+     let onPress = this.props.onPress;
+     const elm = this._renderElm();
+     return (
+       !this.props.showList
+       ? <TouchableOpacity activeOpacity={0.5} onPress={()=>onPress(data.id,data.borrowTitle)}>{elm}</TouchableOpacity> 
+       : <TouchableOpacity activeOpacity={0.5} onPress={()=>{this.props.onPressEvent(data.id)}}>{elm}</TouchableOpacity>
+      );
+   }
+ }
+ const styles =StyleSheet.create({
+   product_box:{
+     height:200/oPx,
+     paddingLeft:30/oPx,
+     borderTopColor:StyleConfig.borderColor,
+     borderTopWidth:StyleConfig.borderWidth,
+     backgroundColor:'#fff',
+     overflow:'hidden'
+   },
+   product_title:{
+     height:90/oPx,
+     marginTop:3,
+     flexDirection:'row',
+     alignItems:'center',
+   },
+   product_title_text:{
+     fontSize:28/oPx,
+     color:'#333',
+     alignSelf:'center',
+     fontWeight:'200'
+   },
+   product_title_way:{
+     marginLeft:3,
+     height:32/oPx,
+     width:118/oPx,
+     borderRadius:16/oPx,
+     borderColor:'#fea401',
+     borderWidth:1/oPx,
+     alignItems:'center',
+     justifyContent:'center'
+   },
+   product_title_way_text:{
+     fontWeight:'200',
+     fontSize:22/oPx,
+     color:'#fea401',
+   },
+   product_detail:{
+     flexDirection:'row',
+   },
+   product_detail_left:{
+     // width:250/oPx
+     flex: 1,
+   },
+   product_detail_center:{
+     flex: 1,
+   },
+   product_detail_right:{
+     flex:1
+   },
+   product_detail_t_t:{
+     height:40/oPx,
+     flexDirection:'row',
+      alignItems: 'center',
+   },
+   product_d_t_big:{
+     fontSize:50/oPx,
+     alignSelf:'center',
+     fontWeight:'200',
+     color:'#eb3331'
+   },
+   product_d_t_small:{
+     fontSize:26/oPx,
+     color:'#eb3331',
+     alignSelf:'flex-end'
+   },
+   product_detail_b_t:{
+     height:50/oPx,
+     justifyContent:'center',
+   },
+   product_d_b_small:{
+     fontSize:22/oPx,
+     color:'#999',
+     fontWeight:'200',
+   },
+   line_default:{
+     width:182/oPx,
+     height:8/oPx,
+     backgroundColor:'#fbdbdb',
+     borderRadius:4/oPx,
+   },
+   line_pull:{
+     width:92/oPx,
+     backgroundColor:'#eb3331',
+   },
+   oButton:{
+     borderRadius:28/oPx,
+     height:56/oPx,
+     width:246/oPx,
+     borderWidth:2/oPx,
+     borderColor:'#eb3331',
+     justifyContent:'center',
+     alignItems:'center'
+   },
+   oButtonText:{
+     fontSize:28/oPx,
+     color:'#eb3331'
+   },
+   oButtonTextDisabled:{
+     fontSize:28/oPx,
+     color:'#999'
+   },
+   oButtonDisabled:{
+     borderColor:'#999',
+   },
+   oProgress:{
+     position:'absolute',
+     left:470/oPx,
+     top:12/oPx,
+   },
+ })

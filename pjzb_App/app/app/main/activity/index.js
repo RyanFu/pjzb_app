@@ -127,6 +127,18 @@
           this.props.navigator.push({component:Questionnaire,name:'Questionnaire'});
         }
         return;
+      } else {
+        if(!global.USER){
+          Alert.alert(
+               '提示信息',
+               '您还未登录，请先登录！',
+               [
+                   {text: '取消' },
+                   {text: '确定', onPress: () => this.props.navigator.push({component:Login,name:'Login'})},
+               ]
+           )
+          return;
+        }
       }
       console.log(link);
       this.props.navigator.push({component:OwebView,name:'OwebView',params:{url:link,title:title,back:true}});
