@@ -289,7 +289,7 @@ export default class InvestDetailTY extends Component {
                                 <View style={[style.tdView,style.color]}><Text style={[style.text,{color: '#333'}]}>{Number(this.state.debtsDetail.auctionBasePrice)>=10000?Number(this.state.debtsDetail.auctionBasePrice)/10000+'万元':this.state.debtsDetail.auctionBasePrice}</Text></View>
                                 <View style={style.tdView}><Text style={style.text}>待收利息</Text></View>
                                 {/*<View style={[style.tdView,style.tdView2,style.color,{backgroundColor: '#fff'}]}><Text style={[style.text,{color: '#333'}]}>{Number(this.state.borrowDetailMap.borrowSum)>=10000?Number(this.state.borrowDetailMap.borrowSum)/10000+'万元':this.state.borrowDetailMap.borrowSum}</Text></View>*/}
-                                <View style={[style.tdView,style.color]}><Text style={[style.text,{color: '#333'}]}>{Number(this.state.debtsDetail.recivedInterest)>=10000?Number(this.state.debtsDetail.recivedInterest)/10000+'万元':this.state.debtsDetail.recivedInterest}</Text></View>
+                                <View style={[style.tdView,style.tdView2,style.color,{backgroundColor: '#fff'}]}><Text style={[style.text,{color: '#333'}]}>{Number(this.state.debtsDetail.recivedInterest)>=10000?Number(this.state.debtsDetail.recivedInterest)/10000+'万元':this.state.debtsDetail.recivedInterest+'元'}</Text></View>
                             </View>
                           {/*  <View style={style.itemView}>
                                 <View style={[style.tdView]}><Text style={style.text}></Text></View>
