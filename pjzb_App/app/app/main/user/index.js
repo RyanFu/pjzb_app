@@ -98,7 +98,7 @@
           // 网络正常
           isError: false,
           NetData: data,
-          times: data.times,
+          times: data.times?data.times:0,
         });
         if(data.headImg){
           this.setState({leftImageSource:{uri:data.headImg}});
