@@ -32,6 +32,8 @@
   import {StyleConfig} from '../../style';
   import Error from '../error/Error.js';
   import NetUtil from '../../utils/NetUtil.js';
+  import OwebView from '../../components/OwebView';
+
   const oPx = StyleConfig.oPx;
   export default class User extends Component {
     constructor(props){
@@ -65,6 +67,9 @@
         // 是否发生网络错误
         isError: false,
         NetData: [],
+
+        // 大转盘抽奖活动
+        times: 0,
       }
     }
     componentDidMount(){
@@ -93,6 +98,7 @@
           // 网络正常
           isError: false,
           NetData: data,
+          times: data.times,
         });
         if(data.headImg){
           this.setState({leftImageSource:{uri:data.headImg}});
@@ -228,6 +234,58 @@
                 </View>;
     }
 
+    _getUserInfoTopView() {
+      // 双旦活动 展示抽奖次数，不在活动时间内展示原有样式
+      let dateStart = new Date(Date.parse("2017/12/15")).getTime();
+      let dateEnd = new Date(Date.parse("2018/1/15")).getTime(); 
+      let date = new Date().getTime();
+      if (!(date >= dateStart && date <= dateEnd)) {
+        return   <LinearGradient colors={['#f14e41', '#eb3549']} style={styles.top}>
+                  <View style={styles.total}>
+                    <View style={styles.totalAmtView}><Text style={styles.totalAmt} numberOfLines={1}>{Utils.formatCurrency(this.state.allTotal)}</Text></View>
+                    <View style={styles.totalTextView}><Text style={styles.totalText}>总资产(元)</Text></View>
+                  </View>
+                  <View style={styles.userAmt}>
+                    <View style={styles.userLeft}>
+                      <View style={styles.userNumView}><Text style={styles.userNum} numberOfLines={1}>{Utils.formatCurrency(this.state.usableSum)}</Text></View>
+                      <View style={styles.userTextView}><Text style={styles.userText}>可用余额(元)</Text></View>
+                    </View>
+                    <View style={styles.line}></View>
+                    <View style={styles.userRight}>
+                      <View style={styles.userNumView}><Text style={styles.userNum} numberOfLines={1}>{Utils.formatCurrency(this.state.forPaySum)}</Text></View>
+                      <View style={styles.userTextView}><Text style={styles.userText}>待收总额(元)</Text></View>
+                    </View>
+                  </View>
+                </LinearGradient>;
+      } else {
+        return   <LinearGradient colors={['#f14e41', '#eb3549']} style={styles.top}>
+                  <View style={styles.total}>
+                    <View style={styles.totalAmtView}><Text style={styles.totalAmt} numberOfLines={1}>{Utils.formatCurrency(this.state.allTotal)}</Text></View>
+                    <View style={styles.totalTextView}><Text style={styles.totalText}>总资产(元)</Text></View>
+                  </View>
+                  <View style={styles.userAmt}>
+                    <View style={styles.userLeft}>
+                      <View style={styles.userNumView}><Text style={styles.userNum} numberOfLines={1}>{Utils.formatCurrency(this.state.usableSum)}</Text></View>
+                      <View style={styles.userTextView}><Text style={styles.userText}>可用余额(元)</Text></View>
+                    </View>
+                    <View style={styles.userRight}>
+                      <View style={styles.userNumView}><Text style={styles.userNum} numberOfLines={1}>{Utils.formatCurrency(this.state.forPaySum)}</Text></View>
+                      <View style={styles.userTextView}><Text style={styles.userText}>待收总额(元)</Text></View>
+                    </View>
+                    <TouchableOpacity style={styles.userRight} onPress={this._goToActivityPage}>
+                      <View style={styles.userNumView}><Text style={[styles.userNum, {color: '#8adbff'}]} numberOfLines={1}>{this.state.times}</Text></View>
+                      <View style={styles.userTextView}><Text style={[styles.userText, {color: '#8adbff'}]}>抽奖机会(次)</Text></View>
+                    </TouchableOpacity>
+                  </View>
+                </LinearGradient>;
+      }
+    }
+
+    _goToActivityPage = () => {
+      let url = "https:\/\/www.pujinziben.com\/activity\/lucky.html";
+      this.props.navigator.push({component:OwebView,name:'OwebView',params:{url:url,title:'大转盘抽奖',back:{true}}});
+    }
+
     render(){
       let rightImageSource = require('../../images/icon/icon_settings.png')
       return (
@@ -258,24 +316,9 @@
                  title="刷新中..."
                  titleColor="#999"
                />}>
-              <LinearGradient colors={['#f14e41', '#eb3549']} style={styles.top}>
-                <View style={styles.total}>
-                  <View style={styles.totalAmtView}><Text style={styles.totalAmt}>{Utils.formatCurrency(this.state.allTotal)}</Text></View>
-                  <View style={styles.totalTextView}><Text style={styles.totalText}>总资产(元)</Text></View>
-                </View>
-                <View style={styles.userAmt}>
-                  <View style={styles.userLeft}>
-                    <View style={styles.userNumView}><Text style={styles.userNum}>{Utils.formatCurrency(this.state.usableSum)}</Text></View>
-                    <View style={styles.userTextView}><Text style={styles.userText}>可用余额(元)</Text></View>
-                  </View>
-                  <View style={styles.line}>
-                  </View>
-                  <View style={styles.userRight}>
-                    <View style={styles.userNumView}><Text style={styles.userNum}>{Utils.formatCurrency(this.state.forPaySum)}</Text></View>
-                    <View style={styles.userTextView}><Text style={styles.userText}>待收总额(元)</Text></View>
-                  </View>
-                </View>
-              </LinearGradient>
+
+             { this._getUserInfoTopView() }
+
               <View style={{backgroundColor: '#fff'}}>
                 <View style={styles.userCenter}>
                   <View style={{flex:1}}><Image style={styles.user_icon} source={require('../../images/icon/icon_user_pay.png')}/></View>
