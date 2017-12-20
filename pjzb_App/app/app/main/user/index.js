@@ -86,7 +86,7 @@
           allTotal:allTotal,
           forPaySum:data.forPaySum,
           isRefreshing:false,
-          nickname:data.nickname,
+          nickname:data.username,
           headImg:data.headImg,
           msgCount:data.count,
           slbao: data.slbao?data.slbao:this.state.slbao,

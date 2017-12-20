@@ -40,10 +40,13 @@
        isShowVersion: false,
        // 版本数据map
        vMap: [],
+       // 发现图片
+       findImage: props.findImage?props.findImage:<Image source={require("../images/icon/icon_find_left.png")} style={styles.iconStyle}/>,
      }
      //alert('像素密度为'+PixelRatio.get());
      //alert('200转化为像素值为'+PixelRatio.getPixelSizeForLayoutSize(200))
    }
+
    async _myAccount(){
        //Utils.isLogin(this.props.navigator,()=>this.setState({ selectedTab: 'user' }));
        let data = await Storage.getItem('USER');
@@ -55,15 +58,20 @@
             //针对之前已经设置过手势密码的用户
             Storage.clear();
             this.props.navigator.push({component:Login,name:'Login',params:{noRight:true}});
+            this.setState({findImage: <Image source={require("../images/icon/icon_find_right.png")} style={styles.iconStyle}/>});
           }else if(GestTime){
             if(GestTime && (nowTime-GestTime)>1800000){
               this.props.navigator.push({component:SetGesture,name:'SetGesture'});
             }else{
               Storage.setItem('GestTime',nowTime);
               this.setState({ selectedTab: 'user' });
+
+              this.setState({findImage: <Image source={require("../images/icon/icon_find_right.png")} style={styles.iconStyle}/>});
             }
           }else if(unGestLock){
             this.setState({ selectedTab: 'user' });
+
+            this.setState({findImage: <Image source={require("../images/icon/icon_find_right.png")} style={styles.iconStyle}/>});
           }else{
             Request.post('queryGesturesPassword.do',{uid:''},(data)=>{
               //已设置手势密码，但是第一次使用手势密码验证
@@ -87,6 +95,8 @@
             }, (error) => {
               this.setState({ selectedTab: 'user' });
             });
+
+            this.setState({findImage: <Image source={require("../images/icon/icon_find_right.png")} style={styles.iconStyle}/>});
           }
        }else{
            Alert.alert(
@@ -121,7 +131,7 @@
            titleStyle={styles.textStyle}
            renderIcon={() => <Image source={require("../images/icon/icon_index.png")} style={styles.iconStyle}/>}
            renderSelectedIcon={() => <Image source={require("../images/icon/icon_index_h.png")} style={styles.iconStyle}/>}
-           onPress={() => this.setState({ selectedTab: 'home' })}>
+           onPress={() => this.setState({ selectedTab: 'home', findImage: <Image source={require("../images/icon/icon_find_left.png")} style={styles.iconStyle}/> })}>
            <Index {...this.props} _showVersionUpdate={this._showVersionUpdate} />
          </TabNavigator.Item>
          <TabNavigator.Item
@@ -131,7 +141,7 @@
            titleStyle={styles.textStyle}
            renderIcon={() => <Image source={require("../images/icon/icon_invest.png")} style={styles.iconStyle}/>}
            renderSelectedIcon={() => <Image source={require("../images/icon/icon_invest_h.png")} style={styles.iconStyle}/>}
-           onPress={() => this.setState({ selectedTab: 'index' })}>
+           onPress={() => this.setState({ selectedTab: 'index', findImage: <Image source={require("../images/icon/icon_find_left.png")} style={styles.iconStyle}/> })}>
            <Invest {...this.props}/>
          </TabNavigator.Item>
          <TabNavigator.Item
@@ -139,7 +149,7 @@
            selected={this.state.selectedTab === 'find'}
            selectedTitleStyle={styles.selectedTextStyle}
            titleStyle={styles.textStyle}
-           renderIcon={() => <Image source={require("../images/icon/icon_find.png")} style={styles.iconStyle}/>}
+           renderIcon={() => this.state.findImage}
            renderSelectedIcon={() => <Image source={require("../images/icon/icon_find_h.png")} style={styles.iconStyle}/>}
            onPress={() => this.setState({ selectedTab: 'find' })}>
            <Find {...this.props}/>
@@ -151,7 +161,7 @@
            titleStyle={styles.textStyle}
            renderIcon={() => <Image source={require("../images/icon/icon_activity.png")} style={styles.iconStyle}/>}
            renderSelectedIcon={() => <Image source={require("../images/icon/icon_activity_h.png")} style={styles.iconStyle}/>}
-           onPress={() => this.setState({ selectedTab: 'activity' })}>
+           onPress={() => this.setState({ selectedTab: 'activity', findImage: <Image source={require("../images/icon/icon_find_right.png")} style={styles.iconStyle}/> })}>
            <Activity {...this.props}/>
          </TabNavigator.Item>
          <TabNavigator.Item

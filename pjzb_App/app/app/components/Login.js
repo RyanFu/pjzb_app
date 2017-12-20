@@ -79,6 +79,7 @@ export default class Welcome extends Component {
 
     }
     jumpPage(){
+
         let isError = false;
         if(!this.flag) {
             global.indexData = null;
@@ -96,18 +97,26 @@ export default class Welcome extends Component {
         this.interval&&clearInterval(this.interval);
     }
     jumpLogin = () =>{
+
         this.props.navigator.push({
             name: 'Login',
             component: Login,
             animated:'FadeIn'
         })
+        // 停止
+        this.interval&&clearInterval(this.interval);
+        this.setState({timerCount: ''});
     }
     jumpRegist = () =>{
+
         this.props.navigator.push({
             name: 'Regist',
             component: Regist,
             animated:'FadeIn'
         })
+        // 停止
+        this.interval&&clearInterval(this.interval);
+        this.setState({timerCount: ''});
     }
     render() {
         const { width, height } = Dimensions.get('window');

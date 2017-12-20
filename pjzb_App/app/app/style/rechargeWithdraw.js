@@ -100,6 +100,8 @@ export default styles = StyleSheet.create({
     },
     titleView: {
         flexDirection: 'row',
+        alignItems: 'center',
+        height: 88/oPx,
     },
     titleCenterView: {
         justifyContent: 'center',
@@ -120,7 +122,6 @@ export default styles = StyleSheet.create({
     },
     listTitle: {
         fontSize: 22/oPx,
-        width: 70/oPx,
         textAlign: 'left',
         color : '#999999',
     },

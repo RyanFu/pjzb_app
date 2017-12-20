@@ -102,10 +102,10 @@ export default class RechargeList extends Component {
         return(
             <View style={styles.itemsList} key={row.id}>
                 <View style={styles.titleView}>
-                    <View style={styles.titleCenterView2}><Text numberOfLines={1} style={[styles.listTitle, {marginLeft: 30/StyleConfig.oPx}]}>{this.props.nickname}</Text></View>
-                    <View style={styles.titleCenterView2}><Text style={[styles.listTitle, {marginLeft: 80/StyleConfig.oPx}, {width: 130/StyleConfig.oPx}, {color: '#333333'}]}>{Utils.formatCurrency(row.rechargeMoney)}</Text></View>
-                    <View style={styles.titleCenterView2}><Text style={[styles.listTitle, {marginLeft: 80/StyleConfig.oPx}, {width: 210/StyleConfig.oPx}]}>{row.rechargeTime}</Text></View>
-                    <View style={styles.titleCenterView2}><Text style={[styles.listTitle, {marginLeft: 30/StyleConfig.oPx}, color]}>{state}</Text></View>
+                    <View style={[styles.titleCenterView2, {flex: 1}]}><Text numberOfLines={1} style={[styles.listTitle, {marginLeft: 30/oPx}]}>{this.props.nickname}</Text></View>
+                    <View style={[styles.titleCenterView2, {flex: 1}]}><Text numberOfLines={1} style={[styles.listTitle,  {color: '#333333'}]}>{Utils.formatCurrency(row.rechargeMoney)}</Text></View>
+                    <View style={[styles.titleCenterView2, {flex: 1}]}><Text style={[styles.listTitle,  ]}>{row.rechargeTime}</Text></View>
+                    <View style={[styles.titleCenterView2, {flex: 1}]}><Text style={[styles.listTitle,  color]}>{state}</Text></View>
                 </View>
             </View>
         )
@@ -201,10 +201,10 @@ export default class RechargeList extends Component {
                     :
                     <View style={styles.topList}>
                         <View style={styles.titleView}>
-                            <View style={styles.titleCenterView}><Text style={[styles.title, {marginLeft: 30/StyleConfig.oPx}]}>账户名</Text></View>
-                            <View style={styles.titleCenterView}><Text style={[styles.title, {marginLeft: 80/StyleConfig.oPx}, {width: 130/StyleConfig.oPx}]}>充值金额</Text></View>
-                            <View style={styles.titleCenterView}><Text style={[styles.title, {marginLeft: 80/StyleConfig.oPx}, {width: 160/StyleConfig.oPx}]}>充值时间</Text></View>
-                            <View style={styles.titleCenterView}><Text style={[styles.title, {marginLeft: 80/StyleConfig.oPx}]}>充值状态</Text></View>
+                            <View style={styles.titleCenterView, {flex: 1}}><Text style={[styles.title, {marginLeft: 30/StyleConfig.oPx}]}>账户名</Text></View>
+                            <View style={styles.titleCenterView, {flex: 1}}><Text style={[styles.title, ]}>充值金额</Text></View>
+                            <View style={styles.titleCenterView, {flex: 1}}><Text style={[styles.title, ]}>充值时间</Text></View>
+                            <View style={styles.titleCenterView, {flex: 1}}><Text style={[styles.title, ]}>充值状态</Text></View>
                         </View>
                     </View>
                 }

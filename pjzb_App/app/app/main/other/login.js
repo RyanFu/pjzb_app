@@ -140,7 +140,10 @@ export default class Login extends Component {
                     this.props.navigator.resetTo({
                         component:AppMain,
                         name:'AppMain',
-                        params:{selectedTab:'user'}
+                        params:{
+                            selectedTab:'user', 
+                            findImage: <Image source={require("../../images/icon/icon_find_right.png")} style={styles.iconStyle}/>
+                        }
                     })
                 );
             } else {
@@ -384,5 +387,9 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    iconStyle:{
+        width:48/StyleConfig.oPx,
+        height:48/StyleConfig.oPx
     },
 });

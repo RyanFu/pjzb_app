@@ -116,17 +116,17 @@ export default class WithdrawList extends Component {
         return(
             <View style={styles.itemsList} key={row.id}>
                 <View style={styles.titleView}>
-                    <View style={styles.titleCenterView2}><Text numberOfLines={1} style={[styles.listTitle, {marginLeft: 30/StyleConfig.oPx}]}>{this.props.nickname}</Text></View>
-                    <View style={styles.titleCenterView2}><Text style={[styles.listTitle, {marginLeft: 30/StyleConfig.oPx}, {width: 150/StyleConfig.oPx}, {color: '#333333'}]}>{Utils.formatCurrency(row.sum)}</Text></View>
-                    <View style={styles.titleCenterView2}><Text style={[styles.listTitle, {marginLeft: 30/StyleConfig.oPx}, {width: 230/StyleConfig.oPx}]}>{row.applyTime}</Text></View>
-                    <View style={styles.titleCenterView2}><Text style={[styles.listTitle, {marginLeft: 30/StyleConfig.oPx}, color]}>{state}</Text></View>
-                    <View style={styles.titleCenterView2}>
+                    <View style={[styles.titleCenterView2, {flex: 1}]}><Text numberOfLines={1} style={[styles.listTitle, {marginLeft: 30/StyleConfig.oPx}]}>{this.props.nickname}</Text></View>
+                    <View style={[styles.titleCenterView2, {flex: 1}]}><Text numberOfLines={1} style={[styles.listTitle, {color: '#333333'}]}>{Utils.formatCurrency(row.sum)}</Text></View>
+                    <View style={[styles.titleCenterView2, {flex: 1}]}><Text style={[styles.listTitle, ]}>{row.applyTime}</Text></View>
+                    <View style={[styles.titleCenterView2, {flex: 1}]}><Text style={[styles.listTitle, color]}>{state}</Text></View>
+                    <View style={[styles.titleCenterView2, {flex: 1}]}>
                         {  operation=='取消'?
                             <TouchableOpacity onPress={() => this.deleteWithdraw(row.id)}>
-                                <Text style={[styles.listTitle, {marginLeft: 30/StyleConfig.oPx,color:'#75c0f6'}]}>{operation}</Text>
+                                <Text style={[styles.listTitle, {color:'#75c0f6'}]}>{operation}</Text>
                             </TouchableOpacity>
                             :
-                            <Text style={[styles.listTitle, {marginLeft: 30/StyleConfig.oPx}, color]}>{operation}</Text>
+                            <Text style={[styles.listTitle, color]}>{operation}</Text>
                         }
                     </View>
                 </View>
@@ -251,11 +251,11 @@ export default class WithdrawList extends Component {
                     :
                     <View style={styles.topList}>
                         <View style={styles.titleView}>
-                            <View style={styles.titleCenterView}><Text style={[styles.title, {marginLeft: 30/StyleConfig.oPx}]}>账户名</Text></View>
-                            <View style={styles.titleCenterView}><Text style={[styles.title, {marginLeft: 30/StyleConfig.oPx}, {width: 150/StyleConfig.oPx}]}>提现金额</Text></View>
-                            <View style={styles.titleCenterView}><Text style={[styles.title, {marginLeft: 80/StyleConfig.oPx}, {width: 190/StyleConfig.oPx}]}>提现时间</Text></View>
-                            <View style={styles.titleCenterView}><Text style={[styles.title, {marginLeft: 30/StyleConfig.oPx}]}>状态</Text></View>
-                            <View style={styles.titleCenterView}><Text style={[styles.title, {marginLeft: 50/StyleConfig.oPx}]}>操作</Text></View>
+                            <View style={styles.titleCenterView, {flex: 1}}><Text style={[styles.title, {marginLeft: 30/StyleConfig.oPx}]}>账户名</Text></View>
+                            <View style={styles.titleCenterView, {flex: 1}}><Text style={[styles.title, ]}>提现金额</Text></View>
+                            <View style={styles.titleCenterView, {flex: 1}}><Text style={[styles.title, ]}>提现时间</Text></View>
+                            <View style={styles.titleCenterView, {flex: 1}}><Text style={[styles.title, ]}>状态</Text></View>
+                            <View style={styles.titleCenterView, {flex: 1}}><Text style={[styles.title, ]}>操作</Text></View>
                         </View>
                     </View>
                 }

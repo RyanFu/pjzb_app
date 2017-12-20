@@ -42,7 +42,7 @@ export default class InvestFriendDetail extends Component{
     }
 
     componentDidMount(){
-      this._get();
+      // this._get();
     }
 
     _get() {
@@ -104,50 +104,27 @@ export default class InvestFriendDetail extends Component{
               </View>
               <View style={styles.viewTopTextView}>
 
-                {
-                  this.state.activityTime?
-                  <Text style={styles.viewTopTextCenter}>
-                    <Text style={{color:'#333'}}>活动时间：</Text>
-                    <Text style={styles.activityTimeText}>{this.state.activityTime}</Text>
-                  </Text>
-                  :null
-                }
+                <Text style={styles.viewTopTextCenter}>
+                  <Text style={{color:'#333'}}>活动时间：</Text>
+                  <Text style={styles.activityTimeText}>2017年12月15日—2018年1月15日；</Text>
+                </Text>
 
-                {
-                  this.state.activityObject?
-                   <Text style={styles.viewTopTextCenter}>
-                    <Text style={{color:'#333'}}>活动对象：</Text>{this.state.activityObject}
-                  </Text>
-                  :null
-                }
+                <Text style={styles.viewTopTextCenter}>
+                  <Text style={{color:'#333'}}>活动对象：</Text>活动期间新注册用户的推荐人；
+                </Text>
 
-                {
-                  this.state.activityDescribe?
+                <Text style={{color:'#333'}}>活动说明：
                   <Text style={styles.viewTopTextCenter}>
-                    <Text style={{color:'#333'}}>活动说明：</Text>
-                    {this.state.activityDescribe}
+                    1.活动期间邀请好友注册并累计投资满10000元，得50元现金券奖励；
                   </Text>
-                  :null
-                }
-               
-                {
-                  this.state.exampleDescribe?
-                  <Text style={styles.viewTopTextCenter}>
-                    <Text style={{color:'#333'}}>举个例子：</Text>
-                    {this.state.exampleDescribe}
-                  </Text>
-                  :null
-                }
+                </Text>
                 
-                {
-                  this.state.awardDescribe?
-                  <Text style={styles.viewTopTextCenter}>
-                    <Text style={{color:'#333'}}>奖励说明：</Text>
-                    {this.state.awardDescribe}
-                  </Text>
-                  :null
-                }
-
+                <Text style={styles.viewTopTextCenter}>
+                  2.活动期间内成功邀请5位以上好友注册投资成功合计满100000，可额外获得500元现金券奖励，可在【我的账户-我的赠券】中查看。
+                </Text>
+                <Text style={styles.viewTopTextCenter}>
+                  (满足活动条件的用户在活动结束后3个工作日内奖励将以现金券的形式发放至用户账户)
+                </Text>
                 
                 <Text style={styles.viewTopTextCenter}>
                   <Text style={styles.activityTimeText}>注：</Text>
