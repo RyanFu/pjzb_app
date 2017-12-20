@@ -47,6 +47,10 @@
      //alert('200转化为像素值为'+PixelRatio.getPixelSizeForLayoutSize(200))
    }
 
+  _setFindImage() {
+    this.setState({findImage: <Image source={require("../images/icon/icon_find_right.png")} style={styles.iconStyle}/>});
+  }
+
    async _myAccount(){
        //Utils.isLogin(this.props.navigator,()=>this.setState({ selectedTab: 'user' }));
        let data = await Storage.getItem('USER');
@@ -61,7 +65,7 @@
             this.setState({findImage: <Image source={require("../images/icon/icon_find_right.png")} style={styles.iconStyle}/>});
           }else if(GestTime){
             if(GestTime && (nowTime-GestTime)>1800000){
-              this.props.navigator.push({component:SetGesture,name:'SetGesture'});
+              this.props.navigator.push({component:SetGesture,name:'SetGesture',params:{findOnPress: this._setFindImage.bind(this)}});
             }else{
               Storage.setItem('GestTime',nowTime);
               this.setState({ selectedTab: 'user' });
@@ -82,6 +86,8 @@
                 }else{
                   this.setState({ selectedTab: 'user' });
                 }
+
+                this.setState({findImage: <Image source={require("../images/icon/icon_find_right.png")} style={styles.iconStyle}/>});
               }else{
                 //没有设置手势密码，直接进入我的账户
                 Alert.alert('提示', '您当前没有设置手势密码，为了账户安全，建议您立即设置手势密码！', [
@@ -91,12 +97,13 @@
                       this.setState({ selectedTab: 'user' });
                     }}
                 ]);
+
+                this.setState({findImage: <Image source={require("../images/icon/icon_find_right.png")} style={styles.iconStyle}/>});
               }
             }, (error) => {
               this.setState({ selectedTab: 'user' });
             });
 
-            this.setState({findImage: <Image source={require("../images/icon/icon_find_right.png")} style={styles.iconStyle}/>});
           }
        }else{
            Alert.alert(
