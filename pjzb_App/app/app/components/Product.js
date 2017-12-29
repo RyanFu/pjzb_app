@@ -48,13 +48,13 @@
    //获取产品类型
    _getBorrowWay(way){
      if(way =='3')
-      return '多金宝';
+      return <View style={styles.product_title_way}><Text style={styles.product_title_way_text}>多金宝</Text></View>;
      if(way =='4')
-      return '普金保';
+      return <View style={styles.product_title_way}><Text style={styles.product_title_way_text}>普金保</Text></View>;
      if(way =='6')
-      return '恒金保';
+      return <View style={styles.product_title_way}><Text style={styles.product_title_way_text}>恒金保</Text></View>;
      if(way =='5')
-      return '新手标';
+      return <View style={styles.product_title_way}><Text style={styles.product_title_way_text}>新手标</Text></View>;
    }
    //金额格式化
    _formatAmt(val){
@@ -103,11 +103,7 @@
                     </Text>
                   </View>;
         } else {
-          return  <View style={styles.product_title_way}>
-                    <Text style={styles.product_title_way_text}>
-                      {this._getBorrowWay(this.props.data.borrowTypeSubId)}
-                    </Text>
-                  </View>;
+          return  this._getBorrowWay(this.props.data.borrowTypeSubId);
         }
       }
    }

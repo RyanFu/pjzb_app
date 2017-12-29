@@ -2,14 +2,14 @@
  * Created by wsl on 2017/01/13.
  */
  // let HOST='http://192.168.1.168:8080/pjzb';
- 
-// let HOST='http://192.168.1.122:8080/pjzb';
 
 // let HOST='http://192.168.1.118:8080/pjzb';
 
-let HOST='http://120.78.89.202:8080/pjzb';
+// let HOST='http://192.168.1.124/pjzb';
 
-// let HOST='https://www.pujinziben.com';
+// let HOST='http://120.78.89.202:8080/pjzb';
+
+let HOST='https://www.pujinziben.com';
 let URL = HOST+'/reactapp/';
 
 import {
