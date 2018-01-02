@@ -121,7 +121,7 @@ export default class CouponCard extends Component{
         }
 
         <View style={styles.rightView}>
-          <TouchableOpacity style={styles.rightViewBtn} onPress={()=>this._useThisCard(row.id,index)}>
+          <View style={styles.rightViewBtn}>
             <Text style={[styles.rightViewText, {color: '#999'}]}>
               已
             </Text>
@@ -131,7 +131,7 @@ export default class CouponCard extends Component{
             <Text style={[styles.rightViewText, {color: '#999'}]}>
               用
             </Text>
-          </TouchableOpacity>
+          </View>
         </View>
       </View>
     </View>

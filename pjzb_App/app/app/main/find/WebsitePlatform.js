@@ -39,7 +39,7 @@
             </View>
             <View style={styles.rowTr}>
                 <View style={styles.leftView}><Text style={styles.leftText}>平台上线运营时间</Text></View>
-                <View style={styles.rightView}><Text style={styles.rightText}>2016年9月9日</Text></View>
+                <View style={styles.rightView}><Text style={styles.rightText}>2016年8月8日</Text></View>
             </View>
             <View style={styles.rowTr}>
                 <View style={styles.leftView}><Text style={styles.leftText}>相应电信业务经营许可证</Text></View>
