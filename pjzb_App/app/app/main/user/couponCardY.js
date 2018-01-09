@@ -87,7 +87,8 @@ export default class CouponCard extends Component{
               </View>
             </View>;
     } else {
-      return <View style={styles.leftView}>
+      if (this.props.title != '现金券') {
+        return <View style={styles.leftView}>
               <View style={styles.leftViewTopView}>
                 <Text style={styles.leftViewTopViewText}>￥{row.money}</Text>
               </View>
@@ -96,6 +97,34 @@ export default class CouponCard extends Component{
                 {/*<Text style={styles.leftViewBottomViewText}>{row.useendtime?'有效期至'+row.useendtime:null}</Text>*/}
               </View>
             </View>;
+      } else {
+        return <View style={styles.leftView}>
+              <View style={styles.leftViewTopView}>
+                <Text style={styles.leftViewTopViewText}>￥{row.money}</Text>
+              </View>
+            </View>;
+      }
+    }
+  }
+
+  _getTextDetail(row) {
+    console.log(row)
+    if (row.moneyInfo) {
+      return  <View style={styles.centerView}>
+                <Text style={[styles.centerViewText,{fontSize: 30/oPx}]}>{row.moneyInfo}</Text>
+              </View>;
+    }else {
+      if (this.props.title != '现金券') {
+        return  <View style={styles.centerView}>
+                  <Text style={styles.centerViewText}>{ this._getRowText1(row.deadline, row.investAmount) }</Text>
+                  <Text style={styles.centerViewText}>{ this._getRowText2(row.deadline, row.borrowFlag) }</Text>
+                  <Text style={styles.centerViewText}>有效期至{ row.useendtime }</Text>
+                </View>;
+      } else {
+        return  <View style={styles.centerView}>
+                  <Text style={styles.centerViewText}>使用时间:{ row.activetime }</Text>
+                </View>;
+      }
     }
   }
 
@@ -107,17 +136,7 @@ export default class CouponCard extends Component{
         { this._getRowText3(row) }
         
         {
-          row.moneyInfo
-          ?
-          <View style={styles.centerView}>
-            <Text style={[styles.centerViewText,{fontSize: 30/oPx}]}>{row.moneyInfo}</Text>
-          </View>
-          :
-          <View style={styles.centerView}>
-            <Text style={styles.centerViewText}>{ this._getRowText1(row.deadline, row.investAmount) }</Text>
-            <Text style={styles.centerViewText}>{ this._getRowText2(row.deadline, row.borrowFlag) }</Text>
-            <Text style={styles.centerViewText}>有效期至{ row.useendtime }</Text>
-          </View>
+          this._getTextDetail(row)
         }
 
         <View style={styles.rightView}>
