@@ -123,6 +123,7 @@
        borrowId:this.props.borrowId,
        uid:''
      },(data)=>{
+      console.log(data);
        this.setState({productDetail:data,animating:false,isRefreshing:false, borrowTypeSubId: data.borrowTypeSubId,isError: false});
        if(data.userMap){
          this.setState({usableSum:data.userMap.usableSum,mapListCd:data.mapListCd});
@@ -524,6 +525,8 @@
                  <Text style={styles.proupseText}>{this.state.productDetail.schedules}%</Text>
                </View>
                <View style={styles.canInvestView}><Text style={[styles.canInvestText,{color:'#777'}]}>剩余可投：</Text><Text style={styles.canInvestText}>{this.state.productDetail.residue}元</Text></View>
+               <View style={styles.canInvestView}><Text style={[styles.canInvestText,{color:'#777'}]}>可投标时间：</Text><Text style={styles.canInvestText}>{this.state.productDetail.bidTime}</Text></View>
+               <View style={styles.canInvestView}><Text style={[styles.canInvestText,{color:'#777'}]}>募集截止时间：</Text><Text style={styles.canInvestText}>{this.state.productDetail.raiseTime}</Text></View>
                
               {/* 活动期间view */}
               { this._getActivityView() }

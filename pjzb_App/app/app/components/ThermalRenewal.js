@@ -66,7 +66,8 @@ export default class ThermalRenewal extends Component {
       // ]);
 
       this.setState({animating: false});
-      switchVersionLater(hash);
+      switchVersion(hash);
+      // switchVersionLater(hash);
     }).catch(err => {
       // Alert.alert('提示', '更新失败');
     });

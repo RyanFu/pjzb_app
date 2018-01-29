@@ -12,6 +12,7 @@
     ScrollView,
     TouchableWithoutFeedback,
     RefreshControl,
+    Platform,
     TouchableOpacity
   } from 'react-native';
   import NavigationBar from '../../components/NavigationBar';
@@ -70,6 +71,7 @@
 
         // 大转盘抽奖活动
         times: 0,
+        _Platform: Platform.OS === 'ios' ? true : false,
       }
     }
     componentDidMount(){
@@ -179,14 +181,14 @@
                       <TouchableOpacity style={styles.itemView} onPress={()=>{this.props.navigator.push({component:SLBaoPage,name:'SLBaoPage'})}}>
                         <Image source={require('../../images/icon/icon_user_slb.png')} style={styles.itemIcon} />
                         <View style={styles.textView}>
-                          <Text style={styles.itemTitle}>生利宝</Text>
+                          <Text style={this.state._Platform ? styles.itemTitle : styles.itemTitleMargin}>生利宝</Text>
                           <Text style={styles.itemText} numberOfLines={1}>{this.state.slbao}</Text>
                         </View>
                       </TouchableOpacity>
                       <TouchableOpacity style={styles.itemView} onPress={()=>{this.props.navigator.push({component:TZGLIntroduction,name:'TZGLIntroduction'})}}>
                         <Image source={require('../../images/icon/icon_user_invest.png')} style={styles.itemIcon} />
                         <View style={styles.textView}>
-                          <Text style={styles.itemTitle}>回款清单</Text>
+                          <Text style={this.state._Platform ? styles.itemTitle : styles.itemTitleMargin}>回款清单</Text>
                           <Text style={styles.itemText} numberOfLines={1}>{this.state.huikuanqd}</Text>
                         </View>
                       </TouchableOpacity>
@@ -201,14 +203,14 @@
                       <TouchableOpacity style={styles.itemView} onPress={()=>{this.props.navigator.push({component:CouponCard,name:'CouponCard'})}}>
                         <Image source={require('../../images/icon/icon_user_coupon.png')} style={styles.itemIcon} />
                         <View style={styles.textView}>
-                          <Text style={styles.itemTitle}>我的赠券</Text>
+                          <Text style={this.state._Platform ? styles.itemTitle : styles.itemTitleMargin}>我的赠券</Text>
                           <Text style={styles.itemText} numberOfLines={1}>{this.state.wodezq}</Text>
                         </View>
                       </TouchableOpacity>
                       <TouchableOpacity style={styles.itemView} onPress={()=>{this.props.navigator.push({component:Funddetail,name:'Funddetail'})}}>
                         <Image source={require('../../images/icon/icon_user_record.png')} style={styles.itemIcon} />
                         <View style={styles.textView}>
-                          <Text style={styles.itemTitle}>资金记录</Text>
+                          <Text style={this.state._Platform ? styles.itemTitle : styles.itemTitleMargin}>资金记录</Text>
                           <Text style={styles.itemText} numberOfLines={1}>{this.state.zijinjl}</Text>
                         </View>
                       </TouchableOpacity>
@@ -219,14 +221,14 @@
                     <TouchableOpacity style={styles.itemView} onPress={()=>{this.props.navigator.push({component:DebtHasBuy,name:'DebtHasBuy'})}}>
                       <Image source={require('../../images/icon/icon_user_deptbuy.png')} style={styles.itemIcon} />
                       <View style={styles.textView}>
-                        <Text style={styles.itemTitle}>债权管理</Text>
+                        <Text style={this.state._Platform ? styles.itemTitle : styles.itemTitleMargin}>债权管理</Text>
                         <Text style={styles.itemText} numberOfLines={1}>{this.state.zaiquanzr}</Text>
                       </View>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.itemView} onPress={()=>{this.props.navigator.push({component:Loan,name:'Loan'})}}>
                       <Image source={require('../../images/icon/icon_user_loan.png')} style={styles.itemIcon} />
                       <View style={styles.textView}>
-                        <Text style={styles.itemTitle}>借款管理</Text>
+                        <Text style={this.state._Platform ? styles.itemTitle : styles.itemTitleMargin}>借款管理</Text>
                         <Text style={styles.itemText} numberOfLines={1}>{this.state.jiekuangl}</Text>
                       </View>
                     </TouchableOpacity>
@@ -537,7 +539,12 @@
     },
     itemTitle: {
       fontSize: 30/oPx, 
-      color: '#333'
+      color: '#333',
+    },
+    itemTitleMargin: {
+      fontSize: 30/oPx, 
+      color: '#333',
+      marginTop: -6/oPx,
     },
     itemText: {
       fontSize: 20/oPx, 

@@ -145,7 +145,7 @@ export default class setGesture extends Component {
         Storage.clearItem('unGestLock');
         let route = this.props.navigator.getCurrentRoutes();
         this.props.navigator.jumpTo(route[0]);
-        this.props.findOnPress();
+        //this.props.findOnPress();
     }
     onStart(e){
         if(this.state.gestlock){
