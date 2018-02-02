@@ -72,6 +72,8 @@
         // 大转盘抽奖活动
         times: 0,
         _Platform: Platform.OS === 'ios' ? true : false,
+        // 风险评估次数
+        riskCount: 0,
       }
     }
     componentDidMount(){
@@ -101,6 +103,7 @@
           isError: false,
           NetData: data,
           times: data.times?data.times:0,
+          riskCount: data.riskCount?data.riskCount:0,
         });
         if(data.headImg){
           this.setState({leftImageSource:{uri:data.headImg}});
@@ -108,6 +111,11 @@
         }
         if(data.ipayAccount!=''){
           this.setState({isRegistHuiFu:true});
+        }
+
+        if (this.state.riskCount == 0) {
+          // 如果没有填写风险评估回跳首页
+          this.props._goHomePage();
         }
       },(error)=>{
         this.setState({animating:false});

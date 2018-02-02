@@ -10,7 +10,8 @@
    Text,
    Image,
    PixelRatio,
-   Dimensions,Alert
+   Dimensions,
+   Alert,
  } from 'react-native';
 
  import TabNavigator from 'react-native-tab-navigator';
@@ -25,6 +26,8 @@
  import Utils from '../utils/utils';
  import SetGesture from './other/setGesture';
  import Request from '../utils/Request';
+ import OwebView from '../components/OwebView';
+ 
  // 版本更新提示组件
  import VersionUpdate from '../components/VersionUpdate';
 
@@ -42,6 +45,8 @@
        vMap: [],
        // 发现图片
        findImage: props.findImage?props.findImage:<Image source={require("../images/icon/icon_find_left.png")} style={styles.iconStyle}/>,
+       // 填写风险评估次数
+       riskCount: 1,
      }
      //alert('像素密度为'+PixelRatio.get());
      //alert('200转化为像素值为'+PixelRatio.getPixelSizeForLayoutSize(200))
@@ -52,6 +57,11 @@
   }
 
    async _myAccount(){
+      if (this.state.riskCount == 0) {
+        this._toHtmlPage();
+        return;
+      }
+
        //Utils.isLogin(this.props.navigator,()=>this.setState({ selectedTab: 'user' }));
        let data = await Storage.getItem('USER');
        let GestTime = await Storage.getItem('GestTime');
@@ -127,6 +137,34 @@
       }
    }
 
+   // 跳转 home
+   _goHomePage() {
+    this.setState({ 
+      selectedTab: 'home',
+      riskCount: 0,
+      findImage: <Image source={require("../images/icon/icon_find_left.png")} style={styles.iconStyle}/> 
+    });
+    this._toHtmlPage();
+   }
+
+  // 填写风险承受能力测评
+  _toHtmlPage = () => {
+    // 未填写不能进入我的账户
+    if (this.state.riskCount == 0) {
+      Alert.alert(
+        '温馨提示',
+        '根据监管要求，所有平台用户需填写风险能力评估报告，方能进行投资！',
+        [
+            {text: '确定', onPress: () => {
+                let url = Request.HOST + "/riskquestion.html";
+                this.props.navigator.push({component:OwebView,name:'OwebView',params:{url:url,title:'风险承受能力测评',back:{true}}});
+            }},
+            {text: '取消', },
+        ]
+      );
+    }
+  }
+
    render(){
      return (
        <View style={{flex:1}}>
@@ -179,7 +217,7 @@
            renderIcon={() => <Image source={require("../images/icon/icon_user.png")} style={styles.iconStyle}/>}
            renderSelectedIcon={() => <Image source={require("../images/icon/icon_user_h.png")} style={styles.iconStyle}/>}
            onPress={this._myAccount.bind(this)}>
-           <User {...this.props}/>
+           <User {...this.props} _goHomePage={this._goHomePage.bind(this)} />
          </TabNavigator.Item>
        </TabNavigator>
 

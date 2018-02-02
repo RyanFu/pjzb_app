@@ -252,6 +252,19 @@
        }else if (data.error=='2') {
           Alert.alert('提示信息', data.msg);
           this._getData();
+       }else if (data.error=='12') {
+          Alert.alert(
+            '温馨提示',
+            '根据监管要求，所有平台用户需填写风险能力评估报告，方能进行投资！',
+            [
+                {text: '确定', onPress: () => {
+                    let url = Request.HOST + "/riskquestion.html";
+                    this.props.navigator.push({component:OwebView,name:'OwebView',params:{url:url,title:'风险承受能力测评',back:{true}}});
+                }},
+                {text: '取消', },
+            ]
+          );
+          this._getData();
        }else{
          this.setState({animating:false});
          Alert.alert('提示信息', data.msg)
