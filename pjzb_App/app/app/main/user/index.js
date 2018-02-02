@@ -13,7 +13,8 @@
     TouchableWithoutFeedback,
     RefreshControl,
     Platform,
-    TouchableOpacity
+    TouchableOpacity,
+    Alert,
   } from 'react-native';
   import NavigationBar from '../../components/NavigationBar';
   import LinearGradient from 'react-native-linear-gradient';
@@ -112,11 +113,11 @@
         if(data.ipayAccount!=''){
           this.setState({isRegistHuiFu:true});
         }
-
         if (this.state.riskCount == 0) {
-          // 如果没有填写风险评估回跳首页
-          this.props._goHomePage();
+          // 如果没有填写风险评估弹出提示框
+          this.props._toHtmlPage();
         }
+        
       },(error)=>{
         this.setState({animating:false});
         if (this.state.NetData == [] || this.state.NetData == '' || this.state.NetData == null)

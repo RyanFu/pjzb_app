@@ -59,7 +59,6 @@
    async _myAccount(){
       if (this.state.riskCount == 0) {
         this._toHtmlPage();
-        return;
       }
 
        //Utils.isLogin(this.props.navigator,()=>this.setState({ selectedTab: 'user' }));
@@ -137,18 +136,9 @@
       }
    }
 
-   // 跳转 home
-   _goHomePage() {
-    this.setState({ 
-      selectedTab: 'home',
-      riskCount: 0,
-      findImage: <Image source={require("../images/icon/icon_find_left.png")} style={styles.iconStyle}/> 
-    });
-    this._toHtmlPage();
-   }
-
   // 填写风险承受能力测评
   _toHtmlPage = () => {
+    this.setState({riskCount: 0});
     // 未填写不能进入我的账户
     if (this.state.riskCount == 0) {
       Alert.alert(
@@ -217,7 +207,7 @@
            renderIcon={() => <Image source={require("../images/icon/icon_user.png")} style={styles.iconStyle}/>}
            renderSelectedIcon={() => <Image source={require("../images/icon/icon_user_h.png")} style={styles.iconStyle}/>}
            onPress={this._myAccount.bind(this)}>
-           <User {...this.props} _goHomePage={this._goHomePage.bind(this)} />
+           <User {...this.props} _toHtmlPage={this._toHtmlPage.bind(this)} />
          </TabNavigator.Item>
        </TabNavigator>
 
