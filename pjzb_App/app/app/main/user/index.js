@@ -74,7 +74,7 @@
         times: 0,
         _Platform: Platform.OS === 'ios' ? true : false,
         // 风险评估次数
-        riskCount: 0,
+        riskCount: 1,
       }
     }
     componentDidMount(){
@@ -83,6 +83,7 @@
     }
     _getState(){
       Request.post('accountOverview.do',{uid:''},(data)=>{
+        
         let allTotal = data.allTotal;
         //parseFloat(data.usableSum) + parseFloat(data.freezeAmount) + parseFloat(data.forPaySum);
         this.setState({
@@ -104,7 +105,7 @@
           isError: false,
           NetData: data,
           times: data.times?data.times:0,
-          riskCount: data.riskCount?data.riskCount:0,
+          riskCount: data.riskCount,
         });
         if(data.headImg){
           this.setState({leftImageSource:{uri:data.headImg}});

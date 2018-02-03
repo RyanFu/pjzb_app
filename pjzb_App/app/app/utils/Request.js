@@ -1,15 +1,15 @@
 /**
  * Created by wsl on 2017/01/13.
  */
- // let HOST='http://192.168.1.168:8080/pjzb';
+ // let HOST='http://192.168.1.31:8080/pjzb';
 
 // let HOST='http://192.168.1.118:8080/pjzb';
 
 // let HOST='http://192.168.1.5:8080/pjzb';
 
-// let HOST='http://120.78.89.202:8080/pjzb';
+let HOST='http://120.78.89.202:8080/pjzb';
 
-let HOST='https://www.pujinziben.com';
+// let HOST='https://www.pujinziben.com';
 let URL = HOST+'/reactapp/';
 
 import {
@@ -23,7 +23,7 @@ import Storage from './Storage';
 
 let Request = {
    post : async (url,data,successCallback,failCallback) => {
-      let user = await Storage.getItem('USER');
+      let user = await Storage.getItem('USER'); 
       let data_gloabl = data.hasOwnProperty("uid")?{
              pageType:"reactAPP",
              uid:user?user.UID:'',

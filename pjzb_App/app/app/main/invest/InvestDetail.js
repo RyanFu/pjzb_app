@@ -88,6 +88,8 @@
        borrowTypeSubId: 1,
        // 是否发生网络错误
        isError: false,
+       // 填写风险评估次数
+       riskCount: 1,
      }
    }
    componentWillMount() {
@@ -124,7 +126,15 @@
        uid:''
      },(data)=>{
       console.log(data);
-       this.setState({productDetail:data,animating:false,isRefreshing:false, borrowTypeSubId: data.borrowTypeSubId,isError: false});
+        this.setState({
+          productDetail:data,
+          animating:false,
+          isRefreshing:false, 
+          borrowTypeSubId: data.borrowTypeSubId,
+          isError: false,
+          riskCount: data.riskCount?data.riskCount:0,
+        });
+
        if(data.userMap){
          this.setState({usableSum:data.userMap.usableSum,mapListCd:data.mapListCd});
        };
@@ -180,6 +190,22 @@
    //提交
    _submit(){
        Utils.isLogin(this.props.navigator,(data)=>{
+          // 是否填写风险评估判断
+          if (this.state.riskCount == 0) {
+            Alert.alert(
+              '温馨提示',
+              '根据监管要求，所有平台用户需填写风险能力评估报告，方能进行投资！',
+              [
+                  {text: '确定', onPress: () => {
+                      let url = Request.HOST + "/riskquestion.html";
+                      this.props.navigator.push({component:OwebView,name:'OwebView',params:{url:url,title:'风险承受能力测评',back:{true}}});
+                  }},
+                  {text: '取消', },
+              ]
+            );
+            return;
+          }
+
           this.setState({showInput:true},()=>this._submitAnim());
        },()=>{this._getData()});
    }
@@ -255,7 +281,7 @@
        }else if (data.error=='12') {
           Alert.alert(
             '温馨提示',
-            '根据监管要求，所有平台用户需填写风险能力评估报告，方能进行投资！',
+            data.msg,
             [
                 {text: '确定', onPress: () => {
                     let url = Request.HOST + "/riskquestion.html";
