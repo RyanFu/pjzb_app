@@ -61,6 +61,7 @@ export default class inviteFriendsList extends Component {
     //获取数据
     _getData(flag){
         Request.post('friendManagerInit.do',{uid:'',begin:this.state.startDate,end:this.state.endDate,curPage:this.state.curPage},(data)=>{
+            console.log(data);
             this.setState({isEmployeeReferral:data.isEmployeeReferral,isError: false});
             if(data.pageBean.page.length == 0){
                 this.setState({
@@ -112,7 +113,8 @@ export default class inviteFriendsList extends Component {
         let isEmployeeReferral = this.state.isEmployeeReferral=='2'?'查看':'- -';
         return <View style={styles.tableTopList} key={index}>
             <Text style={[styles.tableRow,styles.black]}>{data.username}</Text>
-            <Text style={[styles.tableRow,styles.black]}>{data.createTime?data.createTime.substring(0,10):null}</Text>
+            <Text style={[styles.tableRow,styles.black]}>{data.realName}</Text>
+            <Text style={[styles.tableRow, {flex: 1.2}, styles.black]}>{data.createTime?data.createTime.substring(0,10):null}</Text>
             <Text style={[styles.tableRow,styles.black]}>{data.rewardMoney?data.rewardMoney:0}</Text>
             {this.state.isEmployeeReferral=='2'?
             <TouchableOpacity style={{flex:1,paddingLeft:30/oPx,justifyContent:'center',height:80/oPx,}} onPress={()=>this.onPressEvent(data.username,data.userId)}>
@@ -188,7 +190,8 @@ export default class inviteFriendsList extends Component {
                     <View style={{flex:1,backgroundColor:'#fff'}}>
                         <View style={styles.tableTop}>
                             <Text style={styles.tableRow}>用户名</Text>
-                            <Text style={styles.tableRow}>用户创建时间</Text>
+                            <Text style={styles.tableRow}>真实姓名</Text>
+                            <Text style={[styles.tableRow, {flex: 1.2}]}>用户创建时间</Text>
                             <Text style={styles.tableRow}>奖励金额</Text>
                             <Text style={styles.tableRow}>操作</Text>
                         </View>

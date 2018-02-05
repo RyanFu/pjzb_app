@@ -189,7 +189,10 @@
 
       {/* 版本更新提示组件 */}
       <VersionUpdate vMap={this.state.vMap} isShowVersion={this.state.isShowVersion} onPress={() => {this.setState({isShowVersion: false})}} />
+
+      {/* 热更新组件 正式环境不要注释！！！，打测试包时注释不会更新 */}
       <ThermalRenewal />
+      
      </View>
      )
    }
