@@ -20,15 +20,15 @@ export const styles = StyleSheet.create({
     height:400/oPx
   },
   index_about:{
-    paddingLeft:72/oPx,
-    paddingRight:72/oPx,
+    flex: 1,
     height:216/oPx,
     flexDirection:'row',
     backgroundColor:'#fff'
   },
   about:{
     flex:1,
-    justifyContent:'center'
+    justifyContent:'center',
+    alignItems:'center',
   },
   about_img:{
     width:118/oPx,

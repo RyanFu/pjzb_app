@@ -216,6 +216,10 @@ export default class Withdraw extends Component {
             toastShort('提现金额不能小于100元',-300);
             return;
         }
+        if(Number(this.state.usableSum) < Number(this.state.money)) {
+            toastShort('输入金额大于可提现金额',-300);
+            return;
+        }
         this.setState({
             onClick: null,
             timerCount:codeTime,

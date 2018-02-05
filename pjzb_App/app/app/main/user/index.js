@@ -116,7 +116,18 @@
         }
         if (this.state.riskCount == 0) {
           // 如果没有填写风险评估弹出提示框
-          this.props._toHtmlPage();
+          Alert.alert(
+            '温馨提示',
+            '根据监管要求，所有平台用户需填写风险能力评估报告，方能进行投资！',
+            [
+                {text: '确定', onPress: () => {
+                    this.setState({riskCount: 1});
+                    let url = Request.HOST + "/riskquestion.html";
+                    this.props.navigator.push({component:OwebView,name:'OwebView',params:{url:url,title:'风险承受能力测评',back:{true}}});
+                }},
+                {text: '取消', },
+            ]
+          );
         }
         
       },(error)=>{

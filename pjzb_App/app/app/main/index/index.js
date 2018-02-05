@@ -49,6 +49,7 @@
   import Error from '../error/Error.js';
   import NetUtil from '../../utils/NetUtil.js';
   import ZQZRInvestmentDetails from '../invest/ZQZRInvestmentDetails';
+  import OwebView from '../../components/OwebView';
 
 const oPx = StyleConfig.oPx;
  let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
@@ -91,6 +92,8 @@ var options = {
        iosMap: global.indexData?global.indexData.iosMap:[],
        // 是否发生网络错误
        isError: this.props.isError,
+       // 风险评估次数
+       riskCount: 1,
 
      }
    }
@@ -130,6 +133,7 @@ var options = {
          iosMap: data.iosMap,
          // 网络正常
          isError: false,
+         riskCount: data.riskCount,
        });
        if(data.hasOwnProperty("isExgo")){
            this.setState({
@@ -548,6 +552,34 @@ var options = {
       }
     }
 
+    // 风险评估
+    _goToFXPG = () => {
+      let data = global.USER;
+      if(data){
+        if (this.state.riskCount == 0) {
+          let url = Request.HOST + "/riskquestion.html";
+          this.props.navigator.push({component:OwebView,name:'OwebView',params:{url:url,title:'风险承受能力测评',back:{true}}});
+        } else {
+           Alert.alert(
+              '提示信息',
+              '您已经提交过测评，谢谢！',
+              [
+                  {text: '确定'},
+              ]
+          )
+        }
+      }else{
+          Alert.alert(
+              '提示信息',
+              '您还未登录，请先登录！',
+              [
+                  {text: '取消' },
+                  {text: '确定', onPress: () => this.props.navigator.push({component:Login,name:'Login'})},
+              ]
+          )
+      }
+    }
+
      //文本格式化
      _textClip(str){
          str=str+'';
@@ -735,17 +767,21 @@ var options = {
                </Swiper>
              </View>
              <View style={styles.index_about}>
-               <TouchableOpacity activeOpacity={0.8} style={[styles.about,{alignItems:'flex-start'}]} onPress={this._goToGZBJ}>
+               <TouchableOpacity activeOpacity={0.8} style={styles.about} onPress={this._goToGZBJ}>
                  <Image style={styles.about_img} source={require('../../images/index/icon_index_gz.png')}/>
                  <Text style={styles.about_text}>国资背景</Text>
                </TouchableOpacity>
-               <TouchableOpacity activeOpacity={0.8} style={[styles.about,{alignItems:'center'}]} onPress={this._goToSafty}>
+               <TouchableOpacity activeOpacity={0.8} style={styles.about} onPress={this._goToSafty}>
                  <Image style={styles.about_img} source={require('../../images/index/icon_index_safe.png')}/>
                  <Text style={styles.about_text}>安全保障</Text>
                </TouchableOpacity>
-               <TouchableOpacity activeOpacity={0.8} style={[styles.about,{alignItems:'flex-end'}]} onPress={this._goToYQYL}>
+               <TouchableOpacity activeOpacity={0.8} style={styles.about} onPress={this._goToYQYL}>
                  <Image style={styles.about_img} source={require('../../images/index/icon_index_invit.png')}/>
                  <Text style={styles.about_text}>邀请有礼</Text>
+               </TouchableOpacity>
+               <TouchableOpacity activeOpacity={0.8} style={styles.about} onPress={this._goToFXPG}>
+                 <Image style={styles.about_img} source={require('../../images/index/icon_index_fxpg.png')}/>
+                 <Text style={styles.about_text}>风险测评</Text>
                </TouchableOpacity>
              </View>
 
