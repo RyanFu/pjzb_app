@@ -111,10 +111,10 @@ export default class inviteFriendsList extends Component {
     //邀请好友list
     _renderRow(data,index){
         let isEmployeeReferral = this.state.isEmployeeReferral=='2'?'查看':'- -';
-        return <View style={styles.tableTopList} key={index}>
+        return <View style={styles.tableTopList} key={index}> 
             <Text style={[styles.tableRow,styles.black]}>{data.username}</Text>
             <Text style={[styles.tableRow,styles.black]}>{data.realName}</Text>
-            <Text style={[styles.tableRow, {flex: 1.2}, styles.black]}>{data.createTime?data.createTime.substring(0,10):null}</Text>
+            <Text style={[styles.tableRow,styles.black]}>{data.createTime?data.createTime.substring(0,10):null}</Text>
             <Text style={[styles.tableRow,styles.black]}>{data.rewardMoney?data.rewardMoney:0}</Text>
             {this.state.isEmployeeReferral=='2'?
             <TouchableOpacity style={{flex:1,paddingLeft:30/oPx,justifyContent:'center',height:80/oPx,}} onPress={()=>this.onPressEvent(data.username,data.userId)}>
@@ -191,7 +191,7 @@ export default class inviteFriendsList extends Component {
                         <View style={styles.tableTop}>
                             <Text style={styles.tableRow}>用户名</Text>
                             <Text style={styles.tableRow}>真实姓名</Text>
-                            <Text style={[styles.tableRow, {flex: 1.2}]}>用户创建时间</Text>
+                            <Text style={styles.tableRow}>注册时间</Text>
                             <Text style={styles.tableRow}>奖励金额</Text>
                             <Text style={styles.tableRow}>操作</Text>
                         </View>

@@ -162,6 +162,18 @@ export default class Recharge extends Component {
         dismissKeyboard();
     }
 
+    _goChinapnr = () => {
+        this.props.navigator.push({
+            component:OwebView,
+            name:'OwebView',
+            params: {
+                url: "https://c.chinapnr.com/p2puser/",
+                title:'汇付天下',
+                back:{true},
+            }
+        });
+    }
+
     render() {
         return (
             <ScrollView onResponderRelease={(e)=>this.tapEvent(e)} keyboardShouldPersistTaps="handled">
@@ -180,6 +192,12 @@ export default class Recharge extends Component {
                             <Text style={styles.money_text}>账户余额(元)</Text>
                         </View>
                     </LinearGradient>
+                    <TouchableOpacity activeOpacity={1} onPress={this._goChinapnr}>
+                        <Image 
+                            style={{width:690/StyleConfig.oPx, height:187/StyleConfig.oPx, 
+                                marginTop: 20/StyleConfig.oPx, marginBottom: 5/StyleConfig.oPx, marginLeft: 30/StyleConfig.oPx}} 
+                            source={require('../../images/user/icon_promptImg_1.png')} />
+                    </TouchableOpacity>
                     <View style={styles.interval15}></View>
                     <View style={styles.bodyView}>
                         {/*<View style={styles.itemsInput}>*/}
