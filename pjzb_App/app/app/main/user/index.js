@@ -140,9 +140,49 @@
     // 每隔五分钟请求一次数据
     _refresh() {
       this.interval=setInterval(() =>{
-          this._getState();
+          this._refreshData();
       },1000*60*5);
-   }
+    }
+
+    _refreshData(){
+      Request.post('accountOverview.do',{uid:''},(data)=>{
+        
+        let allTotal = data.allTotal;
+        //parseFloat(data.usableSum) + parseFloat(data.freezeAmount) + parseFloat(data.forPaySum);
+        this.setState({
+          animating:false,
+          usableSum:data.usableSum,
+          allTotal:allTotal,
+          forPaySum:data.forPaySum,
+          isRefreshing:false,
+          nickname:data.username,
+          headImg:data.headImg,
+          msgCount:data.count,
+          slbao: data.slbao?data.slbao:this.state.slbao,
+          huikuanqd: data.huikuanqd?data.huikuanqd:this.state.huikuanqd,
+          wodezq: data.wodezq?data.wodezq:this.state.wodezq,
+          zijinjl: data.zijinjl?data.zijinjl:this.state.zijinjl,
+          zaiquanzr: data.zaiquanzr?data.zaiquanzr:this.state.zaiquanzr,
+          jiekuangl: data.jiekuangl?data.jiekuangl:this.state.jiekuangl,
+          // 网络正常
+          isError: false,
+          NetData: data,
+          times: data.times?data.times:0,
+          riskCount: data.riskCount,
+        });
+        if(data.headImg){
+          this.setState({leftImageSource:{uri:data.headImg}});
+          global.userHeadPic = data.headImg;
+        }
+        if(data.ipayAccount!=''){
+          this.setState({isRegistHuiFu:true});
+        }
+      },(error)=>{
+        this.setState({animating:false});
+        if (this.state.NetData == [] || this.state.NetData == '' || this.state.NetData == null)
+          this.setState({isError: true});
+      });
+    }
 
     //功能列表生成
     _funList(row,index){

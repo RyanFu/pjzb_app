@@ -29,6 +29,8 @@
  
  // 版本更新提示组件
  import VersionUpdate from '../components/VersionUpdate';
+ // 领取红包组件
+ import RedEnvelope from '../components/RedEnvelope';
 
  // 热更新
  import ThermalRenewal from '../components/ThermalRenewal';
@@ -46,6 +48,8 @@
        findImage: props.findImage?props.findImage:<Image source={require("../images/icon/icon_find_left.png")} style={styles.iconStyle}/>,
        // 填写风险评估次数
        riskCount: 1,
+       // 红包数据
+       redEnvelopeMap: [],
      }
      //alert('像素密度为'+PixelRatio.get());
      //alert('200转化为像素值为'+PixelRatio.getPixelSizeForLayoutSize(200))
@@ -131,6 +135,17 @@
       }
    }
 
+   // 领取红包方法
+   _showRedEnvelope = (isShowRedEnvelope, redEnvelopeMap, _goCouponCard) => {
+      if (isShowRedEnvelope && redEnvelopeMap) {
+        this.setState({
+          redEnvelopeMap: redEnvelopeMap,
+          isShowRedEnvelope: isShowRedEnvelope,
+          _goCouponCard: _goCouponCard,
+        });
+      }
+   }
+
    render(){
      return (
        <View style={{flex:1}}>
@@ -143,7 +158,7 @@
            renderIcon={() => <Image source={require("../images/icon/icon_index.png")} style={styles.iconStyle}/>}
            renderSelectedIcon={() => <Image source={require("../images/icon/icon_index_h.png")} style={styles.iconStyle}/>}
            onPress={() => this.setState({ selectedTab: 'home', findImage: <Image source={require("../images/icon/icon_find_left.png")} style={styles.iconStyle}/> })}>
-           <Index {...this.props} _showVersionUpdate={this._showVersionUpdate} />
+           <Index {...this.props} _showVersionUpdate={this._showVersionUpdate} _showRedEnvelope={this._showRedEnvelope} />
          </TabNavigator.Item>
          <TabNavigator.Item
            title="投资"
@@ -189,6 +204,9 @@
 
       {/* 版本更新提示组件 */}
       <VersionUpdate vMap={this.state.vMap} isShowVersion={this.state.isShowVersion} onPress={() => {this.setState({isShowVersion: false})}} />
+
+      {/* 领取红包组件 */}
+      <RedEnvelope redEnvelopeMap={this.state.redEnvelopeMap} isShowRedEnvelope={this.state.isShowRedEnvelope} onPress={() => {this.setState({isShowRedEnvelope: false})}} _goCouponCard={this.state._goCouponCard} />
 
       {/* 热更新组件 正式环境不要注释！！！，打测试包时注释不会更新 */}
       <ThermalRenewal />

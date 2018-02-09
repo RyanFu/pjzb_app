@@ -50,6 +50,7 @@
   import NetUtil from '../../utils/NetUtil.js';
   import ZQZRInvestmentDetails from '../invest/ZQZRInvestmentDetails';
   import OwebView from '../../components/OwebView';
+  import CouponCard from '../../main/user/couponCard';
 
 const oPx = StyleConfig.oPx;
  let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
@@ -108,6 +109,7 @@ var options = {
           this._getData();
 
        this._refresh();
+
    }
 
    //获取数据
@@ -135,6 +137,11 @@ var options = {
          isError: false,
          riskCount: data.riskCount,
        });
+      // 是否有红包 data.money
+      if (data.money) {
+        this.props._showRedEnvelope(true, data.money, this._goCouponCard);
+      }
+
        if(data.hasOwnProperty("isExgo")){
            this.setState({
                islogin:1,
@@ -192,6 +199,11 @@ var options = {
         }
       }
    }
+
+    // 跳转我的赠券
+     _goCouponCard = () => {
+        this.props.navigator.push({component:CouponCard,name:'CouponCard'});
+     }
 
    //生成list
    _renderRow = (data) => {
