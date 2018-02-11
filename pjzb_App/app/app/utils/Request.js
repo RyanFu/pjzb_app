@@ -8,10 +8,10 @@
 // let HOST='http://192.168.1.5:8080/pjzb';
 
 // 测试环境地址
-let HOST='http://120.78.89.202:8080/pjzb';
+// let HOST='http://120.78.89.202:8080/pjzb';
 
 // 正式环境地址
-// let HOST='https://www.pujinziben.com';
+let HOST='https://www.pujinziben.com';
 
 let URL = HOST+'/reactapp/';
 

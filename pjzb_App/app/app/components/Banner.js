@@ -25,7 +25,12 @@ export default class Welcome extends Component {
                 {imgPath:require('../images/index/welcome_01.png')},
                 {imgPath:require('../images/index/welcome_02.png')},
                 {imgPath:require('../images/index/welcome_03.png')}
-            ]
+            ],
+            activityBannerList : [
+                {imgPath:require('../images/index/welcome_04.png')},
+                {imgPath:require('../images/index/welcome_05.png')},
+                {imgPath:require('../images/index/welcome_06.png')}
+            ],
         }
     }
 
@@ -50,13 +55,20 @@ export default class Welcome extends Component {
         })
     }
     render() {
+        let dateStart = new Date(Date.parse("2018/02/11")).getTime();
+        let dateEnd = new Date(Date.parse("2018/03/10")).getTime(); 
+        let date = new Date().getTime();
+        let imgList = this.state.bannerList;
+        if (date >= dateStart && date <= dateEnd) {
+            imgList = this.state.activityBannerList;
+        }
         return (
             <View style={{flex: 1}} >
                 <StatusBar hidden={true}/>
                 <Swiper height={height} autoplay={false} loop={false} showsButtons={false} showsPagination={false}
                         onMomentumScrollEnd={(e, state, context)=>this.onMomentumScrollEnd(e, state, context)}>
                     {
-                        this.state.bannerList.map((row, index) =>{
+                        imgList.map((row, index) =>{
                             return this._swiper(row,index);
                         })
                     }

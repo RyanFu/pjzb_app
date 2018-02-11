@@ -106,7 +106,7 @@ export default class InvestFriendDetail extends Component{
 
                 <Text style={styles.viewTopTextCenter}>
                   <Text style={{color:'#333'}}>活动时间：</Text>
-                  <Text style={styles.activityTimeText}>2017年12月15日—2018年1月15日；</Text>
+                  <Text style={styles.activityTimeText}>2018年2月11号—2018年3月10日；</Text>
                 </Text>
 
                 <Text style={styles.viewTopTextCenter}>
@@ -115,15 +115,8 @@ export default class InvestFriendDetail extends Component{
 
                 <Text style={{color:'#333'}}>活动说明：
                   <Text style={styles.viewTopTextCenter}>
-                    1.活动期间邀请好友注册并累计投资满10000元，得50元现金券奖励；
+                    活动期间内邀请好友注册并且好友首次投资满1000元，推荐人可获得 5元 现金奖励，满2000元推荐人可得 10元 ，以此类推，上不封顶，投标后立即发放。
                   </Text>
-                </Text>
-                
-                <Text style={styles.viewTopTextCenter}>
-                  2.活动期间内成功邀请5位以上好友注册投资成功合计满100000，可额外获得500元现金券奖励，可在【我的账户-我的赠券】中查看。
-                </Text>
-                <Text style={styles.viewTopTextCenter}>
-                  (满足活动条件的用户在活动结束后3个工作日内奖励将以现金券的形式发放至用户账户)
                 </Text>
                 
                 <Text style={styles.viewTopTextCenter}>
