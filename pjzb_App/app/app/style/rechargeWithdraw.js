@@ -55,7 +55,7 @@ export default styles = StyleSheet.create({
         marginLeft: 50/oPx,
     },
     interval15: {
-        marginTop: 15/oPx,
+        marginTop: 45/oPx,
     },
     interval40: {
         marginTop: 40/oPx,
@@ -143,5 +143,18 @@ export default styles = StyleSheet.create({
         backgroundColor: 'transparent',
         marginTop:28/oPx,
         marginLeft:85/oPx,
+    },
+    modeView: {
+        marginTop: 10/oPx,
+        paddingLeft: 30/oPx,
+        paddingRight: 30/oPx,
+        flexDirection: 'row',
+    },
+    modeText: {
+        fontSize: 24/oPx,
+        color: '#319bff',
+    },
+    modeView_item: {
+        flex: 1,
     },
 });

@@ -568,18 +568,18 @@ var options = {
     _goToFXPG = () => {
       let data = global.USER;
       if(data){
-        if (this.state.riskCount == 0) {
+        // if (this.state.riskCount == 0) {
           let url = Request.HOST + "/riskquestion.html";
           this.props.navigator.push({component:OwebView,name:'OwebView',params:{url:url,title:'风险承受能力测评',back:{true}}});
-        } else {
-           Alert.alert(
-              '提示信息',
-              '您已经提交过测评，谢谢！',
-              [
-                  {text: '确定'},
-              ]
-          )
-        }
+        // } else {
+        //    Alert.alert(
+        //       '提示信息',
+        //       '您已经提交过测评，谢谢！',
+        //       [
+        //           {text: '确定'},
+        //       ]
+        //   )
+        // }
       }else{
           Alert.alert(
               '提示信息',

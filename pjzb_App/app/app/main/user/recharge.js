@@ -25,6 +25,7 @@ import RechargeList from './rechargeList';
 import RegIpayPersonal from './regIpayPersonal';
 import OwebView from '../../components/OwebView';
 import Loading from '../../components/Loading';
+import ListMode from '../../components/ListMode';
 import Utils from '../../utils/utils';
 
 export default class Recharge extends Component {
@@ -39,6 +40,9 @@ export default class Recharge extends Component {
             showDialog:false,
             usableSum:0,
             nickname:'',
+            isShowList: false,
+            payDataList: [],
+            payType: 1,
         };
     }
 
@@ -174,6 +178,45 @@ export default class Recharge extends Component {
         });
     }
 
+    _showListMode1 = () => {
+        this.setState({
+            isShowList: true,
+            payType: 1,
+        });
+        let params = {uid:'', payType: 1};
+        Request.post('getQuotaList.do',params,(data)=>{
+            if(data.error == '0'){
+                console.log(data)
+                this.setState({
+                    payDataList: data.data,
+                });
+            } else {
+                Alert.alert('提示',data.msg);
+            }
+        },(error)=>{
+            Alert.alert("提示",'您的网络不稳定，请稍后再试！');
+        });
+    }
+    _showListMode2 = () => {
+        this.setState({
+            isShowList: true,
+            payType: 2,
+        });
+        let params = {uid:'', payType: 2};
+        Request.post('getQuotaList.do',params,(data)=>{
+            if(data.error == '0'){
+                console.log(data)
+                this.setState({
+                    payDataList: data.data,
+                });
+            } else {
+                Alert.alert('提示',data.msg);
+            }
+        },(error)=>{
+            Alert.alert("提示",'您的网络不稳定，请稍后再试！');
+        });
+    }
+
     render() {
         return (
             <ScrollView onResponderRelease={(e)=>this.tapEvent(e)} keyboardShouldPersistTaps="handled">
@@ -198,6 +241,15 @@ export default class Recharge extends Component {
                                 marginTop: 20/StyleConfig.oPx, marginBottom: 5/StyleConfig.oPx, marginLeft: 30/StyleConfig.oPx}} 
                             source={require('../../images/user/icon_promptImg_1.png')} />
                     </TouchableOpacity>
+                    <View style={styles.modeView}>
+                        <View style={styles.modeView_item}>
+                            <Text style={styles.modeText} onPress={this._showListMode1}>查看快捷限额</Text>
+                        </View>
+                        <View style={[styles.modeView_item, {alignItems: 'flex-end'}]}>
+                            <Text style={styles.modeText} onPress={this._showListMode2}>查看网银限额</Text>
+                        </View>
+                    </View>
+
                     <View style={styles.interval15}></View>
                     <View style={styles.bodyView}>
                         {/*<View style={styles.itemsInput}>*/}
@@ -234,6 +286,8 @@ export default class Recharge extends Component {
                     </View>
                     <Loading show={this.state.showDialog} top={true}/>
                 </View>
+                {/* 列表模型组件 */}
+                <ListMode isShowList={this.state.isShowList} _cancel={()=> {this.setState({isShowList: false})}} _payDataList={this.state.payDataList} _payType={this.state.payType} />
             </ScrollView>
         );
     }

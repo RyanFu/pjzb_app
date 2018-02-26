@@ -13,6 +13,9 @@
   import ProIntroduction from './proIntroduction';
   import Problems from './problems';
   import Contract from './contract';
+  import Complaint from './Complaint';
+  import Feedback from './Feedback';
+
   import { goBack } from '../../utils/NavigatorBack';
   import {StyleConfig} from '../../style';
   const oPx = StyleConfig.oPx;
@@ -24,6 +27,8 @@
               {leftText:'产品介绍',rightText:'',listPress:()=>{this.props.navigator.push({component:ProIntroduction,name:'ProIntroduction'});},style:{marginTop:16/oPx}},
               {leftText:'常见问题',rightText:'',listPress:()=>{this.props.navigator.push({component:Problems,name:'Problems'});},style:styles.lineTop},
               {leftText:'合同资料',rightText:'',listPress:()=>{this.props.navigator.push({component:Contract,name:'Contract'});},style:styles.lineTop},
+              {leftText:'投诉举报',rightText:'',listPress:()=>{this.props.navigator.push({component:Complaint,name:'Complaint'});},style:styles.lineTop},
+              {leftText:'问题反馈',rightText:'',listPress:()=>{this.props.navigator.push({component:Feedback,name:'Feedback'});},style:styles.lineTop},
           ],
       }
     }
